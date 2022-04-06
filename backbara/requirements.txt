@@ -1,0 +1,11 @@
+imagehash
+nanoid
+starlette
+motor
+python-dotenv
+uvicorn
+aioredis
+slowapi
+python-multipart
+aiofiles
+multicolorcaptcha

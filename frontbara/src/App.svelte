@@ -17,6 +17,7 @@
             <label for="capy-file">Image</label>
             <input required type="file" name="capy-file" accept="image/png,image/gif,image/jpeg,image/jpg">
             <label for="capy-captcha">Capytcha</label>
+            <img src="http://127.0.0.1:8000/api/captcha" alt="Captcha">
             <input type="text" name="capy-captcha" placeholder="beep boop">
             <button type="submit">Submit</button>
         </form>

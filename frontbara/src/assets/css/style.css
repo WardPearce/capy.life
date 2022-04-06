@@ -1,6 +1,7 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 @font-face {
@@ -94,6 +95,7 @@ input {
 
 label {
     font-size: 1em;
+    display: block;
 }
 
 a {
@@ -103,6 +105,10 @@ a {
 
 a:hover {
     color: #bdb9b9;
+}
+
+form img {
+    width: 50%;
 }
 
 @media screen and (max-width: 950px) {
@@ -119,6 +125,12 @@ a:hover {
 
 @media screen and (max-width: 950px) {
     button {
-        width: 101.5%;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    form img {
+        width: 100%;
     }
 }
