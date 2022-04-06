@@ -22,3 +22,10 @@ MONGO_DB = os.getenv("MONGO_DB", "capybara")
 FRONTEND_PROXIED = os.getenv("FRONTEND_PROXIED", "http://localhost:3000")
 
 NANO_ID_LEN = int(os.getenv("NANO_ID_LEN", 21))
+
+SAVE_PATH = os.getenv("SAVE_PATH", "./capybaras")
+
+try:
+    os.mkdir(SAVE_PATH)
+except Exception:
+    pass

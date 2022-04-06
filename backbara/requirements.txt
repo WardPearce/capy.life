@@ -9,3 +9,5 @@ slowapi
 python-multipart
 aiofiles
 multicolorcaptcha
+names
+validators
