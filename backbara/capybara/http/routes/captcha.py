@@ -41,6 +41,7 @@ class CaptchaResource(HTTPEndpoint):
         captcha.image.save(buffer, format="PNG")
 
         return JSONResponse({
-            "imageB64": base64.b64encode(buffer.getvalue()).decode(),
+            "imageB64": "data:image/png;base64," +
+            base64.b64encode(buffer.getvalue()).decode(),
             "captchaId": captcha_id
         })

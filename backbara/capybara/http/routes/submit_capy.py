@@ -27,31 +27,34 @@ from ...env import NANO_ID_LEN, SAVE_PATH
 from ...limiter import LIMITER
 from ...errors import FormMissingFields, SimilarImageError
 
+from ..decorators import require_captcha
+
 
 dhash.force_pil()
 
 
 class SubmitCapyResource(HTTPEndpoint):
     @LIMITER.limit("20/minute")
+    @require_captcha
     async def post(self, request: Request) -> JSONResponse:
         form = await request.form()
 
-        if ("capy-file" not in form or not
-                isinstance(form["capy-file"], UploadFile)):
-            raise FormMissingFields("'capy-file' is required")
+        if ("file" not in form or not
+                isinstance(form["file"], UploadFile)):
+            raise FormMissingFields("'file' is required")
 
-        if "capy-name" not in form or not isinstance(form["capy-name"], str):
+        if "name" not in form or not isinstance(form["name"], str):
             name = get_first_name()
         else:
-            name = form["capy-name"]
+            name = form["name"]
 
-        if ("capy-email" not in form or not
-                validators.email(form["capy-email"])):
+        if ("email" not in form or not
+                validators.email(form["email"])):
             email = None
         else:
-            email = form["capy-email"]
+            email = form["email"]
 
-        image: UploadFile = cast(UploadFile, form["capy-file"])
+        image: UploadFile = cast(UploadFile, form["file"])
         image_bytes = await image.read()
 
         p_row, p_col = dhash.dhash_row_col(Image.open(BytesIO(image_bytes)))

@@ -111,6 +111,12 @@ form img {
     width: 50%;
 }
 
+form .error {
+    padding: 1em .3em;
+    background-color: #c68a11;
+    margin-bottom: 1em;
+}
+
 @media screen and (max-width: 950px) {
     section {
         width: 90vw;

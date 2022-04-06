@@ -10,8 +10,6 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
 from slowapi.middleware import SlowAPIMiddleware
-from slowapi import _rate_limit_exceeded_handler  # type: ignore
-from slowapi.errors import RateLimitExceeded
 
 from motor import motor_asyncio
 
@@ -21,7 +19,7 @@ from .env import (
 )
 from .limiter import LIMITER
 from .resources import Sessions
-from .http import ROUTES
+from .http import ROUTES, ERRORS
 
 
 async def on_start() -> None:
@@ -38,13 +36,16 @@ cors_origins = [FRONTEND_PROXIED.lower()]
 if cors_origins[0].startswith("https"):
     cors_origins.append(cors_origins[0].replace("https", "http", 1))
 
-app = Starlette(routes=ROUTES, middleware=[
-    Middleware(CORSMiddleware,
-               allow_origins=cors_origins,
-               allow_methods=["GET", "DELETE", "POST"]),
-    Middleware(SlowAPIMiddleware),
-], on_startup=[on_start])
-
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app = Starlette(
+    routes=ROUTES,
+    exception_handlers=ERRORS,  # type: ignore
+    middleware=[
+        Middleware(CORSMiddleware,
+                   allow_origins=cors_origins,
+                   allow_methods=["GET", "DELETE", "POST"]),
+        Middleware(SlowAPIMiddleware)
+    ],
+    on_startup=[on_start]
+)
 
 app.state.limiter = LIMITER
