@@ -1,25 +1,44 @@
+# -*- coding: utf-8 -*-
+
+"""
+GNU AFFERO GENERAL PUBLIC LICENSE
+Version 3, 19 November 2007
+"""
+
+import base64
+import secrets
+
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import JSONResponse
 
 from multicolorcaptcha import CaptchaGenerator
 from io import BytesIO
+
+from ...resources import Sessions
 
 
 generator = CaptchaGenerator(captcha_size_num=1)
 
 
 class CaptchaResource(HTTPEndpoint):
-    async def get(self, request: Request) -> Response:
+    async def get(self, request: Request) -> JSONResponse:
         captcha = generator.gen_captcha_image(
             margin=False,
             difficult_level=2
         )
 
+        captcha_id = secrets.token_urlsafe()
+
+        await Sessions.mongo.captcha.insert_one({
+            "_id": captcha_id,
+            "code": captcha.characters
+        })
+
         buffer = BytesIO()
         captcha.image.save(buffer, format="PNG")
 
-        return Response(
-            buffer.getvalue(),
-            media_type="image/png"
-        )
+        return JSONResponse({
+            "imageB64": base64.b64encode(buffer.getvalue()).decode(),
+            "captchaId": captcha_id
+        })
