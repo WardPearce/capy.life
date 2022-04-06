@@ -1,0 +1,64 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: FluffyCapy;
+    src: url('./src/assets/font/PermanentMarker-Regular.ttf');
+}
+
+body {
+    color: #fff;
+    background-color: #211515;
+    background-image: url('./src/assets/img/bg.png');
+    background-repeat: repeat;
+    background-position: center;
+    background-size: 35px 35px;
+    overflow-x: hidden;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+section {
+    background-color: #211515;
+    padding: 1em 2em;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    min-height: 100vh;
+    width: 50vw;
+}
+
+section img {
+    width: 100%;
+}
+
+p {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 1em;
+}
+
+h1, h2, h3 {
+    font-family: FluffyCapy;
+}
+
+h2, h3 {
+    padding-top: .8em;
+}
+
+footer {
+    background-color: #211515;
+    padding: .5em;
+    font-size: .8em;
+    color: #a9a9a9;
+}
+
+@media screen and (max-width: 950px) {
+    section {
+        width: 90vw;
+    }
+}
