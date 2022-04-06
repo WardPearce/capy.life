@@ -1,4 +1,4 @@
-imagehash
+dhash
 nanoid
 starlette
 motor

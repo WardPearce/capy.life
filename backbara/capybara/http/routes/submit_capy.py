@@ -6,7 +6,7 @@ Version 3, 19 November 2007
 """
 
 import nanoid
-import imagehash
+import dhash
 import aiofiles
 import validators
 
@@ -25,7 +25,10 @@ from os import path
 from ...resources import Sessions
 from ...env import NANO_ID_LEN, SAVE_PATH
 from ...limiter import LIMITER
-from ...errors import FormMissingFields
+from ...errors import FormMissingFields, SimilarImageError
+
+
+dhash.force_pil()
 
 
 class SubmitCapyResource(HTTPEndpoint):
@@ -51,7 +54,14 @@ class SubmitCapyResource(HTTPEndpoint):
         image: UploadFile = cast(UploadFile, form["capy-file"])
         image_bytes = await image.read()
 
-        phash = imagehash.phash(Image.open(BytesIO(image_bytes)))
+        p_row, p_col = dhash.dhash_row_col(Image.open(BytesIO(image_bytes)))
+        phash = dhash.format_hex(p_row, p_col)
+
+        similar_image = await Sessions.mongo.capybara.count_documents({
+            "phash": phash
+        })
+        if similar_image > 0:
+            raise SimilarImageError()
 
         _id = nanoid.generate(size=NANO_ID_LEN)
 
@@ -61,7 +71,7 @@ class SubmitCapyResource(HTTPEndpoint):
             "used": None,
             "approved": False,
             "name": name,
-            "phash": str(phash),
+            "phash": phash,
             "email": email,
             "content_type": image.content_type
         })

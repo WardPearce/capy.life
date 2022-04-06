@@ -3,9 +3,9 @@ from enum import Enum
 
 class ErrorCode(Enum):
     INTERNAL_ERROR = 1000
-
     CAPTCHA_CODE_INVALID = 1001
     FORM_MISSING_FIELDS = 1002
+    SIMILAR_IMAGE = 1003
 
 
 class CapyError(Exception):
@@ -29,3 +29,11 @@ class FormMissingFields(CapyError):
     def __init__(self, msg: str = "Form missing fields", status: int = 400,
                  *args: object) -> None:
         super().__init__(msg, status, ErrorCode.FORM_MISSING_FIELDS, *args)
+
+
+class SimilarImageError(CapyError):
+    def __init__(self, msg: str =
+                 "Image too close to an existing capybara in our database",
+                 status: int = 400,
+                 *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.SIMILAR_IMAGE, *args)
