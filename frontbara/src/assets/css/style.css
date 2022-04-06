@@ -10,6 +10,7 @@
 
 body {
     color: #fff;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     background-color: #211515;
     background-image: url('./src/assets/img/bg.png');
     background-repeat: repeat;
@@ -27,7 +28,7 @@ main {
 
 section {
     background-color: #211515;
-    padding: 1em 2em;
+    padding: 1em 2em 5em 2em;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     min-height: 100vh;
     width: 50vw;
@@ -38,16 +39,17 @@ section img {
 }
 
 p {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-size: 1em;
 }
 
 h1, h2, h3 {
     font-family: FluffyCapy;
+    padding-bottom: .2em;
 }
 
-h2, h3 {
-    padding-top: .8em;
+h2 {
+    font-size: 1.3em;
+    padding-top: 1.3em;
 }
 
 footer {
@@ -55,10 +57,59 @@ footer {
     padding: .5em;
     font-size: .8em;
     color: #a9a9a9;
+    width: 100%;
+    text-align: center;
+}
+
+button {
+    border: none;
+    padding: .3em 1em;
+    background-color: #4d3838;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+button:hover {
+    background-color: #644a4a;
+}
+
+input {
+    background-color: #4d3838;
+    color: #fff;
+    border: #644a4a solid 2px;
+    padding: .5em .3em;
+}
+
+input:focus {
+    border: #9e7575 solid 2px;
+    outline: none;
+}
+
+input {
+    display: block;
+    margin-bottom: 1em;
+    width: 50%;
+}
+
+label {
+    font-size: 1em;
 }
 
 @media screen and (max-width: 950px) {
     section {
         width: 90vw;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    input {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    button {
+        width: 101.5%;
     }
 }
