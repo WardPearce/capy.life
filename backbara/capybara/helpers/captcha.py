@@ -9,7 +9,19 @@ from ..resources import Sessions
 from ..errors import CaptchaError
 
 
-async def validate_captcha(_id: str, given_code: str) -> bool:
+async def validate_captcha(_id: str, given_code: str) -> None:
+    """Validate captcha against given code.
+
+    Parameters
+    ----------
+    _id : str
+    given_code : str
+
+    Raises
+    ------
+    CaptchaError
+    """
+
     captcha = await Sessions.mongo.captcha.find_one({
         "_id": _id
     })
