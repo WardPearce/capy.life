@@ -29,8 +29,9 @@
 
 <Link to="/">Home</Link>
 
-<p style="margin:1em 0;">Total Capybaras left: {capyCount.remaining}/{capyCount.total}</p>
+<p style="margin-top:1em;">Total Capybaras left: {capyCount.remaining}/{capyCount.total}</p>
 
+<h2>To approvel</h2>
 {#if toApprove.length === 0 }
     <h3>No capybaras to approve</h3>
 {:else}
