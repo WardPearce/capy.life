@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+
+"""
+GNU AFFERO GENERAL PUBLIC LICENSE
+Version 3, 19 November 2007
+"""
+
 from functools import wraps
 from typing import Callable
 from starlette.requests import Request

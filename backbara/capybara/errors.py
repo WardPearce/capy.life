@@ -18,7 +18,7 @@ class CapyError(Exception):
 
 
 class CaptchaError(CapyError):
-    def __init__(self, msg: str = "Invalid captcha code.", status: int = 400,
+    def __init__(self, msg: str = "Invalid captcha code", status: int = 400,
                  *args: object) -> None:
         super().__init__(
             msg, status, ErrorCode.CAPTCHA_CODE_INVALID, *args

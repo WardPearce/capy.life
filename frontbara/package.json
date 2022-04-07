@@ -21,6 +21,7 @@
     "vite": "^2.9.0"
   },
   "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "^6.1.1"
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "svelte-routing": "^1.6.0"
   }
 }

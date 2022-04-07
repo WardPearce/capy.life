@@ -5,9 +5,12 @@ GNU AFFERO GENERAL PUBLIC LICENSE
 Version 3, 19 November 2007
 """
 
+import secrets
+
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
 from slowapi.middleware import SlowAPIMiddleware
 
@@ -43,7 +46,8 @@ app = Starlette(
         Middleware(CORSMiddleware,
                    allow_origins=cors_origins,
                    allow_methods=["GET", "DELETE", "POST"]),
-        Middleware(SlowAPIMiddleware)
+        Middleware(SlowAPIMiddleware),
+        Middleware(SessionMiddleware, secret_key=secrets.token_urlsafe())
     ],
     on_startup=[on_start]
 )

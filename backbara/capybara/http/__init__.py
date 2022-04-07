@@ -5,13 +5,16 @@ from slowapi.errors import RateLimitExceeded
 
 from .routes.captcha import CaptchaResource
 from .routes.submit_capy import SubmitCapyResource
+from .routes.login import LoginResource, AuthorizeResource
 
 from .errors import capy_error_handle, CapyError
 
 
 ROUTES = [Mount("/api", routes=[
     Route("/captcha", CaptchaResource),
-    Route("/capy", SubmitCapyResource)
+    Route("/capy", SubmitCapyResource),
+    Route("/login", LoginResource),
+    Route("/authorize", AuthorizeResource)
 ])]
 
 

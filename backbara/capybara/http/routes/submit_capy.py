@@ -83,4 +83,6 @@ class SubmitCapyResource(HTTPEndpoint):
                 path.join(SAVE_PATH, f"{_id}.capy"), "wb") as f_:
             await f_.write(image_bytes)
 
-        return JSONResponse({})
+        return JSONResponse({
+            "_id": _id
+        })

@@ -11,3 +11,6 @@ aiofiles
 multicolorcaptcha
 names
 validators
+Authlib
+aiohttp
+itsdangerous
