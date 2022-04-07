@@ -2,10 +2,13 @@
     import Fa from 'svelte-fa'
     import { faArrowRotateForward } from '@fortawesome/free-solid-svg-icons'
 
-    import { getCaptcha, submitCapy } from '../api'
-    import type { iCaptcha, iCapySubmit } from '../api/interfaces'
+    import { getCaptcha, submitCapy, getTodayCapy } from '../api'
+    import type { iCaptcha, iCapySubmit, iCapy } from '../api/interfaces'
 
     let page = 0
+
+    let todayCapy: iCapy = {} as iCapy
+    getTodayCapy().then(resp => todayCapy = resp)
 
     let captcha: iCaptcha = {} as iCaptcha
     let captchaValue = ''
@@ -38,8 +41,8 @@
 </script>
 
 <h1>Capybara of the day!</h1>
-<img src="./src/assets/img/capy.jpg" alt="capy">
-<h3 style="text-align: center;">Name: greg</h3>
+<img src={todayCapy.image} alt="capy">
+<h3 style="text-align: center;">Name: { todayCapy.name }</h3>
 
 <h2>What is capy.life?</h2>
 <p>Capy.Life is the official daily Capybara site approved by many Zoos & Scientists. 1/10 Endocrinologist say that viewing a Capybara each day drastically improves your mental state.</p>

@@ -1,8 +1,8 @@
 <script lang="ts">
     import { getToApprove, AdminCapy } from '../api'
-    import type { iToApproveCapy } from '../api/interfaces'
+    import type { iCapy } from '../api/interfaces'
 
-    let toApprove: iToApproveCapy[] = []
+    let toApprove: iCapy[] = []
     getToApprove().then(resp => {
         toApprove = resp
     })

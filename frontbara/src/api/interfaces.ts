@@ -11,7 +11,7 @@ export interface iCapySubmit {
 }
 
 
-export interface iToApproveCapy {
+export interface iCapy {
     name: string
     image: string
     _id: string

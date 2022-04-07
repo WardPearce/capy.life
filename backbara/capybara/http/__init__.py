@@ -9,6 +9,7 @@ from .routes.admin import AdminApprovalResource, AdminApproveResource
 
 from .routes.capy.image import CapyImageResource
 from .routes.capy.submit import SubmitCapyResource
+from .routes.capy.get import CapyDateResource
 
 from .errors import capy_error_handle, CapyError
 
@@ -22,7 +23,8 @@ ROUTES = [Mount("/api", routes=[
     Mount("/admin", routes=[
         Route("/approval", AdminApprovalResource),
         Route("/approval/{_id}", AdminApproveResource)
-    ])
+    ]),
+    Route("/", CapyDateResource)
 ])]
 
 
