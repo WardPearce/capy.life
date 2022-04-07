@@ -123,6 +123,32 @@ form .successful {
     margin-bottom: 1em;
 }
 
+.approval {
+    list-style: none;
+}
+
+.approval .card {
+    background-color: #332525;
+    padding: .5em 1em;
+    width: 100%;
+}
+
+.approval li {
+    margin-bottom: 1em;
+}
+
+.approval img {
+    width: 200px;
+}
+
+.approval .deny {
+    background-color: #600909;
+}
+
+.approval .deny:hover {
+    background-color: #a00d0d;
+}
+
 @media screen and (max-width: 1200px) {
     input {
         width: 80%;

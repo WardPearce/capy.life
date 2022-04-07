@@ -6,6 +6,7 @@ class ErrorCode(Enum):
     CAPTCHA_CODE_INVALID = 1001
     FORM_MISSING_FIELDS = 1002
     SIMILAR_IMAGE = 1003
+    CAPY_ID_INVALID = 1004
 
 
 class CapyError(Exception):
@@ -37,3 +38,9 @@ class SimilarImageError(CapyError):
                  status: int = 400,
                  *args: object) -> None:
         super().__init__(msg, status, ErrorCode.SIMILAR_IMAGE, *args)
+
+
+class InvalidCapyId(CapyError):
+    def __init__(self, msg: str = "Capy ID not found", status: int = 404,
+                 *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.CAPY_ID_INVALID, *args)

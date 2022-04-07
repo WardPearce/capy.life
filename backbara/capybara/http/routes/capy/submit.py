@@ -9,6 +9,7 @@ import nanoid
 import dhash
 import aiofiles
 import validators
+import re
 
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
@@ -22,12 +23,12 @@ from typing import cast
 from names import get_first_name
 from os import path
 
-from ...resources import Sessions
-from ...env import NANO_ID_LEN, SAVE_PATH
-from ...limiter import LIMITER
-from ...errors import FormMissingFields, SimilarImageError
+from ....resources import Sessions
+from ....env import NANO_ID_LEN, SAVE_PATH
+from ....limiter import LIMITER
+from ....errors import FormMissingFields, SimilarImageError
 
-from ..decorators import require_captcha
+from ...decorators import require_captcha
 
 
 dhash.force_pil()
@@ -43,10 +44,11 @@ class SubmitCapyResource(HTTPEndpoint):
                 isinstance(form["file"], UploadFile)):
             raise FormMissingFields("'file' is required")
 
-        if "name" not in form or not isinstance(form["name"], str):
+        if ("name" not in form or not isinstance(form["name"], str) or not
+                re.match(r'[A-Za-z]+', form["name"])):
             name = get_first_name()
         else:
-            name = form["name"]
+            name = form["name"].capitalize()
 
         if ("email" not in form or not
                 validators.email(form["email"])):

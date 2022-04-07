@@ -30,10 +30,10 @@
                 image: ''
             }
             successful = 'Capybara has been submitted for approval!'
-            await setCaptcha()
         } catch (error) {
             errorMsg = (await error.json()).error
         }
+        await setCaptcha()
     }
 </script>
 

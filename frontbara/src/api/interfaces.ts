@@ -9,3 +9,10 @@ export interface iCapySubmit {
     captchaCode?: string
     image: FileList
 }
+
+
+export interface iToApproveCapy {
+    name: string
+    image: string
+    _id: string
+}
