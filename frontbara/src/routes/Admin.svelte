@@ -22,17 +22,21 @@
     }
 </script>
 
+<a href="/" style="padding-bottom: 1em;display:block;">Home</a>
 
-<ul class="approval">
-    {#each toApprove as capy }
-        <li><div class="card">
-            <h3>{ capy.name }</h3>
-            <img src={capy.image} alt={`Capy named ${capy.name}`}>
-            <div>
-                <button on:click={async () => await approveCapy(capy._id)} style="margin-right: .2em;">Approve</button>
-                <button on:click={async () => await denyCapy(capy._id)} class="deny">Deny</button>
-            </div>
-        </div></li>
-    {/each }
-</ul>
-
+{#if toApprove.length === 0 }
+    <h3>No capybaras to approve</h3>
+{:else}
+    <ul class="approval">
+        {#each toApprove as capy }
+            <li><div class="card">
+                <h3>{ capy.name }</h3>
+                <img src={capy.image} alt={`Capy named ${capy.name}`}>
+                <div>
+                    <button on:click={async () => await approveCapy(capy._id)} style="margin-right: .2em;">Approve</button>
+                    <button on:click={async () => await denyCapy(capy._id)} class="deny">Deny</button>
+                </div>
+            </div></li>
+        {/each }
+    </ul>
+{/if}
