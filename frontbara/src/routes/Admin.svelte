@@ -29,7 +29,7 @@
 
 <Link to="/">Home</Link>
 
-<p style="margin-top:1em;">Total Capybaras left: {capyCount.remaining}/{capyCount.total}</p>
+<p style="margin-top:1em;">Total Capybaras left: {capyCount.remaining}/{capyCount.total} ({ capyCount.remaining } days covered)</p>
 
 <h2>To approvel</h2>
 {#if toApprove.length === 0 }
