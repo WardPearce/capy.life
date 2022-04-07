@@ -1,4 +1,4 @@
-import type { iCaptcha, iCapySubmit, iCapy } from './interfaces'
+import type { iCaptcha, iCapySubmit, iCapy, iCapyCount } from './interfaces'
 
 const backendUrl: string = import.meta.env.VITE_BACKEND_URL as string
 
@@ -35,6 +35,13 @@ export async function getToApprove(): Promise<iCapy[]> {
 
 export async function getTodayCapy(): Promise<iCapy> {
     const resp = await fetch(`${backendUrl}/api`)
+    if (resp.status !== 200)
+        throw resp
+    return await resp.json()
+}
+
+export async function getCapyCount(): Promise<iCapyCount> {
+    const resp = await fetch(`${backendUrl}/api/admin/remaining`)
     if (resp.status !== 200)
         throw resp
     return await resp.json()

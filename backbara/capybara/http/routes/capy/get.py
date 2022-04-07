@@ -13,6 +13,7 @@ from datetime import date
 
 from ....resources import Sessions
 from ....env import BACKEND_PROXIED
+from ....errors import NoCapyToday
 
 
 class CapyDateResource(HTTPEndpoint):
@@ -28,6 +29,9 @@ class CapyDateResource(HTTPEndpoint):
                 {"$sample": {"size": 1}}
             ]):
                 record = result
+
+            if not record:
+                raise NoCapyToday()
 
             await Sessions.mongo.capybara.update_one({
                 "_id": record["_id"]

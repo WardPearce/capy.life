@@ -1,6 +1,9 @@
 <script lang="ts">
-    import { getToApprove, AdminCapy } from '../api'
-    import type { iCapy } from '../api/interfaces'
+    import { getToApprove, AdminCapy, getCapyCount } from '../api'
+    import type { iCapy, iCapyCount } from '../api/interfaces'
+
+    let capyCount: iCapyCount  = {} as iCapyCount
+    getCapyCount().then(resp => capyCount = resp)
 
     let toApprove: iCapy[] = []
     getToApprove().then(resp => {
@@ -22,7 +25,9 @@
     }
 </script>
 
-<a href="/" style="padding-bottom: 1em;display:block;">Home</a>
+<a href="/" style="display:block;margin-bottom:1em;">Home</a>
+
+<p style="margin-bottom:1em;">Total Capybaras left: {capyCount.remaining}/{capyCount.total}</p>
 
 {#if toApprove.length === 0 }
     <h3>No capybaras to approve</h3>

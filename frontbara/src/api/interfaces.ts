@@ -10,9 +10,13 @@ export interface iCapySubmit {
     image: FileList
 }
 
-
 export interface iCapy {
     name: string
     image: string
     _id: string
+}
+
+export interface iCapyCount {
+    remaining: number
+    total: number
 }

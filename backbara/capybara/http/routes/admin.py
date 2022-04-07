@@ -19,6 +19,17 @@ from ...helpers.capy import get_capy
 
 
 # ToDo auth admin
+class AdminCapyRemaining(HTTPEndpoint):
+    async def get(self, request: Request) -> JSONResponse:
+        return JSONResponse({
+            "remaining": await Sessions.mongo.capybara.count_documents({
+                "used": None
+            }),
+            "total": await Sessions.mongo.capybara.count_documents({})
+        })
+
+
+# ToDo auth admin
 class AdminApprovalResource(HTTPEndpoint):
     async def get(self, request: Request) -> JSONResponse:
         to_approve = []

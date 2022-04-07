@@ -7,6 +7,7 @@ class ErrorCode(Enum):
     FORM_MISSING_FIELDS = 1002
     SIMILAR_IMAGE = 1003
     CAPY_ID_INVALID = 1004
+    NO_CAPY_TODAY = 1005
 
 
 class CapyError(Exception):
@@ -44,3 +45,9 @@ class InvalidCapyId(CapyError):
     def __init__(self, msg: str = "Capy ID not found", status: int = 404,
                  *args: object) -> None:
         super().__init__(msg, status, ErrorCode.CAPY_ID_INVALID, *args)
+
+
+class NoCapyToday(CapyError):
+    def __init__(self, msg: str = "We ran out of capybaras", status: int = 500,
+                 *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.NO_CAPY_TODAY, *args)
