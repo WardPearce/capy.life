@@ -19,9 +19,17 @@ from datetime import datetime, timedelta
 from json import JSONDecodeError
 
 from ...resources import Sessions
-from ...env import URL_PROXIED, SAVE_PATH, JWT_SECRET, JWT_EXPIRES_DAYS
+from ...env import (
+    URL_PROXIED, SAVE_PATH, JWT_SECRET,
+    JWT_EXPIRES_DAYS
+)
 from ...helpers.capy import get_capy
-from ...errors import LoginError, FormMissingFields, PayloadDecodeError
+from ...helpers.invite import validate_invite
+from ...helpers.admin import create_admin
+from ...errors import (
+    LoginError, FormMissingFields, PayloadDecodeError,
+    InvalidInvite
+)
 
 
 class AdminLogin(HTTPEndpoint):
@@ -37,26 +45,41 @@ class AdminLogin(HTTPEndpoint):
         if "password" not in json or not isinstance(json["password"], str):
             raise FormMissingFields("`username` is a required field")
 
-        record = await Sessions.mongo.admin.find_one({
-            "username": json["username"]
+        if "inviteCode" in json:
+            if not isinstance(json["inviteCode"], str):
+                raise FormMissingFields("`inviteCode` is not a string")
+
+            try:
+                await validate_invite(json["inviteCode"])
+            except InvalidInvite:
+                raise
+
+            _id = await create_admin(json["username"], json["password"])
+        else:
+            record = await Sessions.mongo.admin.find_one({
+                "username": json["username"]
+            })
+            if not record:
+                raise LoginError()
+
+            if not bcrypt.checkpw(
+                hashlib.sha256(json["password"]).digest(),
+                record["password"]
+            ):
+                raise LoginError()
+
+            _id = record["_id"]
+
+        response = JSONResponse({
+            "success": True
         })
-        if not record:
-            raise LoginError()
-
-        if not bcrypt.checkpw(
-            hashlib.sha256(json["password"]).digest(),
-            record["password"]
-        ):
-            raise LoginError()
-
-        response = JSONResponse()
         response.set_cookie(
             "jwt-token",
             jwt.encode({
                 "ext": (
                     datetime.now() + timedelta(days=JWT_EXPIRES_DAYS)
                 ).timestamp(),
-                "sub": record["_id"]
+                "sub": _id
             }, JWT_SECRET, algorithm="HS256"),
             httponly=True, samesite="strict"
         )

@@ -10,6 +10,8 @@ class ErrorCode(Enum):
     NO_CAPY_TODAY = 1005
     INVALID_LOGIN = 1006
     PAYLOAD_DECODE_ERROR = 1007
+    INVALID_INVITE = 1008
+    USERNAME_TAKEN = 1009
 
 
 class CapyError(Exception):
@@ -67,3 +69,16 @@ class PayloadDecodeError(CapyError):
                  status: int = 400,
                  *args: object) -> None:
         super().__init__(msg, status, ErrorCode.PAYLOAD_DECODE_ERROR, *args)
+
+
+class InvalidInvite(CapyError):
+    def __init__(self, msg: str = "Invite code is not valid",
+                 status: int = 400,
+                 *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.INVALID_INVITE, *args)
+
+
+class UsernameTaken(CapyError):
+    def __init__(self, msg: str = "Username taken", status: int = 400,
+                 *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.USERNAME_TAKEN, *args)
