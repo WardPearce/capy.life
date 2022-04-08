@@ -12,7 +12,7 @@ from starlette.responses import JSONResponse
 from datetime import date
 
 from ....resources import Sessions
-from ....env import BACKEND_PROXIED
+from ....env import URL_PROXIED
 from ....errors import NoCapyToday
 
 
@@ -39,6 +39,6 @@ class CapyDateResource(HTTPEndpoint):
 
         return JSONResponse({
             "name": record["name"],
-            "image": f"{BACKEND_PROXIED}/api/capy/{record['_id']}",
+            "image": f"{URL_PROXIED}/api/capy/{record['_id']}",
             "_id": record["_id"],
         })

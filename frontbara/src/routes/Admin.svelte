@@ -23,6 +23,10 @@
 
     async function approveCapy(capyId: string) {
         removeIdFromList(capyId)
+
+        capyCount.total++
+        capyCount.remaining++
+
         await (new AdminCapy(capyId)).approve()
     }
 </script>

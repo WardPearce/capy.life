@@ -185,3 +185,9 @@ form .successful {
         width: 100%;
     }
 }
+
+@media screen and (max-width: 950px) {
+    .approval button {
+        margin-top: .5em;
+    }
+}

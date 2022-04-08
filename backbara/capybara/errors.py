@@ -8,6 +8,8 @@ class ErrorCode(Enum):
     SIMILAR_IMAGE = 1003
     CAPY_ID_INVALID = 1004
     NO_CAPY_TODAY = 1005
+    INVALID_LOGIN = 1006
+    PAYLOAD_DECODE_ERROR = 1007
 
 
 class CapyError(Exception):
@@ -51,3 +53,17 @@ class NoCapyToday(CapyError):
     def __init__(self, msg: str = "We ran out of capybaras", status: int = 500,
                  *args: object) -> None:
         super().__init__(msg, status, ErrorCode.NO_CAPY_TODAY, *args)
+
+
+class LoginError(CapyError):
+    def __init__(self, msg: str = "Username or password is incorrect",
+                 status: int = 401,
+                 *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.INVALID_LOGIN, *args)
+
+
+class PayloadDecodeError(CapyError):
+    def __init__(self, msg: str = "Payload could not decode",
+                 status: int = 400,
+                 *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.PAYLOAD_DECODE_ERROR, *args)

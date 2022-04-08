@@ -1,6 +1,6 @@
 import type { iCaptcha, iCapySubmit, iCapy, iCapyCount } from './interfaces'
 
-const backendUrl: string = import.meta.env.VITE_BACKEND_URL as string
+const backendUrl: string = import.meta.env.VITE_URL_PROXIED as string
 
 export async function getCaptcha(): Promise<iCaptcha> {
     const resp = await fetch(`${backendUrl}/api/captcha`)

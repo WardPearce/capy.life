@@ -11,6 +11,5 @@ aiofiles
 multicolorcaptcha
 names
 validators
-Authlib
-aiohttp
-itsdangerous
+pyjwt
+hashlib
