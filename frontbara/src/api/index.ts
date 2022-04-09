@@ -75,7 +75,7 @@ export class AdminCapy {
 }
 
 
-export async function login(details: iAdminDetails): Promise<iAdminLogin> {
+export async function login(details: iAdminDetails, captchaId: string, captchaCode: string): Promise<iAdminLogin> {
     let payload = {
         username: details.username,
         password: details.password
@@ -87,7 +87,7 @@ export async function login(details: iAdminDetails): Promise<iAdminLogin> {
     if (details.inviteCode)
         payload['inviteCode'] = details.inviteCode
 
-    const resp = await fetch(`${backendUrl}/api/admin/login`, {
+    const resp = await fetch(`${backendUrl}/api/admin/login?captchaId=${captchaId}&captchaCode=${captchaCode}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -20,11 +20,11 @@
         toApprove = resp
     })
 
-    let canInvite = false
+    let isRoot = false
     let invites = []
     adminStore.subscribe(async value => {
-        canInvite = value.canInvite
-        if (canInvite) {
+        isRoot = value.root
+        if (isRoot) {
             invites = await getInvites()
         }
     })
@@ -66,7 +66,7 @@
         await logout()
         adminStore.set({
             is: false,
-            canInvite: false
+            root: false
         })
         navigate('/')
     }
@@ -80,7 +80,7 @@
     <button on:click={logMeOut}>Logout</button>
 </nav>
 
-{#if canInvite}
+{#if isRoot}
     <h2>Invitation codes</h2>
     {#if invites.length === 0 }
         <p style="margin-bottom: .5em;">No invites</p>

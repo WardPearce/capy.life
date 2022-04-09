@@ -13,7 +13,7 @@ from starlette.requests import Request
 
 from ..errors import (
     CaptchaError, OptSetupRequired, LoginError,
-    OptError, AdminCantCreateInvites
+    OptError, AdminNotRoot
 )
 from ..helpers.captcha import validate_captcha
 from ..helpers.jwt_ import remove_jwt_response
@@ -63,7 +63,7 @@ def require_captcha(func: Callable) -> Callable:
 
 
 def validate_admin(require_otp: bool = True,
-                   can_create_invites: bool = False) -> Callable:
+                   is_root: bool = False) -> Callable:
     def _call(func: Callable) -> Callable:
         @wraps(func)
         async def _validate(*args, **kwargs) -> Callable:
@@ -87,8 +87,8 @@ def validate_admin(require_otp: bool = True,
             if not record:
                 return remove_jwt_response(request)
 
-            if can_create_invites and not record["create_invites"]:
-                raise AdminCantCreateInvites()
+            if is_root and not record["is_root"]:
+                raise AdminNotRoot()
 
             if require_otp:
                 if not record["otp_completed"]:

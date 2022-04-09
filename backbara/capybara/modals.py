@@ -8,4 +8,4 @@ class AdminModel:
     password: str
     otp: str
     otp_completed: bool
-    create_invites: bool
+    is_root: bool

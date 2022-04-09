@@ -11,9 +11,9 @@
     let todayCapy: iCapy = {} as iCapy
     getTodayCapy().then(resp => todayCapy = resp)
 
-    let captcha: iCaptcha = {} as iCaptcha
-    let captchaCode = ''
-    let captchaCompoponet
+    let captcha: iCaptcha
+    let captchaCode: string
+    let captchaComponent
 
     let isAdmin = false
     adminStore.subscribe(value => {
@@ -38,13 +38,13 @@
             if (isAdmin && error.code === 1001) {
                 adminStore.set({
                     is: false,
-                    canInvite: false
+                    root: false
                 })
                 errorMsg = 'Admin login has expired, please login again.'
             } else
                 errorMsg = (await error.json()).error
         }
-        await captchaCompoponet.setCaptcha()
+        await captchaComponent.setCaptcha()
     }
 </script>
 
@@ -85,7 +85,7 @@
     <label for="capy-file">Image</label>
     <input bind:files={capyDetails.image} required type="file" name="capy-file" accept="image/png,image/gif,image/jpeg,image/jpg">
     {#if !isAdmin}
-        <Captcha bind:captchaCode bind:captcha bind:this={captchaCompoponet} />
+        <Captcha bind:captchaCode bind:captcha bind:this={captchaComponent} />
     {/if}
     <button type="submit">Submit</button>
 </form>

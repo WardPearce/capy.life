@@ -1,9 +1,10 @@
 <script lang="ts">
     import { navigate } from 'svelte-routing'
 
-    import type { iAdminDetails } from '../api/interfaces'
+    import type { iAdminDetails, iCaptcha } from '../api/interfaces'
     import { login } from '../api'
     import { adminStore } from '../stores'
+    import Captcha from '../components/Captcha.svelte'
 
     let mode = 'login'
     let errorMsg = ''
@@ -15,12 +16,16 @@
         otpCode: 'blank'
     }
 
+    let captcha: iCaptcha
+    let captchaCode: string
+    let captchaComponent
+
     async function attemptLogin() {
         try {
-            const adminLogin = await login(loginDetails)
+            const adminLogin = await login(loginDetails, captcha.captchaId, captchaCode)
             adminStore.set({
                 is: true,
-                canInvite: adminLogin.createInvites
+                root: adminLogin.isRoot
             })
             if (!adminLogin.otpCompleted) {
                 navigate('/otp')
@@ -37,8 +42,10 @@
                     errorMsg = errorJson.error
                 loginDetails.otpCode = ''
                 otpStage = true
+                await captchaComponent.setCaptcha()
                 return
             }
+            await captchaComponent.setCaptcha()
             errorMsg = errorJson.error
         }
     }
@@ -67,6 +74,7 @@
         <label for="otp">Two-factor code</label>
         <input bind:value={loginDetails.otpCode} placeholder="..." type="text" required name="otp">
     {/if}
+    <Captcha bind:captchaCode bind:captcha bind:this={captchaComponent} />
     <button type="submit" style="text-transform: capitalize;">{ mode }</button>
     <button
         type="button"

@@ -39,7 +39,7 @@ async def on_start() -> None:
 
     try:
         password = secrets.token_urlsafe(32)
-        await create_admin(ROOT_ADMIN_NAME, password, create_invites=True)
+        await create_admin(ROOT_ADMIN_NAME, password, is_root=True)
     except UsernameTaken:
         pass
     else:

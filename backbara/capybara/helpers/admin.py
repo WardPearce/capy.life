@@ -8,15 +8,15 @@ from ..errors import UsernameTaken
 
 
 async def create_admin(username: str, password: str,
-                       create_invites: bool = False) -> str:
+                       is_root: bool = False) -> str:
     """Create a new admin user.
 
     Parameters
     ----------
     username : str
     password : str
-    create_invites, optional
-        If admin can invite other admins, By default False
+    is_root, optional
+        If account is a root user
 
     Returns
     -------
@@ -41,7 +41,7 @@ async def create_admin(username: str, password: str,
         ),
         "otp": None,
         "otp_completed": False,
-        "create_invites": create_invites
+        "is_root": is_root
     })
 
     return _id

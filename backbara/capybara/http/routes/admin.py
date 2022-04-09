@@ -34,7 +34,7 @@ from ...errors import (
 from ...limiter import LIMITER
 from ...modals import AdminModel
 
-from ..decorators import validate_admin
+from ..decorators import validate_admin, require_captcha
 
 
 class AdminOtp(HTTPEndpoint):
@@ -83,8 +83,10 @@ class AdminOtp(HTTPEndpoint):
 
 
 class AdminLogin(HTTPEndpoint):
+    @require_captcha
     @LIMITER.limit("10/minute")
-    async def post(self, request: Request) -> JSONResponse:
+    async def post(self, request: Request,
+                   captcha_admin_bypass: bool) -> JSONResponse:
         try:
             json = await request.json()
         except JSONDecodeError:
@@ -106,7 +108,7 @@ class AdminLogin(HTTPEndpoint):
                 raise
 
             _id = await create_admin(json["username"], json["password"])
-            create_invites = False
+            is_root = False
             otp_completed = False
 
             await delete_invite(json["inviteCode"])
@@ -135,10 +137,10 @@ class AdminLogin(HTTPEndpoint):
             otp_completed = record["otp_completed"]
 
             _id = record["_id"]
-            create_invites = record["create_invites"]
+            is_root = record["is_root"]
 
         response = JSONResponse({
-            "createInvites": create_invites,
+            "isRoot": is_root,
             "otpCompleted": otp_completed
         })
         response.set_cookie(
@@ -164,20 +166,20 @@ class AdminLogin(HTTPEndpoint):
 
 
 class AdminInvites(HTTPEndpoint):
-    @validate_admin(require_otp=True, can_create_invites=True)
+    @validate_admin(require_otp=True, is_root=True)
     async def get(self, request: Request, admin: AdminModel) -> JSONResponse:
         invites = []
         async for record in Sessions.mongo.invite.find({}):
             invites.append(record["_id"])
         return JSONResponse(invites)
 
-    @validate_admin(require_otp=True, can_create_invites=True)
+    @validate_admin(require_otp=True, is_root=True)
     async def post(self, request: Request, admin: AdminModel) -> JSONResponse:
         return JSONResponse({
             "inviteCode": await generate_invite()
         })
 
-    @validate_admin(require_otp=True, can_create_invites=True)
+    @validate_admin(require_otp=True, is_root=True)
     async def delete(self, request: Request, admin: AdminModel) -> Response:
         if "inviteId" not in request.query_params:
             return Response(status_code=400)

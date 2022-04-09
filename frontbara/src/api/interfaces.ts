@@ -22,7 +22,7 @@ export interface iCapyCount {
 }
 
 export interface iAdminLogin {
-    createInvites: boolean
+    isRoot: boolean
     otpCompleted: boolean
 }
 
