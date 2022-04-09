@@ -1,6 +1,7 @@
 import type {
     iCaptcha, iCapySubmit, iCapy, iCapyCount,
-    iAdminLogin, iAdminDetails, iAdminOtp
+    iAdminLogin, iAdminDetails, iAdminOtp,
+    iAdminInvite
 } from './interfaces'
 
 const backendUrl: string = import.meta.env.VITE_URL_PROXIED as string
@@ -120,6 +121,14 @@ export async function setOtpCode(otpCode: string) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({otpCode: otpCode})
+    })
+    if (resp.status !== 200)
+        throw resp
+}
+
+export async function generateInvite(): Promise<iAdminInvite> {
+    const resp = await fetch(`${backendUrl}/api/admin/invite`, {
+        method: 'POST'
     })
     if (resp.status !== 200)
         throw resp

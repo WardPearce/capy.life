@@ -50,3 +50,9 @@ async def validate_invite(code: str) -> None:
     })
     if not bcrypt.checkpw(password.encode(), record["password"]):
         raise InvalidInvite()
+
+    if datetime.now() > record["expires"]:
+        await Sessions.mongo.invite.delete_many({
+            "_id": _id
+        })
+        raise InvalidInvite()

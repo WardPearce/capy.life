@@ -30,6 +30,10 @@ export interface iAdminOtp {
     provisioningUri: string
 }
 
+export interface iAdminInvite {
+    inviteCode: string
+}
+
 export interface iAdminDetails {
     username: string
     password: string

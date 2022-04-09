@@ -25,7 +25,7 @@ from ...env import (
     JWT_EXPIRES_DAYS
 )
 from ...helpers.capy import get_capy
-from ...helpers.invite import validate_invite
+from ...helpers.invite import validate_invite, generate_invite
 from ...helpers.admin import create_admin
 from ...errors import (
     LoginError, FormMissingFields, PayloadDecodeError,
@@ -159,6 +159,22 @@ class AdminLogin(HTTPEndpoint):
             httponly=True, samesite="strict"
         )
         return response
+
+
+class AdminInvites(HTTPEndpoint):
+    @validate_admin(require_otp=True, can_create_invites=True)
+    async def get(self, request: Request, admin: AdminModel) -> JSONResponse:
+        pass
+
+    @validate_admin(require_otp=True, can_create_invites=True)
+    async def post(self, request: Request, admin: AdminModel) -> JSONResponse:
+        return JSONResponse({
+            "inviteCode": await generate_invite()
+        })
+
+    @validate_admin(require_otp=True, can_create_invites=True)
+    async def delete(self, request: Request, admin: AdminModel) -> JSONResponse:
+        pass
 
 
 class AdminCapyRemaining(HTTPEndpoint):

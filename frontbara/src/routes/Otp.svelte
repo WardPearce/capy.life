@@ -13,6 +13,7 @@
             await setOtpCode(otpCode)
             navigate('/admin')
         } catch (error) {
+            otpCode = ''
             errorMsg = (await error.json()).error
         }
     }

@@ -33,6 +33,8 @@
                 navigate('/otp')
                 return
             } else if (errorJson.code === 1010) {
+                if (loginDetails.otpCode !== 'blank')
+                    errorMsg = errorJson.error
                 loginDetails.otpCode = ''
                 otpStage = true
                 return

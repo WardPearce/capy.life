@@ -18,6 +18,7 @@ class ErrorCode(Enum):
     OTP_SETUP_REQUIRED = 1011
     FILE_TYPE_NOT_SUPPORT = 1012
     FILE_TOO_LARGE = 1013
+    CANT_CREATE_INVITES = 1014
 
 
 class CapyError(Exception):
@@ -112,3 +113,9 @@ class FileTooLarge(CapyError):
     def __init__(self, msg: str = "File is too large",
                  status: int = 400, *args: object) -> None:
         super().__init__(msg, status, ErrorCode.FILE_TOO_LARGE, *args)
+
+
+class AdminCantCreateInvites(CapyError):
+    def __init__(self, msg: str = "Admin can't create invites",
+                 status: int = 400, *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.CANT_CREATE_INVITES, *args)
