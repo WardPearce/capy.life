@@ -31,6 +31,10 @@ JWT_EXPIRES_DAYS = int(os.getenv("JWT_EXPIRES_DAYS", 20))
 
 ROOT_ADMIN_NAME = os.getenv("ROOT_ADMIN_NAME", "capy")
 
+SUPPORTED_IMAGE_TYPES = os.getenv(
+    "SUPPORTED_IMAGE_TYPES", "image/webp,image/jpeg,image/jpg,image/png"
+).split(",")
+
 
 try:
     os.mkdir(SAVE_PATH)

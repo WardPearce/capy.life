@@ -39,14 +39,15 @@ async def on_start() -> None:
 
     try:
         password = secrets.token_urlsafe(32)
-        await create_admin(ROOT_ADMIN_NAME, password)
+        await create_admin(ROOT_ADMIN_NAME, password, create_invites=True)
     except UsernameTaken:
         pass
     else:
         LOGGER.info((
             "Your root login\n"
             f"Username: {ROOT_ADMIN_NAME}\n"
-            f"Password: {password}"
+            f"Password: {password}",
+            "\nOnce you login, you'll be prompted to setup 2 factor."
         ))
 
 

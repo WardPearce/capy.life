@@ -24,9 +24,11 @@ from names import get_first_name
 from os import path
 
 from ....resources import Sessions
-from ....env import NANO_ID_LEN, SAVE_PATH
+from ....env import NANO_ID_LEN, SAVE_PATH, SUPPORTED_IMAGE_TYPES
 from ....limiter import LIMITER
-from ....errors import FormMissingFields, SimilarImageError
+from ....errors import (
+    FormMissingFields, SimilarImageError, FileTypeNotSupported
+)
 
 from ...decorators import require_captcha
 
@@ -57,6 +59,9 @@ class SubmitCapyResource(HTTPEndpoint):
             email = form["email"]
 
         image: UploadFile = cast(UploadFile, form["file"])
+        if image.content_type not in SUPPORTED_IMAGE_TYPES:
+            raise FileTypeNotSupported()
+
         image_bytes = await image.read()
 
         p_row, p_col = dhash.dhash_row_col(Image.open(BytesIO(image_bytes)))
