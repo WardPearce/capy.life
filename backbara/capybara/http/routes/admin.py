@@ -53,7 +53,7 @@ class AdminOtp(HTTPEndpoint):
 
     @validate_admin(require_otp=False)
     @LIMITER.limit("10/minute")
-    async def post(self, request: Request) -> JSONResponse:
+    async def post(self, request: Request) -> Response:
         try:
             json = await request.json()
         except JSONDecodeError:
@@ -78,9 +78,7 @@ class AdminOtp(HTTPEndpoint):
             "_id": request.state.admin_id,
         }, {"$set": {"otp_completed": True}})
 
-        return JSONResponse({
-            "success": True
-        })
+        return Response()
 
 
 class AdminLogin(HTTPEndpoint):
@@ -107,6 +105,7 @@ class AdminLogin(HTTPEndpoint):
                 raise
 
             _id = await create_admin(json["username"], json["password"])
+            create_invites = False
         else:
             if "otpCode" not in json or not isinstance(json["otpCode"], str):
                 raise FormMissingFields("`otpCode` is a required field")
@@ -131,9 +130,10 @@ class AdminLogin(HTTPEndpoint):
                 raise OptError()
 
             _id = record["_id"]
+            create_invites = record["create_invites"]
 
         response = JSONResponse({
-            "success": True
+            "createInvites": create_invites
         })
         response.set_cookie(
             "jwt-token",

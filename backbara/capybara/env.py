@@ -29,6 +29,8 @@ SAVE_PATH = os.getenv("SAVE_PATH", "./capybaras")
 JWT_SECRET_PATH = os.getenv("JWT_SECRET_PATH", "./jwt.secret")
 JWT_EXPIRES_DAYS = int(os.getenv("JWT_EXPIRES_DAYS", 20))
 
+ROOT_ADMIN_NAME = os.getenv("ROOT_ADMIN_NAME", "capy")
+
 
 try:
     os.mkdir(SAVE_PATH)
