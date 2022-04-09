@@ -12,6 +12,8 @@ class ErrorCode(Enum):
     PAYLOAD_DECODE_ERROR = 1007
     INVALID_INVITE = 1008
     USERNAME_TAKEN = 1009
+    OTP_ERROR = 1010
+    OTP_SETUP_REQUIRED = 1011
 
 
 class CapyError(Exception):
@@ -82,3 +84,15 @@ class UsernameTaken(CapyError):
     def __init__(self, msg: str = "Username taken", status: int = 400,
                  *args: object) -> None:
         super().__init__(msg, status, ErrorCode.USERNAME_TAKEN, *args)
+
+
+class OptError(CapyError):
+    def __init__(self, msg: str = "OTP is not correct",
+                 status: int = 500, *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.OTP_ERROR, *args)
+
+
+class OptSetupRequired(CapyError):
+    def __init__(self, msg: str = "OTP setup is required",
+                 status: int = 500, *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.OTP_SETUP_REQUIRED, *args)

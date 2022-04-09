@@ -9,6 +9,7 @@ import aiofiles.os
 import jwt
 import bcrypt
 import hashlib
+import pyotp
 
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
@@ -28,11 +29,15 @@ from ...helpers.invite import validate_invite
 from ...helpers.admin import create_admin
 from ...errors import (
     LoginError, FormMissingFields, PayloadDecodeError,
-    InvalidInvite
+    InvalidInvite, OptError, OptSetupRequired
 )
+from ...limiter import LIMITER
+
+from ..decorators import validate_admin
 
 
 class AdminLogin(HTTPEndpoint):
+    @LIMITER.limit("10/minute")
     async def post(self, request: Request) -> JSONResponse:
         try:
             json = await request.json()
@@ -56,6 +61,9 @@ class AdminLogin(HTTPEndpoint):
 
             _id = await create_admin(json["username"], json["password"])
         else:
+            if "otpCode" not in json or not isinstance(json["otpCode"], str):
+                raise FormMissingFields("`otpCode` is a required field")
+
             record = await Sessions.mongo.admin.find_one({
                 "username": json["username"]
             })
@@ -68,6 +76,13 @@ class AdminLogin(HTTPEndpoint):
             ):
                 raise LoginError()
 
+            if record["otp"] is None:
+                raise OptSetupRequired()
+
+            otp = pyotp.TOTP(record["otp"])
+            if not otp.verify(json["otpCode"]):
+                raise OptError()
+
             _id = record["_id"]
 
         response = JSONResponse({
@@ -76,7 +91,7 @@ class AdminLogin(HTTPEndpoint):
         response.set_cookie(
             "jwt-token",
             jwt.encode({
-                "ext": (
+                "exp": (
                     datetime.now() + timedelta(days=JWT_EXPIRES_DAYS)
                 ).timestamp(),
                 "sub": _id
@@ -87,8 +102,8 @@ class AdminLogin(HTTPEndpoint):
         return response
 
 
-# ToDo auth admin
 class AdminCapyRemaining(HTTPEndpoint):
+    @validate_admin(require_otp=True)
     async def get(self, request: Request) -> JSONResponse:
         return JSONResponse({
             "remaining": await Sessions.mongo.capybara.count_documents({
@@ -101,8 +116,8 @@ class AdminCapyRemaining(HTTPEndpoint):
         })
 
 
-# ToDo auth admin
 class AdminApprovalResource(HTTPEndpoint):
+    @validate_admin(require_otp=True)
     async def get(self, request: Request) -> JSONResponse:
         to_approve = []
 
@@ -116,8 +131,8 @@ class AdminApprovalResource(HTTPEndpoint):
         return JSONResponse(to_approve)
 
 
-# ToDo auth admin
 class AdminApproveResource(HTTPEndpoint):
+    @validate_admin(require_otp=True)
     async def post(self, request: Request) -> Response:
         # Add logic to email if exists & remove from db.
         record = await get_capy(request.path_params["_id"])

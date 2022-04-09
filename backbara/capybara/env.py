@@ -37,7 +37,7 @@ except Exception:
 
 
 if not os.path.exists(JWT_SECRET_PATH):
-    JWT_SECRET = secrets.token_urlsafe(64)
+    JWT_SECRET = secrets.token_urlsafe(32)
     with open(JWT_SECRET_PATH, "w+") as f_:
         f_.write(JWT_SECRET)
 else:
@@ -45,4 +45,4 @@ else:
         JWT_SECRET = f_.read()
 
 
-assert len(JWT_SECRET) == 64
+assert len(JWT_SECRET) == 86

@@ -35,7 +35,8 @@ async def create_admin(username: str, password: str) -> str:
         "password": bcrypt.hashpw(
             hashlib.sha256(password.encode()).digest(),
             bcrypt.gensalt(16)
-        )
+        ),
+        "otp": None
     })
 
     return _id

@@ -4,7 +4,7 @@ from starlette.responses import JSONResponse
 from ..errors import CapyError
 
 
-async def capy_error_handle(request: Request, exc: CapyError):
+def capy_error_handle(request: Request, exc: CapyError) -> JSONResponse:
     return JSONResponse({
         "error": str(exc),
         "code": exc.error
