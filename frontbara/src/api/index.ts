@@ -134,3 +134,20 @@ export async function generateInvite(): Promise<iAdminInvite> {
         throw resp
     return await resp.json()
 }
+
+export async function getInvites(): Promise<string[]> {
+    const resp = await fetch(`${backendUrl}/api/admin/invite`, {
+        method: 'GET'
+    })
+    if (resp.status !== 200)
+        throw resp
+    return await resp.json()
+}
+
+export async function deleteInvite(inviteId: string) {
+    const resp = await fetch(`${backendUrl}/api/admin/invite?inviteId=${inviteId}`, {
+        method: 'DELETE'
+    })
+    if (resp.status !== 200)
+        throw resp
+}

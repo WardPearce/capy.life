@@ -28,6 +28,19 @@ async def generate_invite() -> str:
     return f"{_id}/{password}"
 
 
+async def delete_invite(id_: str) -> None:
+    """Used to delete a invite.
+
+    Parameters
+    ----------
+    id_ : str
+    """
+
+    await Sessions.mongo.invite.delete_many({
+        "_id": id_
+    })
+
+
 async def validate_invite(code: str) -> None:
     """Validate a invite code.
 

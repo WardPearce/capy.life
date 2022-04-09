@@ -25,7 +25,7 @@ from ...env import (
     JWT_EXPIRES_DAYS
 )
 from ...helpers.capy import get_capy
-from ...helpers.invite import validate_invite, generate_invite
+from ...helpers.invite import validate_invite, generate_invite, delete_invite
 from ...helpers.admin import create_admin
 from ...errors import (
     LoginError, FormMissingFields, PayloadDecodeError,
@@ -108,6 +108,8 @@ class AdminLogin(HTTPEndpoint):
             _id = await create_admin(json["username"], json["password"])
             create_invites = False
             otp_completed = False
+
+            await delete_invite(json["inviteCode"])
         else:
             record = await Sessions.mongo.admin.find_one({
                 "username": json["username"]
@@ -164,7 +166,10 @@ class AdminLogin(HTTPEndpoint):
 class AdminInvites(HTTPEndpoint):
     @validate_admin(require_otp=True, can_create_invites=True)
     async def get(self, request: Request, admin: AdminModel) -> JSONResponse:
-        pass
+        invites = []
+        async for record in Sessions.mongo.invite.find({}):
+            invites.append(record["_id"])
+        return JSONResponse(invites)
 
     @validate_admin(require_otp=True, can_create_invites=True)
     async def post(self, request: Request, admin: AdminModel) -> JSONResponse:
@@ -173,8 +178,13 @@ class AdminInvites(HTTPEndpoint):
         })
 
     @validate_admin(require_otp=True, can_create_invites=True)
-    async def delete(self, request: Request, admin: AdminModel) -> JSONResponse:
-        pass
+    async def delete(self, request: Request, admin: AdminModel) -> Response:
+        if "inviteId" not in request.query_params:
+            return Response(status_code=400)
+
+        await delete_invite(request.query_params["inviteId"])
+
+        return Response()
 
 
 class AdminCapyRemaining(HTTPEndpoint):

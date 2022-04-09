@@ -3,7 +3,7 @@
 
     import {
         getToApprove, AdminCapy, getCapyCount,
-        logout, generateInvite
+        logout, generateInvite, getInvites, deleteInvite
     } from '../api'
     import type { iCapy, iCapyCount } from '../api/interfaces'
     import { adminStore } from '../stores'
@@ -21,11 +21,27 @@
     })
 
     let canInvite = false
-    adminStore.subscribe(value => canInvite = value.canInvite)
+    let invites = []
+    adminStore.subscribe(async value => {
+        canInvite = value.canInvite
+        if (canInvite) {
+            invites = await getInvites()
+        }
+    })
 
     let inviteCode = ''
     async function createInvite() {
         inviteCode = (await generateInvite()).inviteCode
+        invites.push(inviteCode.split('/', 1))
+        invites = invites
+    }
+
+    async function removeInvite(inviteId: string) {
+        inviteCode = ''
+        try {
+            await deleteInvite(inviteId)
+        } catch (error) {}
+        invites = invites.filter(id => id !== inviteId)
     }
 
     function removeIdFromList(capyId: string) {
@@ -64,6 +80,18 @@
 
 {#if canInvite}
     <h2>Invitation codes</h2>
+    {#if invites.length === 0 }
+        <p style="margin-bottom: .5em;">No invites</p>
+    {:else}
+        <ul class="approval">
+            {#each invites as code }
+                <li><div class="card" style="display: flex;justify-content: space-between;align-items: center;">
+                    <p style="display: inline;">{ code }</p>
+                    <button class="deny" on:click={async () => await removeInvite(code)}>Delete</button>
+                </div></li>
+            {/each}
+        </ul>
+    {/if}
     <form on:submit|preventDefault={createInvite}>
         {#if inviteCode !== ''}
             <input bind:value={inviteCode} type="text" disabled>
