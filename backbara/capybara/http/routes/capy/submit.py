@@ -24,10 +24,14 @@ from names import get_first_name
 from os import path
 
 from ....resources import Sessions
-from ....env import NANO_ID_LEN, SAVE_PATH, SUPPORTED_IMAGE_TYPES
+from ....env import (
+    NANO_ID_LEN, SAVE_PATH, SUPPORTED_IMAGE_TYPES,
+    MAX_FILE_SIZE_BYTES
+)
 from ....limiter import LIMITER
 from ....errors import (
-    FormMissingFields, SimilarImageError, FileTypeNotSupported
+    FormMissingFields, SimilarImageError, FileTypeNotSupported,
+    FileTooLarge
 )
 
 from ...decorators import require_captcha
@@ -62,7 +66,13 @@ class SubmitCapyResource(HTTPEndpoint):
         if image.content_type not in SUPPORTED_IMAGE_TYPES:
             raise FileTypeNotSupported()
 
-        image_bytes = await image.read()
+        # Read the max size & 24 extra bytes
+        # if the image bytes equals the max size plus the extra bytes
+        # its too large.
+        read_size = MAX_FILE_SIZE_BYTES + 24
+        image_bytes = await image.read(read_size)
+        if len(image_bytes) == read_size:
+            raise FileTooLarge()
 
         p_row, p_col = dhash.dhash_row_col(Image.open(BytesIO(image_bytes)))
         phash = dhash.format_hex(p_row, p_col)

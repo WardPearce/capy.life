@@ -35,6 +35,8 @@ SUPPORTED_IMAGE_TYPES = os.getenv(
     "SUPPORTED_IMAGE_TYPES", "image/webp,image/jpeg,image/jpg,image/png"
 ).split(",")
 
+MAX_FILE_SIZE_BYTES = int(os.getenv("MAX_FILE_SIZE_BYTES", 5243000))
+
 
 try:
     os.mkdir(SAVE_PATH)

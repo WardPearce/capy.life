@@ -17,6 +17,7 @@ class ErrorCode(Enum):
     OTP_ERROR = 1010
     OTP_SETUP_REQUIRED = 1011
     FILE_TYPE_NOT_SUPPORT = 1012
+    FILE_TOO_LARGE = 1013
 
 
 class CapyError(Exception):
@@ -91,17 +92,23 @@ class UsernameTaken(CapyError):
 
 class OptError(CapyError):
     def __init__(self, msg: str = "OTP is not correct",
-                 status: int = 500, *args: object) -> None:
+                 status: int = 401, *args: object) -> None:
         super().__init__(msg, status, ErrorCode.OTP_ERROR, *args)
 
 
 class OptSetupRequired(CapyError):
     def __init__(self, msg: str = "OTP setup is required",
-                 status: int = 500, *args: object) -> None:
+                 status: int = 400, *args: object) -> None:
         super().__init__(msg, status, ErrorCode.OTP_SETUP_REQUIRED, *args)
 
 
 class FileTypeNotSupported(CapyError):
-    def __init__(self, msg: str = f"File type not supported, only {','.join(SUPPORTED_IMAGE_TYPES)} is supported.",  # noqa: E501
-                 status: int = 500, *args: object) -> None:
+    def __init__(self, msg: str = f"File type not supported, only {','.join(SUPPORTED_IMAGE_TYPES)} is supported",  # noqa: E501
+                 status: int = 400, *args: object) -> None:
         super().__init__(msg, status, ErrorCode.FILE_TYPE_NOT_SUPPORT, *args)
+
+
+class FileTooLarge(CapyError):
+    def __init__(self, msg: str = "File is too large",
+                 status: int = 400, *args: object) -> None:
+        super().__init__(msg, status, ErrorCode.FILE_TOO_LARGE, *args)
