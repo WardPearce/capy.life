@@ -5,7 +5,6 @@ import bcrypt
 from datetime import datetime, timedelta
 
 from ..resources import Sessions
-from ..env import NANO_ID_LEN
 from ..errors import InvalidInvite
 
 
@@ -17,8 +16,8 @@ async def generate_invite() -> str:
     str
     """
 
-    _id = nanoid.generate(size=NANO_ID_LEN)
-    password = secrets.token_urlsafe(20)
+    _id = nanoid.generate(size=12)
+    password = secrets.token_urlsafe(24)
 
     await Sessions.mongo.invite.insert_one({
         "_id": _id,
