@@ -32,6 +32,7 @@ from ...errors import (
     InvalidInvite, OptError, OptSetupRequired
 )
 from ...limiter import LIMITER
+from ...modals import AdminModel
 
 from ..decorators import validate_admin
 
@@ -39,21 +40,21 @@ from ..decorators import validate_admin
 class AdminOtp(HTTPEndpoint):
     @validate_admin(require_otp=False)
     @LIMITER.limit("10/minute")
-    async def get(self, request: Request) -> JSONResponse:
+    async def get(self, request: Request, admin: AdminModel) -> JSONResponse:
         otp_secret = pyotp.random_base32()
         await Sessions.mongo.admin.update_one({
-            "_id": request.state.admin_id,
+            "_id": admin._id,
         }, {"$set": {"otp": otp_secret, "otp_completed": False}})
 
         return JSONResponse({
             "provisioningUri": pyotp.TOTP(otp_secret).provisioning_uri(
-                name=request.state.admin_name, issuer_name="capy.life"
+                name=admin.username, issuer_name="capy.life"
             )
         })
 
     @validate_admin(require_otp=False)
     @LIMITER.limit("10/minute")
-    async def post(self, request: Request) -> Response:
+    async def post(self, request: Request, admin: AdminModel) -> Response:
         try:
             json = await request.json()
         except JSONDecodeError:
@@ -63,7 +64,7 @@ class AdminOtp(HTTPEndpoint):
             raise FormMissingFields("`otpCode` is a required field")
 
         record = await Sessions.mongo.admin.find_one({
-            "_id": request.state.admin_id
+            "_id": admin._id
         })
         if not record:
             raise LoginError()  # should never happen
@@ -75,7 +76,7 @@ class AdminOtp(HTTPEndpoint):
             raise OptError()
 
         await Sessions.mongo.admin.update_one({
-            "_id": request.state.admin_id,
+            "_id": record["_id"],
         }, {"$set": {"otp_completed": True}})
 
         return Response()
@@ -162,7 +163,7 @@ class AdminLogin(HTTPEndpoint):
 
 class AdminCapyRemaining(HTTPEndpoint):
     @validate_admin(require_otp=True)
-    async def get(self, request: Request) -> JSONResponse:
+    async def get(self, request: Request, admin: AdminModel) -> JSONResponse:
         return JSONResponse({
             "remaining": await Sessions.mongo.capybara.count_documents({
                 "used": None,
@@ -176,7 +177,7 @@ class AdminCapyRemaining(HTTPEndpoint):
 
 class AdminApprovalResource(HTTPEndpoint):
     @validate_admin(require_otp=True)
-    async def get(self, request: Request) -> JSONResponse:
+    async def get(self, request: Request, admin: AdminModel) -> JSONResponse:
         to_approve = []
 
         async for record in Sessions.mongo.capybara.find({"approved": False}):
@@ -191,7 +192,7 @@ class AdminApprovalResource(HTTPEndpoint):
 
 class AdminApproveResource(HTTPEndpoint):
     @validate_admin(require_otp=True)
-    async def post(self, request: Request) -> Response:
+    async def post(self, request: Request, admin: AdminModel) -> Response:
         # Add logic to email if exists & remove from db.
         record = await get_capy(request.path_params["_id"])
         await Sessions.mongo.capybara.update_one({
@@ -200,7 +201,7 @@ class AdminApproveResource(HTTPEndpoint):
 
         return Response()
 
-    async def delete(self, request: Request) -> Response:
+    async def delete(self, request: Request, admin: AdminModel) -> Response:
         # Add logic to email if exists & remove from db.
         record = await get_capy(request.path_params["_id"])
         await Sessions.mongo.capybara.delete_many({

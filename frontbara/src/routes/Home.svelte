@@ -34,7 +34,7 @@
         errorMsg = ''
         successful = ''
         try {
-            await submitCapy(captcha.captchaId, captchaValue, capyDetails)
+            await submitCapy(captcha?.captchaId, captchaValue, capyDetails)
             capyDetails = {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore

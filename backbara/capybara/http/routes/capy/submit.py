@@ -43,7 +43,8 @@ dhash.force_pil()
 class SubmitCapyResource(HTTPEndpoint):
     @LIMITER.limit("20/minute")
     @require_captcha
-    async def post(self, request: Request) -> JSONResponse:
+    async def post(self, request: Request,
+                   captcha_admin_bypass: bool) -> JSONResponse:
         form = await request.form()
 
         if ("file" not in form or not
@@ -89,7 +90,8 @@ class SubmitCapyResource(HTTPEndpoint):
             "_id": _id,
             "created": datetime.now(),
             "used": None,
-            "approved": False,
+            # If captcha was bypassed by admin then auto approve.
+            "approved": captcha_admin_bypass,
             "name": name,
             "phash": phash,
             "email": email,

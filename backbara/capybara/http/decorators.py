@@ -10,20 +10,39 @@ import jwt
 from functools import wraps
 from typing import Callable
 from starlette.requests import Request
-from starlette.responses import JSONResponse
 
 from ..errors import CaptchaError, OptSetupRequired, LoginError, OptError
 from ..helpers.captcha import validate_captcha
+from ..helpers.jwt_ import remove_jwt_response
 from ..env import JWT_SECRET
 from ..resources import Sessions
-
-from .errors import capy_error_handle
+from ..modals import AdminModel
 
 
 def require_captcha(func: Callable) -> Callable:
     @wraps(func)
     async def _validate(*args, **kwargs) -> Callable:
         request: Request = args[1]
+
+        # Admin bypass captcha
+        if "jwt-token" in request.cookies:
+            try:
+                payload = jwt.decode(
+                    request.cookies["jwt-token"],
+                    JWT_SECRET,
+                    algorithms=["HS256"]
+                )
+            except jwt.InvalidTokenError:
+                pass
+            else:
+                if await Sessions.mongo.admin.count_documents({
+                    "_id": payload["sub"]
+                }) > 0:
+                    return await func(
+                        *args, **kwargs,
+                        captcha_admin_bypass=True
+                    )
+
         if ("captchaId" not in request.query_params or
                 "captchaCode" not in request.query_params):
             raise CaptchaError()
@@ -33,15 +52,11 @@ def require_captcha(func: Callable) -> Callable:
             request.query_params["captchaCode"]
         )
 
-        return await func(*args, **kwargs)
+        request.state.admin_bypass = False
+
+        return await func(*args, **kwargs, captcha_admin_bypass=False)
 
     return _validate
-
-
-def __remove_jwt_response(request: Request) -> JSONResponse:
-    response = capy_error_handle(request, LoginError())
-    response.delete_cookie("jwt-token", httponly=True, samesite="strict")
-    return response
 
 
 def validate_admin(require_otp: bool = True) -> Callable:
@@ -60,13 +75,13 @@ def validate_admin(require_otp: bool = True) -> Callable:
                     algorithms=["HS256"]
                 )
             except jwt.InvalidTokenError:
-                return __remove_jwt_response(request)
+                return remove_jwt_response(request)
 
             record = await Sessions.mongo.admin.find_one({
                 "_id": payload["sub"]
             })
             if not record:
-                return __remove_jwt_response(request)
+                return remove_jwt_response(request)
 
             if require_otp:
                 if not record["otp_completed"]:
@@ -75,10 +90,10 @@ def validate_admin(require_otp: bool = True) -> Callable:
                 if record["otp_completed"]:
                     raise OptError()
 
-            request.state.admin_id = record["_id"]
-            request.state.admin_name = record["username"]
-
-            return await func(*args, **kwargs)
+            return await func(
+                *args, **kwargs,
+                admin=AdminModel(**record)
+            )
 
         return _validate
 
