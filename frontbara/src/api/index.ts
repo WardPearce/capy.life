@@ -1,4 +1,7 @@
-import type { iCaptcha, iCapySubmit, iCapy, iCapyCount } from './interfaces'
+import type {
+    iCaptcha, iCapySubmit, iCapy, iCapyCount,
+    iAdminLogin, iAdminDetails, iAdminOtp
+} from './interfaces'
 
 const backendUrl: string = import.meta.env.VITE_URL_PROXIED as string
 
@@ -68,4 +71,57 @@ export class AdminCapy {
         if (resp.status !== 200)
             throw resp
     }
+}
+
+
+export async function login(details: iAdminDetails): Promise<iAdminLogin> {
+    let payload = {
+        username: details.username,
+        password: details.password
+    }
+
+    if (details.otpCode)
+        payload['otpCode'] = details.otpCode
+
+    if (details.inviteCode)
+        payload['inviteCode'] = details.inviteCode
+
+    const resp = await fetch(`${backendUrl}/api/admin/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    if (resp.status !== 200)
+        throw resp
+    return await resp.json()
+}
+
+export async function logout() {
+    await fetch(`${backendUrl}/api/admin/login`, {
+        method: 'DELETE'
+    })
+}
+
+export async function getOtpQR(): Promise<iAdminOtp> {
+    const resp = await fetch(`${backendUrl}/api/admin/login/otp`, {
+        method: 'GET'
+    })
+    if (resp.status !== 200)
+        throw resp
+    return await resp.json()
+}
+
+export async function setOtpCode(otpCode: string) {
+    const resp = await fetch(`${backendUrl}/api/admin/login/otp`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({otpCode: otpCode})
+    })
+    if (resp.status !== 200)
+        throw resp
+    return await resp.json()
 }

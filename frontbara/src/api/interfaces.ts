@@ -20,3 +20,19 @@ export interface iCapyCount {
     remaining: number
     total: number
 }
+
+export interface iAdminLogin {
+    createInvites: boolean
+    otpCompleted: boolean
+}
+
+export interface iAdminOtp {
+    provisioningUri: string
+}
+
+export interface iAdminDetails {
+    username: string
+    password: string
+    otpCode?: string
+    inviteCode?: string
+}

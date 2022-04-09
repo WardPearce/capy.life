@@ -1,9 +1,11 @@
 <script lang="ts">
+    import { Link } from 'svelte-routing'
     import Fa from 'svelte-fa'
     import { faArrowRotateForward } from '@fortawesome/free-solid-svg-icons'
 
     import { getCaptcha, submitCapy, getTodayCapy } from '../api'
     import type { iCaptcha, iCapySubmit, iCapy } from '../api/interfaces'
+    import { adminStore } from '../stores'
 
     let page = 0
 
@@ -17,7 +19,13 @@
         captcha = await getCaptcha()
     }
 
-    setCaptcha()
+    let isAdmin = false
+    adminStore.subscribe(value => {
+        isAdmin = value.is
+        if (!isAdmin) {
+            setCaptcha()
+        }
+    })
 
     let errorMsg = ''
     let successful = ''
@@ -39,6 +47,10 @@
         await setCaptcha()
     }
 </script>
+
+{#if isAdmin}
+    <Link to="/admin"><button>Admin portal</button></Link>
+{/if}
 
 <h1>Capybara of the day!</h1>
 <img src={todayCapy.image} alt="capy">
@@ -62,18 +74,24 @@
     {/if}
     <label for="capy-name">Capybara name <span style="font-size: .7em;">(optional)</span></label>
     <input bind:value={capyDetails.name} type="text" maxlength="30" name="capy-name" placeholder="e.g. greg">
-    <label for="capy-email">Email <span style="font-size: .7em;">(optional)</span></label>
-    <input bind:value={capyDetails.email} type="email" name="capy-email" placeholder="e.g. example@pm.me">
+
+    {#if !isAdmin}
+        <label for="capy-email">Email <span style="font-size: .7em;">(optional)</span></label>
+        <input bind:value={capyDetails.email} type="email" name="capy-email" placeholder="e.g. example@pm.me">
+    {/if}
+
     <label for="capy-file">Image</label>
     <input bind:files={capyDetails.image} required type="file" name="capy-file" accept="image/png,image/gif,image/jpeg,image/jpg">
-    <div>
-        <label for="capy-captcha">Capytcha</label>
-        <img src={captcha.imageB64} alt="Captcha">
-        <button type="button" on:click={setCaptcha}>
-            <Fa icon={faArrowRotateForward} />
-        </button>
-        <input bind:value={captchaValue} required type="text" name="capy-captcha" placeholder="beep boop">
-    </div>
+    {#if !isAdmin}
+        <div>
+            <label for="capy-captcha">Capytcha</label>
+            <img src={captcha.imageB64} alt="Captcha">
+            <button type="button" on:click={setCaptcha}>
+                <Fa icon={faArrowRotateForward} />
+            </button>
+            <input bind:value={captchaValue} required type="text" name="capy-captcha" placeholder="beep boop">
+        </div>
+    {/if}
     <button type="submit">Submit</button>
 </form>
 

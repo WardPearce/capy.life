@@ -1,11 +1,17 @@
 <script lang="ts">
-    import { Link } from 'svelte-routing'
 
-    import { getToApprove, AdminCapy, getCapyCount } from '../api'
+    import { Link, navigate } from 'svelte-routing'
+
+    import { getToApprove, AdminCapy, getCapyCount, logout } from '../api'
     import type { iCapy, iCapyCount } from '../api/interfaces'
+    import { adminStore } from '../stores'
 
     let capyCount: iCapyCount  = {} as iCapyCount
-    getCapyCount().then(resp => capyCount = resp)
+    getCapyCount().then(resp => capyCount = resp).catch(error => {
+        if (error.status === 401) {
+            navigate('/login')
+        }
+    })
 
     let toApprove: iCapy[] = []
     getToApprove().then(resp => {
@@ -29,9 +35,22 @@
 
         await (new AdminCapy(capyId)).approve()
     }
+
+    async function logMeOut() {
+        await logout()
+        adminStore.set({
+            is: false,
+            canInvite: false
+        })
+        navigate('/')
+    }
 </script>
 
-<Link to="/">Home</Link>
+<Link to="/">
+    <button>Home</button>
+</Link>
+
+<button on:click={logMeOut}>Logout</button>
 
 <p style="margin-top:1em;">Total Capybaras left: {capyCount.remaining}/{capyCount.total} ({ capyCount.remaining } days covered)</p>
 

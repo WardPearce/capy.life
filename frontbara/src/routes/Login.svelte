@@ -1,0 +1,79 @@
+<script lang="ts">
+    import { navigate } from 'svelte-routing'
+
+    import type { iAdminDetails } from '../api/interfaces'
+    import { login } from '../api'
+    import { adminStore } from '../stores'
+
+    let mode = 'login'
+    let errorMsg = ''
+    let otpStage = false
+
+    let loginDetails: iAdminDetails = {
+        username: '',
+        password: '',
+        otpCode: 'blank'
+    }
+
+    async function attemptLogin() {
+        try {
+            const adminLogin = await login(loginDetails)
+            adminStore.set({
+                is: true,
+                canInvite: adminLogin.createInvites
+            })
+            if (!adminLogin.otpCompleted) {
+                navigate('/otp')
+            } else {
+                navigate('/admin')
+            }
+        } catch (error) {
+            const errorJson = await error.json()
+            if (errorJson.code === 1011) {
+                navigate('/otp')
+                return
+            } else if (errorJson.code === 1010) {
+                loginDetails.otpCode = ''
+                otpStage = true
+                return
+            }
+            errorMsg = errorJson.error
+        }
+    }
+
+</script>
+
+<h2>Login required</h2>
+<form on:submit|preventDefault={attemptLogin}>
+    {#if errorMsg !== ''}
+        <div class="error">
+            <p>{ errorMsg }.</p>
+        </div>
+    {/if}
+    {#if !otpStage}
+        <label for="username">Username</label>
+        <input bind:value={loginDetails.username} type="text" name="username" required placeholder="...">
+
+        <label for="password">Password</label>
+        <input bind:value={loginDetails.password} type="password" name="password" required placeholder="...">
+
+        {#if mode === 'register'}
+            <label for="invite">Invite code</label>
+            <input bind:value={loginDetails.inviteCode} type="password" name="invite" required placeholder="...">
+        {/if}
+    {:else}
+        <label for="otp">Two-factor code</label>
+        <input bind:value={loginDetails.otpCode} placeholder="..." type="text" required name="otp">
+    {/if}
+    <button type="submit" style="text-transform: capitalize;">{ mode }</button>
+    <button
+        type="button"
+        style="background-color: transparent;text-transform: capitalize;text-decoration: underline;"
+        on:click={() => mode === 'login' ? mode = 'register' : mode = 'login'}>
+        {#if mode === 'login'}
+            Register
+        {:else}
+            Login
+        {/if}
+    </button>
+</form>

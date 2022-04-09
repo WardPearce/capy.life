@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "qrcode": "^1.5.0",
+    "svelte-local-storage-store": "^0.2.6",
     "svelte-routing": "^1.6.0"
   }
 }

@@ -106,10 +106,8 @@ class AdminLogin(HTTPEndpoint):
 
             _id = await create_admin(json["username"], json["password"])
             create_invites = False
+            otp_completed = False
         else:
-            if "otpCode" not in json or not isinstance(json["otpCode"], str):
-                raise FormMissingFields("`otpCode` is a required field")
-
             record = await Sessions.mongo.admin.find_one({
                 "username": json["username"]
             })
@@ -117,23 +115,28 @@ class AdminLogin(HTTPEndpoint):
                 raise LoginError()
 
             if not bcrypt.checkpw(
-                hashlib.sha256(json["password"]).digest(),
+                hashlib.sha256(json["password"].encode()).digest(),
                 record["password"]
             ):
                 raise LoginError()
 
-            if not record["otp_completed"]:
-                raise OptSetupRequired()
+            if record["otp_completed"]:
+                if ("otpCode" not in json or
+                        not isinstance(json["otpCode"], str)):
+                    raise FormMissingFields("`otpCode` is a required field")
 
-            otp = pyotp.TOTP(record["otp"])
-            if not otp.verify(json["otpCode"]):
-                raise OptError()
+                otp = pyotp.TOTP(record["otp"])
+                if not otp.verify(json["otpCode"]):
+                    raise OptError()
+
+            otp_completed = record["otp_completed"]
 
             _id = record["_id"]
             create_invites = record["create_invites"]
 
         response = JSONResponse({
-            "createInvites": create_invites
+            "createInvites": create_invites,
+            "otpCompleted": otp_completed
         })
         response.set_cookie(
             "jwt-token",
@@ -146,6 +149,14 @@ class AdminLogin(HTTPEndpoint):
             httponly=True, samesite="strict"
         )
 
+        return response
+
+    async def delete(self, request: Request) -> Response:
+        response = Response()
+        response.delete_cookie(
+            "jwt-token",
+            httponly=True, samesite="strict"
+        )
         return response
 
 

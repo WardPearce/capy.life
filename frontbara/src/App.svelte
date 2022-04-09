@@ -3,6 +3,8 @@
 
     import Home from './routes/Home.svelte'
     import Admin from './routes/Admin.svelte'
+    import Login from './routes/Login.svelte'
+    import Otp from './routes/Otp.svelte'
 </script>
 
 <main>
@@ -10,6 +12,8 @@
         <Router>
               <Route path="/" component={Home} />
               <Route path="/admin" component={Admin} />
+              <Route path="/login" component={Login} />
+              <Route path="/otp" component={Otp} />
           </Router>
     </section>
     <footer>
