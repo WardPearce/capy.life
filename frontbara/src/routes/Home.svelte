@@ -1,11 +1,10 @@
 <script lang="ts">
     import { Link } from 'svelte-routing'
-    import Fa from 'svelte-fa'
-    import { faArrowRotateForward } from '@fortawesome/free-solid-svg-icons'
 
-    import { getCaptcha, submitCapy, getTodayCapy } from '../api'
+    import { submitCapy, getTodayCapy } from '../api'
     import type { iCaptcha, iCapySubmit, iCapy } from '../api/interfaces'
     import { adminStore } from '../stores'
+    import Captcha from '../components/Captcha.svelte'
 
     let page = 0
 
@@ -13,18 +12,12 @@
     getTodayCapy().then(resp => todayCapy = resp)
 
     let captcha: iCaptcha = {} as iCaptcha
-    let captchaValue = ''
-    async function setCaptcha() {
-        captchaValue = ''
-        captcha = await getCaptcha()
-    }
+    let captchaCode = ''
+    let captchaCompoponet
 
     let isAdmin = false
     adminStore.subscribe(value => {
         isAdmin = value.is
-        if (!isAdmin) {
-            setCaptcha()
-        }
     })
 
     let errorMsg = ''
@@ -34,7 +27,7 @@
         errorMsg = ''
         successful = ''
         try {
-            await submitCapy(captcha?.captchaId, captchaValue, capyDetails)
+            await submitCapy(captcha?.captchaId, captchaCode, capyDetails)
             capyDetails = {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
@@ -51,7 +44,7 @@
             } else
                 errorMsg = (await error.json()).error
         }
-        await setCaptcha()
+        await captchaCompoponet.setCaptcha()
     }
 </script>
 
@@ -92,14 +85,7 @@
     <label for="capy-file">Image</label>
     <input bind:files={capyDetails.image} required type="file" name="capy-file" accept="image/png,image/gif,image/jpeg,image/jpg">
     {#if !isAdmin}
-        <div>
-            <label for="capy-captcha">Capytcha</label>
-            <img src={captcha.imageB64} alt="Captcha">
-            <button type="button" on:click={setCaptcha}>
-                <Fa icon={faArrowRotateForward} />
-            </button>
-            <input bind:value={captchaValue} required type="text" name="capy-captcha" placeholder="beep boop">
-        </div>
+        <Captcha bind:captchaCode bind:captcha bind:this={captchaCompoponet} />
     {/if}
     <button type="submit">Submit</button>
 </form>
