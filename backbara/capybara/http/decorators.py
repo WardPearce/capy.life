@@ -38,7 +38,7 @@ def require_captcha(func: Callable) -> Callable:
     return _validate
 
 
-def __remove_jwt_reponse(request: Request) -> JSONResponse:
+def __remove_jwt_response(request: Request) -> JSONResponse:
     response = capy_error_handle(request, LoginError())
     response.delete_cookie("jwt-token", httponly=True, samesite="strict")
     return response
@@ -60,13 +60,13 @@ def validate_admin(require_otp: bool = True) -> Callable:
                     algorithms=["HS256"]
                 )
             except jwt.InvalidTokenError:
-                return __remove_jwt_reponse(request)
+                return __remove_jwt_response(request)
 
             record = await Sessions.mongo.admin.find_one({
                 "_id": payload["sub"]
             })
             if not record:
-                return __remove_jwt_reponse(request)
+                return __remove_jwt_response(request)
 
             if require_otp:
                 if not record["otp_completed"]:
