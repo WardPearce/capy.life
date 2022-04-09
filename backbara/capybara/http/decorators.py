@@ -94,6 +94,8 @@ def validate_admin(require_otp: bool = True,
                 if not record["otp_completed"]:
                     raise OptSetupRequired()
             else:
+                # Don't allow non OTP routes
+                # if OTP completed
                 if record["otp_completed"]:
                     raise OptError()
 

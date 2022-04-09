@@ -43,12 +43,10 @@ async def on_start() -> None:
     except UsernameTaken:
         pass
     else:
-        LOGGER.info((
-            "Your root login\n"
-            f"Username: {ROOT_ADMIN_NAME}\n"
-            f"Password: {password}",
-            "\nOnce you login, you'll be prompted to setup 2 factor."
-        ))
+        LOGGER.info(f"""Your root login
+Username: {ROOT_ADMIN_NAME}
+Password: {password}
+Once you login, you'll be prompted to setup 2 factor.""")
 
 
 cors_origins = [URL_PROXIED.lower()]

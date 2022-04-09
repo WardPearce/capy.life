@@ -21,7 +21,7 @@ async def generate_invite() -> str:
 
     await Sessions.mongo.invite.insert_one({
         "_id": _id,
-        "password": bcrypt.hashpw(password.encode(), bcrypt.gensalt(16)),
+        "password": bcrypt.hashpw(password.encode(), bcrypt.gensalt()),
         "expires": datetime.now() + timedelta(hours=36)
     })
 

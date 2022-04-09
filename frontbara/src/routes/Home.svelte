@@ -42,7 +42,14 @@
             }
             successful = 'Capybara has been submitted for approval!'
         } catch (error) {
-            errorMsg = (await error.json()).error
+            if (isAdmin && error.code === 1001) {
+                adminStore.set({
+                    is: false,
+                    canInvite: false
+                })
+                errorMsg = 'Admin login has expired, please login again.'
+            } else
+                errorMsg = (await error.json()).error
         }
         await setCaptcha()
     }
