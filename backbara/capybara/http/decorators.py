@@ -69,11 +69,14 @@ def validate_admin(require_otp: bool = True) -> Callable:
                 return __remove_jwt_reponse(request)
 
             if require_otp:
-                if record["otp"] is None:
+                if not record["otp_completed"]:
                     raise OptSetupRequired()
             else:
-                if record["otp"] is not None:
+                if record["otp_completed"]:
                     raise OptError()
+
+            request.state.admin_id = record["_id"]
+            request.state.admin_name = record["username"]
 
             return await func(*args, **kwargs)
 

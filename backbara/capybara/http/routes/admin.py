@@ -36,6 +36,53 @@ from ...limiter import LIMITER
 from ..decorators import validate_admin
 
 
+class AdminOtp(HTTPEndpoint):
+    @validate_admin(require_otp=False)
+    @LIMITER.limit("10/minute")
+    async def get(self, request: Request) -> JSONResponse:
+        otp_secret = pyotp.random_base32()
+        await Sessions.mongo.admin.update_one({
+            "_id": request.state.admin_id,
+        }, {"$set": {"otp": otp_secret, "otp_completed": False}})
+
+        return JSONResponse({
+            "provisioningUri": pyotp.TOTP(otp_secret).provisioning_uri(
+                name=request.state.admin_name, issuer_name="capy.life"
+            )
+        })
+
+    @validate_admin(require_otp=False)
+    @LIMITER.limit("10/minute")
+    async def post(self, request: Request) -> JSONResponse:
+        try:
+            json = await request.json()
+        except JSONDecodeError:
+            raise PayloadDecodeError()
+
+        if "otpCode" not in json or not isinstance(json["otpCode"], str):
+            raise FormMissingFields("`otpCode` is a required field")
+
+        record = await Sessions.mongo.admin.find_one({
+            "_id": request.state.admin_id
+        })
+        if not record:
+            raise LoginError()  # should never happen
+
+        if record["otp"] is None:
+            raise OptSetupRequired()
+
+        if not pyotp.TOTP(record["otp"]).verify(json["otpCode"]):
+            raise OptError()
+
+        await Sessions.mongo.admin.update_one({
+            "_id": request.state.admin_id,
+        }, {"$set": {"otp_completed": True}})
+
+        return JSONResponse({
+            "success": True
+        })
+
+
 class AdminLogin(HTTPEndpoint):
     @LIMITER.limit("10/minute")
     async def post(self, request: Request) -> JSONResponse:
@@ -76,7 +123,7 @@ class AdminLogin(HTTPEndpoint):
             ):
                 raise LoginError()
 
-            if record["otp"] is None:
+            if not record["otp_completed"]:
                 raise OptSetupRequired()
 
             otp = pyotp.TOTP(record["otp"])

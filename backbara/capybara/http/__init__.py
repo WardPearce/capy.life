@@ -12,7 +12,8 @@ from slowapi.errors import RateLimitExceeded
 
 from .routes.captcha import CaptchaResource
 from .routes.admin import (
-    AdminApprovalResource, AdminApproveResource, AdminCapyRemaining
+    AdminApprovalResource, AdminApproveResource, AdminCapyRemaining,
+    AdminLogin, AdminOtp
 )
 
 from .routes.capy.image import CapyImageResource
@@ -29,7 +30,9 @@ ROUTES = [Mount("/api", routes=[
     Mount("/admin", routes=[
         Route("/approval", AdminApprovalResource),
         Route("/approval/{_id}", AdminApproveResource),
-        Route("/remaining", AdminCapyRemaining)
+        Route("/remaining", AdminCapyRemaining),
+        Route("/login", AdminLogin),
+        Route("/login/otp", AdminOtp)
     ]),
     Route("/", CapyDateResource)
 ])]
