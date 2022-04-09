@@ -72,11 +72,13 @@
     }
 </script>
 
-<Link to="/">
-    <button>Home</button>
-</Link>
-
-<button on:click={logMeOut}>Logout</button>
+<nav>
+    <Link to="/">
+        <button>Home</button>
+    </Link>
+    
+    <button on:click={logMeOut}>Logout</button>
+</nav>
 
 {#if canInvite}
     <h2>Invitation codes</h2>
@@ -85,8 +87,8 @@
     {:else}
         <ul class="approval">
             {#each invites as code }
-                <li><div class="card" style="display: flex;justify-content: space-between;align-items: center;">
-                    <p style="display: inline;">{ code }</p>
+                <li><div class="card center">
+                    <p>{ code }</p>
                     <button class="deny" on:click={async () => await removeInvite(code)}>Delete</button>
                 </div></li>
             {/each}

@@ -56,7 +56,9 @@
 </script>
 
 {#if isAdmin}
-    <Link to="/admin"><button>Admin portal</button></Link>
+    <nav>
+        <Link to="/admin"><button>Admin portal</button></Link>
+    </nav>
 {/if}
 
 <h1>Capybara of the day!</h1>

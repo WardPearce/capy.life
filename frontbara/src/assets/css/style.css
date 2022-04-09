@@ -53,6 +53,15 @@ h2 {
     padding-top: 1.3em;
 }
 
+nav {
+    display: flex;
+    justify-content: end;
+}
+
+nav button {
+    margin-left: .6em;
+}
+
 footer {
     background-color: #211515;
     padding: .5em;
@@ -149,6 +158,12 @@ form .successful {
     background-color: #a00d0d;
 }
 
+.center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 @media screen and (max-width: 1200px) {
     input {
         width: 80%;
@@ -189,5 +204,24 @@ form .successful {
 @media screen and (max-width: 950px) {
     .approval button {
         margin-top: .5em;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    nav button {
+        margin-left: 0;
+        margin-top: .5em;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    nav {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .center {
+        display: block;
     }
 }
