@@ -18,7 +18,7 @@ async def generate_invite() -> str:
     """
 
     _id = nanoid.generate(size=NANO_ID_LEN)
-    password = secrets.token_urlsafe(32)
+    password = secrets.token_urlsafe(20)
 
     await Sessions.mongo.invite.insert_one({
         "_id": _id,
