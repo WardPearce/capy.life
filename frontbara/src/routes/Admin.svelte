@@ -51,6 +51,9 @@
     async function denyCapy(capyId: string) {
         removeIdFromList(capyId)
         await (new AdminCapy(capyId)).deny()
+        if (toApprove.length === 0) {
+            toApprove = await getToApprove()
+        }
     }
 
     async function approveCapy(capyId: string) {
@@ -60,6 +63,9 @@
         capyCount.remaining++
 
         await (new AdminCapy(capyId)).approve()
+        if (toApprove.length === 0) {
+            toApprove = await getToApprove()
+        }
     }
 
     async function logMeOut() {

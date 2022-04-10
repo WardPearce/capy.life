@@ -30,8 +30,8 @@ export async function submitCapy(captchaId: string, captchaCode: string,
         throw resp
 }
 
-export async function getToApprove(): Promise<iCapy[]> {
-    const resp = await fetch(`${backendUrl}/api/admin/approval`)
+export async function getToApprove(page: number = 1): Promise<iCapy[]> {
+    const resp = await fetch(`${backendUrl}/api/admin/approval?page=${page}`)
     if (resp.status !== 200)
         throw resp
     return await resp.json()

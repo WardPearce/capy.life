@@ -208,7 +208,17 @@ class AdminApprovalResource(HTTPEndpoint):
     async def get(self, request: Request, admin: AdminModel) -> JSONResponse:
         to_approve = []
 
-        async for record in Sessions.mongo.capybara.find({"approved": False}):
+        query = Sessions.mongo.capybara.find({
+            "approved": False
+        }).sort("created", 1)
+        if ("page" in request.query_params and
+                request.query_params["page"].isdigit()):
+            page = int(request.query_params["page"])
+            query.skip(10 * (page - 1)).limit(10)
+        else:
+            query.limit(10)
+
+        async for record in query:
             to_approve.append({
                 "name": record["name"],
                 "image": f"{URL_PROXIED}/api/capy/{record['_id']}",
