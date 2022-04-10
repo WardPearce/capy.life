@@ -100,10 +100,10 @@
 {#if capyHistory.length > 0}
     <h2>Timeline</h2>
     <p style="padding-bottom: 1em;">View the history of capybaras!</p>
-    <ul class="approval">
+    <ul class="approval capy-history">
         {#each capyHistory as history}
             <li><div class="card" style="display: flex;justify-content: space-between;align-items: center;">
-                <div>
+                <div class="capy-name-date">
                     <h3>{history.name}</h3>
                     <p>{history.used}</p>
                 </div>

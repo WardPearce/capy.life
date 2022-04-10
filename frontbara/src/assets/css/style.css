@@ -225,3 +225,9 @@ form .successful {
         display: block;
     }
 }
+
+@media screen and (max-width: 950px) {
+    .capy-history .card {
+        flex-direction: column;
+    }
+}
