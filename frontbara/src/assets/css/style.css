@@ -18,6 +18,7 @@ body {
     background-position: center;
     background-size: 35px 35px;
     overflow-x: hidden;
+    image-rendering: -webkit-optimize-contrast;
 }
 
 main {
