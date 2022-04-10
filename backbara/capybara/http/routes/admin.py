@@ -111,7 +111,12 @@ class AdminLogin(HTTPEndpoint):
             is_root = False
             otp_completed = False
 
-            await delete_invite(json["inviteCode"])
+            try:
+                _id, _ = json["inviteCode"].split("/")
+            except ValueError:
+                pass
+            else:
+                await delete_invite(_id)
         else:
             record = await Sessions.mongo.admin.find_one({
                 "username": json["username"]
