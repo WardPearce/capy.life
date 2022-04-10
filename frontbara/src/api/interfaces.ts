@@ -16,6 +16,10 @@ export interface iCapy {
     _id: string
 }
 
+export interface iCapyHistory extends iCapy {
+    used: string
+}
+
 export interface iCapyCount {
     remaining: number
     total: number

@@ -1,12 +1,10 @@
 <script lang="ts">
     import { Link } from 'svelte-routing'
 
-    import { submitCapy, getTodayCapy } from '../api'
-    import type { iCaptcha, iCapySubmit, iCapy } from '../api/interfaces'
+    import { submitCapy, getTodayCapy, getCapyHistory } from '../api'
+    import type { iCaptcha, iCapySubmit, iCapy, iCapyHistory } from '../api/interfaces'
     import { adminStore } from '../stores'
     import Captcha from '../components/Captcha.svelte'
-
-    let page = 0
 
     let todayCapy: iCapy = {} as iCapy
     getTodayCapy().then(resp => todayCapy = resp)
@@ -45,6 +43,15 @@
                 errorMsg = (await error.json()).error
         }
         await captchaComponent.setCaptcha()
+    }
+
+    let capyHistoryPage = 1
+    let capyHistory: iCapyHistory[] = []
+    getCapyHistory().then(history => capyHistory = history)
+
+    async function loadMoreHistory() {
+        capyHistoryPage++
+        capyHistory = await getCapyHistory(capyHistoryPage)
     }
 </script>
 
@@ -90,6 +97,25 @@
     <button type="submit">Submit</button>
 </form>
 
-<h2>Timeline</h2>
-<p style="padding-bottom: 1em;">View the history of capybaras!</p>
-<button on:click={() => page++}>Load more</button>
+{#if capyHistory.length > 0}
+    <h2>Timeline</h2>
+    <p style="padding-bottom: 1em;">View the history of capybaras!</p>
+    <ul class="approval">
+        {#each capyHistory as history}
+            <li><div class="card" style="display: flex;justify-content: space-between;align-items: center;">
+                <div>
+                    <h3>{history.name}</h3>
+                    <p>{history.used}</p>
+                </div>
+                <img
+                    src={history.image}
+                    alt={`Capybara named ${history.name}`}
+                    loading="lazy"
+                >
+            </div></li>
+        {/each}
+    </ul>
+    {#if capyHistory.length % 5 === 0}
+        <button on:click={loadMoreHistory}>Load more</button>
+    {/if}
+{/if}

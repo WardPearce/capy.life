@@ -1,7 +1,7 @@
 import type {
     iCaptcha, iCapySubmit, iCapy, iCapyCount,
     iAdminLogin, iAdminDetails, iAdminOtp,
-    iAdminInvite
+    iAdminInvite, iCapyHistory
 } from './interfaces'
 
 const backendUrl: string = import.meta.env.VITE_URL_PROXIED as string
@@ -39,6 +39,13 @@ export async function getToApprove(page: number = 1): Promise<iCapy[]> {
 
 export async function getTodayCapy(): Promise<iCapy> {
     const resp = await fetch(`${backendUrl}/api`)
+    if (resp.status !== 200)
+        throw resp
+    return await resp.json()
+}
+
+export async function getCapyHistory(page: number = 1): Promise<iCapyHistory[]> {
+    const resp = await fetch(`${backendUrl}/api/capy/timeline?page=${page}`)
     if (resp.status !== 200)
         throw resp
     return await resp.json()

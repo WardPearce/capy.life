@@ -20,6 +20,7 @@ from .routes.admin import (
 from .routes.capy.image import CapyImageResource
 from .routes.capy.submit import SubmitCapyResource
 from .routes.capy.get import CapyDateResource
+from .routes.capy.timeline import CapyTimeline
 
 from .errors import capy_error_handle, CapyError
 
@@ -27,6 +28,7 @@ from .errors import capy_error_handle, CapyError
 ROUTES = [Mount("/api", routes=[
     Route("/captcha", CaptchaResource),
     Route("/capy", SubmitCapyResource),
+    Route("/capy/timeline", CapyTimeline),
     Route("/capy/{_id}", CapyImageResource),
     Mount("/admin", routes=[
         Route("/approval", AdminApprovalResource),
