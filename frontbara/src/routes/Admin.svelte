@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Link, navigate } from 'svelte-routing'
     import { io } from 'socket.io-client'
+    import { SyncLoader } from 'svelte-loading-spinners'
 
     import Fa from 'svelte-fa'
     import { faCheckSquare, faSquareXmark } from '@fortawesome/free-solid-svg-icons'
@@ -12,10 +13,14 @@
     import type { iCapy, iCapyCount } from '../api/interfaces'
     import { adminStore } from '../stores'
 
+    let pageLoading = true
     let approvedNames = {}
 
     let capyCount: iCapyCount  = {} as iCapyCount
-    getCapyCount().then(resp => capyCount = resp).catch(_ => {
+    getCapyCount().then(resp =>{
+        capyCount = resp
+        pageLoading = false
+    }).catch(_ => {
         navigate('/login')
     })
 
@@ -44,7 +49,7 @@
         inviteCode = ''
         try {
             await deleteInvite(inviteId)
-        } catch (error) {}
+        } catch (error) {return}
         invites = invites.filter(id => id !== inviteId)
     }
 
@@ -54,7 +59,12 @@
 
     async function denyCapy(capyId: string) {
         removeIdFromList(capyId)
-        await (new AdminCapy(capyId)).deny()
+        try {
+            await (new AdminCapy(capyId)).deny()
+        } catch (error) {
+            navigate('/login')
+            return
+        }
         if (toApprove.length === 0) {
             toApprove = await getToApprove()
         }
@@ -66,9 +76,15 @@
         capyCount.total++
         capyCount.remaining++
 
-        await (new AdminCapy(capyId)).approve(
-            capyId in approvedNames ? !(approvedNames[capyId]) : false
-        )
+
+        try {
+            await (new AdminCapy(capyId)).approve(
+                capyId in approvedNames ? !(approvedNames[capyId]) : false
+            )
+        } catch (error) {
+            navigate('/login')
+            return
+        }
         if (toApprove.length === 0) {
             toApprove = await getToApprove()
         }
@@ -96,6 +112,9 @@
     })
 </script>
 
+{#if pageLoading}
+    <SyncLoader color="#644a4a" />
+{:else}
 <nav>
     <Link to="/">
         <button>Home</button>
@@ -156,4 +175,5 @@
             </div></li>
         {/each }
     </ul>
+{/if}
 {/if}
