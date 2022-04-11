@@ -109,7 +109,10 @@
     <input bind:value={capyDetails.name} type="text" maxlength="30" name="capy-name" placeholder="e.g. greg">
 
     {#if !isAdmin}
-        <label for="capy-email">Email <span style="font-size: .7em;">(optional)</span></label>
+        <label for="capy-email">
+            Email
+            <span style="font-size: .7em;">(optional)</span>
+        </label>
         <input bind:value={capyDetails.email} type="email" name="capy-email" placeholder="e.g. example@pm.me">
     {/if}
 
