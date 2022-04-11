@@ -15,30 +15,39 @@ from ..resources import Sessions
 
 class AdminWebsocket(socketio.AsyncNamespace):
     async def on_connect(self, sid, environ):
+        if "asgi.scope" not in environ or "headers" not in environ:
+            return
+
         raw_cookies = None
         for header in environ["asgi.scope"]["headers"]:
             if header[0] == b"cookie":
                 raw_cookies = header[1].decode()
                 break
 
-        if raw_cookies:
-            loaded_cookies = cookies.SimpleCookie()
-            loaded_cookies.load(raw_cookies)
+        if not raw_cookies:
+            return
 
-            if "jwt-token" in loaded_cookies:
-                try:
-                    payload = jwt.decode(
-                        loaded_cookies["jwt-token"].value,
-                        JWT_SECRET,
-                        algorithms=["HS256"]
-                    )
-                except jwt.InvalidTokenError:
-                    pass
-                else:
-                    if await Sessions.mongo.admin.count_documents({
-                        "_id": payload["sub"]
-                    }) > 0:
-                        self.enter_room(sid, "admin_approval")
+        loaded_cookies = cookies.SimpleCookie()
+        loaded_cookies.load(raw_cookies)
+
+        if "jwt-token" not in loaded_cookies:
+            return
+
+        try:
+            payload = jwt.decode(
+                loaded_cookies["jwt-token"].value,
+                JWT_SECRET,
+                algorithms=["HS256"]
+            )
+        except jwt.InvalidTokenError:
+            return
+        else:
+            if await Sessions.mongo.admin.count_documents({
+                "_id": payload["sub"]
+            })  == 0:
+                return
+
+        self.enter_room(sid, "admin_approval")
 
     async def on_disconnect(self, sid):
         self.leave_room(sid, "admin_approval")
