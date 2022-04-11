@@ -46,7 +46,7 @@ class FormMissingFields(CapyError):
 
 class SimilarImageError(CapyError):
     def __init__(self, msg: str =
-                 "Image too close to an existing capybara in our database",
+                 "Image is too close to an existing capybara in our database",
                  status: int = 400,
                  *args: object) -> None:
         super().__init__(msg, status, ErrorCode.SIMILAR_IMAGE, *args)
