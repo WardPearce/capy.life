@@ -231,13 +231,16 @@ class AdminApprovalResource(HTTPEndpoint):
 class AdminApproveResource(HTTPEndpoint):
     @validate_admin(require_otp=True)
     async def post(self, request: Request, admin: AdminModel) -> Response:
-        # Add logic to email if exists & remove from db.
         record = await get_capy(request.path_params["_id"])
         update_values = {"approved": True}
 
         if ("changeName" in request.query_params and
                 request.query_params["changeName"] == "true"):
             update_values["name"] = get_first_name()
+
+        if record["email"] is not None:
+            # ToDO add emailing logic, should be background task
+            update_values["email"] = None  # type: ignore
 
         await Sessions.mongo.capybara.update_one({
             "_id": record["_id"]
@@ -253,6 +256,10 @@ class AdminApproveResource(HTTPEndpoint):
     async def delete(self, request: Request, admin: AdminModel) -> Response:
         # Add logic to email if exists & remove from db.
         record = await get_capy(request.path_params["_id"])
+        if record["email"] is not None:
+            # ToDO add emailing logic, should be background task
+            pass
+
         await Sessions.mongo.capybara.delete_many({
             "_id": record["_id"]
         })

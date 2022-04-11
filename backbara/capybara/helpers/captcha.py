@@ -5,8 +5,6 @@ GNU AFFERO GENERAL PUBLIC LICENSE
 Version 3, 19 November 2007
 """
 
-from datetime import datetime
-
 from ..resources import Sessions
 from ..errors import CaptchaError
 
@@ -28,10 +26,12 @@ async def validate_captcha(_id: str, given_code: str) -> None:
         "_id": _id
     })
 
+    if not captcha:
+        raise CaptchaError()
+
     await Sessions.mongo.captcha.delete_many({
-        "_id": _id
+        "_id": captcha["_id"]
     })
 
-    if (not captcha or datetime.now() > captcha["expires"]
-            or given_code != captcha["code"]):
+    if captcha["code"] != given_code:
         raise CaptchaError()

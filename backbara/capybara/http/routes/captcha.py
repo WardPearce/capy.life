@@ -34,7 +34,7 @@ class CaptchaResource(HTTPEndpoint):
         await Sessions.mongo.captcha.insert_one({
             "_id": captcha_id,
             "code": captcha.characters,
-            "expires": datetime.now() + timedelta(hours=1)
+            "expire": (datetime.now() + timedelta(hours=1)).utcnow()
         })
 
         buffer = BytesIO()

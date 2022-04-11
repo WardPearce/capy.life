@@ -37,6 +37,8 @@ async def on_start() -> None:
 
     Sessions.mongo = mongo[MONGO_DB]
 
+    await Sessions.mongo.captcha.create_index("expire", expireAfterSeconds=0)
+
     try:
         password = secrets.token_urlsafe(32)
         await create_admin(ROOT_ADMIN_NAME, password, is_root=True)
