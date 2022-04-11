@@ -19,6 +19,7 @@ from starlette.background import BackgroundTask
 from os import path
 from datetime import datetime, timedelta
 from json import JSONDecodeError
+from names import get_first_name
 
 from ...resources import Sessions
 from ...env import (
@@ -232,9 +233,15 @@ class AdminApproveResource(HTTPEndpoint):
     async def post(self, request: Request, admin: AdminModel) -> Response:
         # Add logic to email if exists & remove from db.
         record = await get_capy(request.path_params["_id"])
+        update_values = {"approved": True}
+
+        if ("changeName" in request.query_params and
+                request.query_params["changeName"] == "true"):
+            update_values["name"] = get_first_name()
+
         await Sessions.mongo.capybara.update_one({
             "_id": record["_id"]
-        }, {"$set": {"approved": True}})
+        }, {"$set": update_values})
 
         return Response(background=BackgroundTask(
             Sessions.ws.emit,

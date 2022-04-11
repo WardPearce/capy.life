@@ -72,8 +72,8 @@ export class AdminCapy {
             throw resp
     }
 
-    async approve() {
-        const resp = await fetch(`${backendUrl}/api/admin/approval/${this.capyId}`, {
+    async approve(changeName: boolean = false) {
+        const resp = await fetch(`${backendUrl}/api/admin/approval/${this.capyId}?changeName=${changeName.toString()}`, {
             method: 'POST'
         })
         if (resp.status !== 200)

@@ -2,12 +2,17 @@
     import { Link, navigate } from 'svelte-routing'
     import { io } from 'socket.io-client'
 
+    import Fa from 'svelte-fa'
+    import { faCheckSquare, faSquareXmark } from '@fortawesome/free-solid-svg-icons'
+
     import {
         getToApprove, AdminCapy, getCapyCount,
         logout, generateInvite, getInvites, deleteInvite
     } from '../api'
     import type { iCapy, iCapyCount } from '../api/interfaces'
     import { adminStore } from '../stores'
+
+    let approvedNames = {}
 
     let capyCount: iCapyCount  = {} as iCapyCount
     getCapyCount().then(resp => capyCount = resp).catch(error => {
@@ -63,7 +68,9 @@
         capyCount.total++
         capyCount.remaining++
 
-        await (new AdminCapy(capyId)).approve()
+        await (new AdminCapy(capyId)).approve(
+            capyId in approvedNames ? !(approvedNames[capyId]) : false
+        )
         if (toApprove.length === 0) {
             toApprove = await getToApprove()
         }
@@ -131,7 +138,18 @@
     <ul class="approval">
         {#each toApprove as capy }
             <li><div class="card">
-                <h3>{ capy.name }</h3>
+                <label style="cursor: pointer;">
+                    <input on:click={() => capy._id in approvedNames ? approvedNames[capy._id] = !approvedNames[capy._id] : approvedNames[capy._id] = false} style="display: none;" type="checkbox" checked>
+                    <h3>
+                        {#if !(capy._id in approvedNames) || approvedNames[capy._id]}
+                            <Fa icon={faCheckSquare} style="color: #11c650;" />
+                        {:else}
+                            <Fa icon={faSquareXmark} style="color: #d11414;" />
+                        {/if}
+                        { capy.name }
+                    </h3>
+                </label>
+                  
                 <img src={capy.image} alt={`Capy named ${capy.name}`}>
                 <div>
                     <button on:click={async () => await approveCapy(capy._id)} style="margin-right: .2em;">Approve</button>
