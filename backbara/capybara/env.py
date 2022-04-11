@@ -37,6 +37,12 @@ SUPPORTED_IMAGE_TYPES = os.getenv(
 
 MAX_FILE_SIZE_BYTES = int(os.getenv("MAX_FILE_SIZE_BYTES", 5243000))
 
+SMTP_DOMAIN = os.getenv("SMTP_DOMAIN", None)
+SMTP_MAIN = os.getenv("SMTP_MAIN", "noreply")
+SMTP_HOST = os.getenv("SMTP_HOST", "localhost")
+SMTP_PORT = int(os.getenv("SMTP_PORT", 25))
+SMTP_USERNAME = os.getenv("SMTP_USERNAME", None)
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", None)
 
 try:
     os.mkdir(SAVE_PATH)

@@ -14,7 +14,7 @@ import pyotp
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
-from starlette.background import BackgroundTask
+from starlette.background import BackgroundTasks
 
 from os import path
 from datetime import datetime, timedelta
@@ -24,11 +24,12 @@ from names import get_first_name
 from ...resources import Sessions
 from ...env import (
     URL_PROXIED, SAVE_PATH, JWT_SECRET,
-    JWT_EXPIRES_DAYS
+    JWT_EXPIRES_DAYS, SMTP_DOMAIN
 )
 from ...helpers.capy import get_capy
 from ...helpers.invite import validate_invite, generate_invite, delete_invite
 from ...helpers.admin import create_admin
+from ...helpers.emailer import send_email
 from ...errors import (
     LoginError, FormMissingFields, PayloadDecodeError,
     InvalidInvite, OptError, OptSetupRequired
@@ -238,27 +239,66 @@ class AdminApproveResource(HTTPEndpoint):
                 request.query_params["changeName"] == "true"):
             update_values["name"] = get_first_name()
 
+        background_tasks = BackgroundTasks()
+        background_tasks.add_task(
+            Sessions.ws.emit,
+            event="approval_update",
+            data={"_id": record["_id"]},
+            to="admin_approval"
+        )
+
         if record["email"] is not None:
-            # ToDO add emailing logic, should be background task
+            if SMTP_DOMAIN:
+                message = (
+                    "Thanks for submitting your capybara,"
+                    " we appreciate it!"
+                )
+                if "name" in update_values:
+                    message += (
+                        " However our admins flagged "
+                        "the name as inappropriate & "
+                        f"has been changed to \"{update_values['name']}\""
+                    )
+                message += (
+                    "\n\nYour can view your capybara here:"
+                    f"{URL_PROXIED}/api/capy/{record['_id']}"
+                )
+                background_tasks.add_task(
+                    send_email,
+                    to=record["email"],
+                    subject="Your capybara has been approved!",
+                    content=message
+                )
+
             update_values["email"] = None  # type: ignore
 
         await Sessions.mongo.capybara.update_one({
             "_id": record["_id"]
         }, {"$set": update_values})
 
-        return Response(background=BackgroundTask(
+        return Response(background=background_tasks)
+
+    async def delete(self, request: Request, admin: AdminModel) -> Response:
+        record = await get_capy(request.path_params["_id"])
+
+        background_tasks = BackgroundTasks()
+        background_tasks.add_task(
             Sessions.ws.emit,
             event="approval_update",
             data={"_id": record["_id"]},
             to="admin_approval"
-        ))
+        )
 
-    async def delete(self, request: Request, admin: AdminModel) -> Response:
-        # Add logic to email if exists & remove from db.
-        record = await get_capy(request.path_params["_id"])
-        if record["email"] is not None:
-            # ToDO add emailing logic, should be background task
-            pass
+        if record["email"] is not None and SMTP_DOMAIN:
+            background_tasks.add_task(
+                send_email,
+                to=record["email"],
+                subject="Your image has been denied.",
+                content=(
+                    "Thank for your for attempting to support us, "
+                    "however admins have decided to deny your image."
+                )
+            )
 
         await Sessions.mongo.capybara.delete_many({
             "_id": record["_id"]
@@ -271,9 +311,4 @@ class AdminApproveResource(HTTPEndpoint):
         except FileNotFoundError:
             pass
 
-        return Response(background=BackgroundTask(
-            Sessions.ws.emit,
-            event="approval_update",
-            data={"_id": record["_id"]},
-            to="admin_approval"
-        ))
+        return Response(background=background_tasks)
