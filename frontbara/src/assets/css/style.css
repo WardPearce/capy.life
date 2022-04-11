@@ -121,13 +121,14 @@ form img {
     width: 50%;
 }
 
-form .error {
+.error {
     padding: 1em .3em;
     background-color: #c68a11;
     margin-bottom: 1em;
+    width: 100%;
 }
 
-form .successful {
+.successful {
     padding: 1em .3em;
     background-color: #11c650;
     margin-bottom: 1em;

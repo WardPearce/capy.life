@@ -1,13 +1,17 @@
 <script lang="ts">
     import { Link } from 'svelte-routing'
+    import { SyncLoader } from 'svelte-loading-spinners'
 
     import { submitCapy, getTodayCapy, getCapyHistory } from '../api'
     import type { iCaptcha, iCapySubmit, iCapy, iCapyHistory } from '../api/interfaces'
     import { adminStore } from '../stores'
     import Captcha from '../components/Captcha.svelte'
 
+    let todayCapyError = ''
     let todayCapy: iCapy = {} as iCapy
-    getTodayCapy().then(resp => todayCapy = resp)
+    getTodayCapy().then(resp => {
+        todayCapy = resp
+    }).catch(async error => todayCapyError = (await error.json()).error)
 
     let captcha: iCaptcha
     let captchaCode: string
@@ -21,7 +25,9 @@
     let errorMsg = ''
     let successful = ''
     let capyDetails: iCapySubmit = {} as iCapySubmit
+    let capySubmitting = false
     async function attemptCapySubmit() {
+        capySubmitting = true
         errorMsg = ''
         successful = ''
         try {
@@ -43,6 +49,7 @@
                 errorMsg = (await error.json()).error
         }
         await captchaComponent.setCaptcha()
+        capySubmitting = false
     }
 
     let capyHistoryPage = 1
@@ -63,8 +70,16 @@
 
 <main>
     <h1>Capybara of the day!</h1>
-    <img src={todayCapy.image} alt="capy">
-    <h3 style="text-align: center;">Name: { todayCapy.name }</h3>
+    {#if todayCapyError !== ''}
+        <div class="error">
+            <p>{ todayCapyError }.</p>
+        </div>
+    {:else if Object.keys(todayCapy).length === 0}
+        <SyncLoader color="#644a4a" />
+    {:else}
+        <img src={todayCapy.image} alt="capy">
+        <h3 style="text-align: center;">Name: { todayCapy.name }</h3>
+    {/if}
 </main>
 
 <h2>What is capy.life?</h2>
@@ -96,7 +111,11 @@
     {#if !isAdmin}
         <Captcha bind:captchaCode bind:captcha bind:this={captchaComponent} />
     {/if}
-    <button type="submit">Submit</button>
+    {#if !capySubmitting}
+        <button type="submit">Submit</button>
+    {:else}
+        <SyncLoader color="#644a4a" />
+    {/if}
 </form>
 
 {#if capyHistory.length > 0}
