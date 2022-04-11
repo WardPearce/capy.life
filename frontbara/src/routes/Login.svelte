@@ -2,7 +2,7 @@
     import { navigate } from 'svelte-routing'
 
     import type { iAdminDetails, iCaptcha } from '../api/interfaces'
-    import { login } from '../api'
+    import { login, logout } from '../api'
     import { adminStore } from '../stores'
     import Captcha from '../components/Captcha.svelte'
 
@@ -20,7 +20,18 @@
     let captchaCode: string
     let captchaComponent
 
+    adminStore.set({
+        is: false,
+        root: false
+    })
+    logout().then()
+
     async function attemptLogin() {
+        if (mode === 'login' && 'inviteCode' in loginDetails) {
+            delete loginDetails.inviteCode
+        }
+        errorMsg = ''
+
         try {
             const adminLogin = await login(loginDetails, captcha.captchaId, captchaCode)
             adminStore.set({

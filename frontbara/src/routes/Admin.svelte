@@ -15,10 +15,8 @@
     let approvedNames = {}
 
     let capyCount: iCapyCount  = {} as iCapyCount
-    getCapyCount().then(resp => capyCount = resp).catch(error => {
-        if (error.status === 401) {
-            navigate('/login')
-        }
+    getCapyCount().then(resp => capyCount = resp).catch(_ => {
+        navigate('/login')
     })
 
     let toApprove: iCapy[] = []
