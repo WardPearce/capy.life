@@ -3,7 +3,7 @@ nanoid
 starlette
 motor
 python-dotenv
-uvicorn
+uvicorn[standard]
 aioredis
 slowapi
 python-multipart
@@ -12,5 +12,5 @@ multicolorcaptcha
 names
 validators
 pyjwt
-hashlib
 pyotp
+python-socketio

@@ -14,6 +14,7 @@ import pyotp
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
+from starlette.background import BackgroundTask
 
 from os import path
 from datetime import datetime, timedelta
@@ -112,11 +113,11 @@ class AdminLogin(HTTPEndpoint):
             otp_completed = False
 
             try:
-                _id, _ = json["inviteCode"].split("/")
+                invite_code, _ = json["inviteCode"].split("/")
             except ValueError:
                 pass
             else:
-                await delete_invite(_id)
+                await delete_invite(invite_code)
         else:
             record = await Sessions.mongo.admin.find_one({
                 "username": json["username"]
@@ -213,17 +214,10 @@ class AdminApprovalResource(HTTPEndpoint):
     async def get(self, request: Request, admin: AdminModel) -> JSONResponse:
         to_approve = []
 
-        query = Sessions.mongo.capybara.find({
-            "approved": False
-        }).sort("created", 1)
-        if ("page" in request.query_params and
-                request.query_params["page"].isdigit()):
-            page = int(request.query_params["page"])
-            query.skip(10 * (page - 1)).limit(10)
-        else:
-            query.limit(10)
-
-        async for record in query:
+        async for record in Sessions.mongo.capybara.aggregate([
+            {"$match": {"approved": False}},
+            {"$sample": {"size": 5}}
+        ]):
             to_approve.append({
                 "name": record["name"],
                 "image": f"{URL_PROXIED}/api/capy/{record['_id']}",
@@ -242,7 +236,12 @@ class AdminApproveResource(HTTPEndpoint):
             "_id": record["_id"]
         }, {"$set": {"approved": True}})
 
-        return Response()
+        return Response(background=BackgroundTask(
+            Sessions.ws.emit,
+            event="approval_update",
+            data={"_id": record["_id"]},
+            to="admin_approval"
+        ))
 
     async def delete(self, request: Request, admin: AdminModel) -> Response:
         # Add logic to email if exists & remove from db.
@@ -258,4 +257,9 @@ class AdminApproveResource(HTTPEndpoint):
         except FileNotFoundError:
             pass
 
-        return Response()
+        return Response(background=BackgroundTask(
+            Sessions.ws.emit,
+            event="approval_update",
+            data={"_id": record["_id"]},
+            to="admin_approval"
+        ))

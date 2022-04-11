@@ -5,6 +5,8 @@ GNU AFFERO GENERAL PUBLIC LICENSE
 Version 3, 19 November 2007
 """
 
+import socketio
+
 from starlette.routing import Mount, Route
 
 from slowapi import _rate_limit_exceeded_handler  # type: ignore
@@ -24,22 +26,32 @@ from .routes.capy.timeline import CapyTimeline
 
 from .errors import capy_error_handle, CapyError
 
+from .websocket import AdminWebsocket
 
-ROUTES = [Mount("/api", routes=[
-    Route("/captcha", CaptchaResource),
-    Route("/capy", SubmitCapyResource),
-    Route("/capy/timeline", CapyTimeline),
-    Route("/capy/{_id}", CapyImageResource),
-    Mount("/admin", routes=[
-        Route("/approval", AdminApprovalResource),
-        Route("/approval/{_id}", AdminApproveResource),
-        Route("/remaining", AdminCapyRemaining),
-        Route("/login", AdminLogin),
-        Route("/login/otp", AdminOtp),
-        Route("/invite", AdminInvites)
+from ..resources import Sessions
+
+
+Sessions.ws.register_namespace(AdminWebsocket())
+
+
+ROUTES = [
+    Mount("/api", routes=[
+        Route("/captcha", CaptchaResource),
+        Route("/capy", SubmitCapyResource),
+        Route("/capy/timeline", CapyTimeline),
+        Route("/capy/{_id}", CapyImageResource),
+        Mount("/admin", routes=[
+            Route("/approval", AdminApprovalResource),
+            Route("/approval/{_id}", AdminApproveResource),
+            Route("/remaining", AdminCapyRemaining),
+            Route("/login", AdminLogin),
+            Route("/login/otp", AdminOtp),
+            Route("/invite", AdminInvites)
+        ]),
+        Route("/", CapyDateResource)
     ]),
-    Route("/", CapyDateResource)
-])]
+    Mount("/socket.io", socketio.ASGIApp(Sessions.ws, socketio_path=""))
+]
 
 
 ERRORS = {

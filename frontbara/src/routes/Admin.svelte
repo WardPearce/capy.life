@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Link, navigate } from 'svelte-routing'
+    import { io } from 'socket.io-client'
 
     import {
         getToApprove, AdminCapy, getCapyCount,
@@ -76,6 +77,18 @@
         })
         navigate('/')
     }
+
+    const socket = io(
+        import.meta.env.VITE_URL_PROXIED as string
+    )
+    socket.connect()
+    socket.on('disconnect', () => {
+        socket.connect()
+    })
+
+    socket.on('approval_update', (data) => {
+        removeIdFromList(data._id)
+    })
 </script>
 
 <nav>
