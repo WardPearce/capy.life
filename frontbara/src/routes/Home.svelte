@@ -61,9 +61,11 @@
     </nav>
 {/if}
 
-<h1>Capybara of the day!</h1>
-<img src={todayCapy.image} alt="capy">
-<h3 style="text-align: center;">Name: { todayCapy.name }</h3>
+<main>
+    <h1>Capybara of the day!</h1>
+    <img src={todayCapy.image} alt="capy">
+    <h3 style="text-align: center;">Name: { todayCapy.name }</h3>
+</main>
 
 <h2>What is capy.life?</h2>
 <p>Capy.Life is the official daily Capybara site approved by many Zoos & Scientists. 1/10 Endocrinologist say that viewing a Capybara each day drastically improves your mental state.</p>
