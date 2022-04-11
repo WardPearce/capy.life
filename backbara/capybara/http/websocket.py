@@ -44,7 +44,7 @@ class AdminWebsocket(socketio.AsyncNamespace):
         else:
             if await Sessions.mongo.admin.count_documents({
                 "_id": payload["sub"]
-            })  == 0:
+            }) == 0:
                 return
 
         self.enter_room(sid, "admin_approval")
