@@ -1,5 +1,6 @@
 <script lang="ts">
     import { navigate } from 'svelte-routing'
+    import { SyncLoader } from 'svelte-loading-spinners'
 
     import type { iAdminDetails, iCaptcha } from '../api/interfaces'
     import { login, logout } from '../api'
@@ -15,6 +16,7 @@
         password: '',
         otpCode: 'blank'
     }
+    let loginLoading = false
 
     let captcha: iCaptcha
     let captchaCode: string
@@ -27,6 +29,7 @@
     logout().then()
 
     async function attemptLogin() {
+        loginLoading = true
         if (mode === 'login' && 'inviteCode' in loginDetails) {
             delete loginDetails.inviteCode
         }
@@ -54,11 +57,13 @@
                 loginDetails.otpCode = ''
                 otpStage = true
                 await captchaComponent.setCaptcha()
+                loginLoading = false
                 return
             }
             await captchaComponent.setCaptcha()
             errorMsg = errorJson.error
         }
+        loginLoading = false
     }
 
 </script>
@@ -86,15 +91,19 @@
         <input bind:value={loginDetails.otpCode} placeholder="..." type="text" required name="otp">
     {/if}
     <Captcha bind:captchaCode bind:captcha bind:this={captchaComponent} />
-    <button type="submit" style="text-transform: capitalize;">{ mode }</button>
-    <button
-        type="button"
-        style="background-color: transparent;text-transform: capitalize;text-decoration: underline;"
-        on:click={() => mode === 'login' ? mode = 'register' : mode = 'login'}>
-        {#if mode === 'login'}
-            Register
-        {:else}
-            Login
-        {/if}
-    </button>
+    {#if loginLoading}
+        <SyncLoader color="#644a4a" />
+    {:else}
+        <button type="submit" style="text-transform: capitalize;">{ mode }</button>
+        <button
+            type="button"
+            style="background-color: transparent;text-transform: capitalize;text-decoration: underline;"
+            on:click={() => mode === 'login' ? mode = 'register' : mode = 'login'}>
+            {#if mode === 'login'}
+                Register
+            {:else}
+                Login
+            {/if}
+        </button>
+    {/if}
 </form>
