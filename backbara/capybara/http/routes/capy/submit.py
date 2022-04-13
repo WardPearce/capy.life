@@ -95,7 +95,8 @@ class SubmitCapyResource(HTTPEndpoint):
             "name": name,
             "phash": phash,
             "email": email,
-            "content_type": image.content_type
+            "content_type": image.content_type,
+            "approved_by": None
         })
 
         async with aiofiles.open(

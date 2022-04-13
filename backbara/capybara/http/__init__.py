@@ -14,10 +14,10 @@ from slowapi.errors import RateLimitExceeded
 
 from .routes.captcha import CaptchaResource
 
-from .routes.admin import (
-    AdminApprovalResource, AdminApproveResource, AdminCapyRemaining,
-    AdminLogin, AdminOtp, AdminInvites
-)
+from .routes.admin.approve import AdminApproveResource, AdminApprovalResource
+from .routes.admin.login import AdminLogin, AdminOtp
+from .routes.admin.invites import AdminInvites
+from .routes.admin.misc import AdminCapyRemaining
 
 from .routes.capy.image import CapyImageResource
 from .routes.capy.submit import SubmitCapyResource
