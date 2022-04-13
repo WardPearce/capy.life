@@ -62,9 +62,9 @@ class AdminApprovalHistoryResource(HTTPEndpoint):
         if ("page" in request.query_params and
                 request.query_params["page"].isdigit()):
             page = int(request.query_params["page"])
-            query.skip(10 * (page - 1)).limit(10)
+            query.skip(5 * (page - 1)).limit(5)
         else:
-            query.limit(10)
+            query.limit(5)
 
         approved_capy = []
         async for record in query:
