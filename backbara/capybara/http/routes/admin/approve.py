@@ -14,12 +14,14 @@ from starlette.background import BackgroundTasks
 
 from os import path
 from names import get_first_name
+from datetime import datetime
 
 from ....resources import Sessions
 from ....env import (
     URL_PROXIED, SAVE_PATH,
     SMTP_DOMAIN
 )
+from ....limiter import LIMITER
 from ....helpers.capy import get_capy
 from ....helpers.emailer import send_email
 from ....modals import AdminModel
@@ -45,13 +47,57 @@ class AdminApprovalResource(HTTPEndpoint):
         return JSONResponse(to_approve)
 
 
+class AdminApprovalHistoryResource(HTTPEndpoint):
+    @validate_admin(require_otp=True)
+    async def get(self, request: Request, admin: AdminModel) -> JSONResponse:
+        where = {
+            "approved": True
+        }
+
+        if not admin.is_root:
+            where["approved_by"] = admin._id  # type: ignore
+
+        query = Sessions.mongo.capybara.find(where).sort("approved_at", -1)
+
+        if ("page" in request.query_params and
+                request.query_params["page"].isdigit()):
+            page = int(request.query_params["page"])
+            query.skip(10 * (page - 1)).limit(10)
+        else:
+            query.limit(10)
+
+        approved_capy = []
+        async for record in query:
+            approved_capy.append({
+                "name": record["name"],
+                "image": f"{URL_PROXIED}/api/capy/{record['_id']}",
+                "_id": record["_id"]
+            })
+
+        return JSONResponse(approved_capy)
+
+
+class AdminDeleteHistoryResource(HTTPEndpoint):
+    @LIMITER.limit("5/minute")
+    @validate_admin(require_otp=True)
+    async def delete(self, request: Request, admin: AdminModel) -> Response:
+        query = {"_id": request.path_params["_id"]}
+        if not admin.is_root:
+            query["approved_by"] = admin._id  # type: ignore
+
+        await Sessions.mongo.capybara.delete_many(query)
+
+        return Response()
+
+
 class AdminApproveResource(HTTPEndpoint):
     @validate_admin(require_otp=True)
     async def post(self, request: Request, admin: AdminModel) -> Response:
         record = await get_capy(request.path_params["_id"])
         update_values = {
             "approved": True,
-            "approved_by": admin._id
+            "approved_by": admin._id,
+            "approved_at": datetime.now()
         }
 
         if ("changeName" in request.query_params and

@@ -38,12 +38,13 @@ def require_captcha(func: Callable) -> Callable:
             except jwt.InvalidTokenError:
                 pass
             else:
-                if await Sessions.mongo.admin.count_documents({
+                record = await Sessions.mongo.admin.find_one({
                     "_id": payload["sub"]
-                }) > 0:
+                })
+                if record:
                     return await func(
                         *args, **kwargs,
-                        captcha_admin_bypass=True
+                        admin=AdminModel(**record)
                     )
 
         if ("captchaId" not in request.query_params or
@@ -55,9 +56,7 @@ def require_captcha(func: Callable) -> Callable:
             request.query_params["captchaCode"]
         )
 
-        request.state.admin_bypass = False
-
-        return await func(*args, **kwargs, captcha_admin_bypass=False)
+        return await func(*args, **kwargs, admin=None)
 
     return _validate
 

@@ -8,7 +8,8 @@
 
     import {
         getToApprove, AdminCapy, getCapyCount,
-        logout, generateInvite, getInvites, deleteInvite
+        logout, generateInvite, getInvites, deleteInvite,
+        getApprovalHistory, deleteCapy
     } from '../api'
     import type { iCapy, iCapyCount } from '../api/interfaces'
     import { adminStore } from '../stores'
@@ -38,6 +39,25 @@
         }
     })
 
+    let historyPage = 1
+    let approvalHistory = []
+    getApprovalHistory().then(resp => approvalHistory = resp)
+
+    async function loadMoreHistory() {
+        historyPage++
+        approvalHistory = [
+            ...approvalHistory,
+            ...await getApprovalHistory(historyPage)
+        ]
+    }
+
+    async function removeCapy(capyId: string) {
+        try {
+            await deleteCapy(capyId)
+            approvalHistory = approvalHistory.filter(capy => capy._id !== capyId)
+        } catch (error) {}
+    }
+
     let inviteCode = ''
     async function createInvite() {
         inviteCode = (await generateInvite()).inviteCode
@@ -58,9 +78,9 @@
     }
 
     async function denyCapy(capyId: string) {
-        removeIdFromList(capyId)
         try {
             await (new AdminCapy(capyId)).deny()
+            removeIdFromList(capyId)
         } catch (error) {
             navigate('/login')
             return
@@ -71,8 +91,6 @@
     }
 
     async function approveCapy(capyId: string) {
-        removeIdFromList(capyId)
-
         capyCount.total++
         capyCount.remaining++
 
@@ -81,6 +99,18 @@
             await (new AdminCapy(capyId)).approve(
                 capyId in approvedNames ? !(approvedNames[capyId]) : false
             )
+            // Kinda ugly, but fast.
+            for (let index = 0; index < toApprove.length; index++) {
+                const element = toApprove[index];
+                if (element._id === capyId) {
+                    approvalHistory = [
+                        element,
+                        ...approvalHistory
+                    ]
+                    break
+                }
+            }
+            removeIdFromList(capyId)
         } catch (error) {
             navigate('/login')
             return
@@ -175,5 +205,30 @@
             </div></li>
         {/each }
     </ul>
+{/if}
+
+<h2>{!isRoot ? 'My' : ''} Approval History</h2>
+{#if approvalHistory.length === 0 }
+    <p>No history</p>
+{:else}
+    <ul class="approval">
+        {#each approvalHistory as capy }
+            <li><div class="card">
+                <h3>
+                    { capy.name }
+                </h3>
+                  
+                <img src={capy.image} alt={`Capy named ${capy.name}`} loading="lazy">
+                <div>
+                    <button on:click={async () => await removeCapy(capy._id)} class="deny">
+                        Remove
+                    </button>
+                </div>
+            </div></li>
+        {/each }
+    </ul>
+    {#if approvalHistory.length % 5 === 0}
+        <button on:click={loadMoreHistory}>Load more</button>
+    {/if}
 {/if}
 {/if}

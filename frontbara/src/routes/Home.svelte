@@ -48,7 +48,9 @@
             } else
                 errorMsg = (await error.json()).error
         }
-        await captchaComponent.setCaptcha()
+        if (typeof captchaComponent !== 'undefined') {
+            await captchaComponent.setCaptcha()
+        }
         capySubmitting = false
     }
 

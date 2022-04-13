@@ -16,6 +16,7 @@ from starlette.responses import JSONResponse, Response
 
 from datetime import datetime, timedelta
 from json import JSONDecodeError
+from typing import Optional
 
 from ....resources import Sessions
 from ....env import (
@@ -83,7 +84,7 @@ class AdminLogin(HTTPEndpoint):
     @require_captcha
     @LIMITER.limit("10/minute")
     async def post(self, request: Request,
-                   captcha_admin_bypass: bool) -> JSONResponse:
+                   admin: Optional[AdminModel]) -> JSONResponse:
         try:
             json = await request.json()
         except JSONDecodeError:

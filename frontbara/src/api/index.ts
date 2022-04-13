@@ -51,6 +51,22 @@ export async function getCapyHistory(page: number = 1): Promise<iCapyHistory[]> 
     return await resp.json()
 }
 
+export async function getApprovalHistory(page: number = 1): Promise<iCapyHistory[]> {
+    const resp = await fetch(`${backendUrl}/api/admin/approval/history?page=${page}`)
+    if (resp.status !== 200)
+        throw resp
+    return await resp.json()
+}
+
+export async function deleteCapy(capyId: string) {
+    const resp = await fetch(`${backendUrl}/api/admin/approval/${capyId}/remove`, {
+        method: 'DELETE'
+    })
+    if (resp.status !== 200)
+        throw resp
+}
+
+
 export async function getCapyCount(): Promise<iCapyCount> {
     const resp = await fetch(`${backendUrl}/api/admin/remaining`)
     if (resp.status !== 200)

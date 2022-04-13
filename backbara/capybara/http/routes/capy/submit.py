@@ -19,7 +19,7 @@ from starlette.datastructures import UploadFile
 from datetime import datetime
 from PIL import Image
 from io import BytesIO
-from typing import cast
+from typing import Optional, cast
 from names import get_first_name
 from os import path
 
@@ -28,6 +28,7 @@ from ....env import (
     NANO_ID_LEN, SAVE_PATH, SUPPORTED_IMAGE_TYPES,
     MAX_FILE_SIZE_BYTES
 )
+from ....modals import AdminModel
 from ....limiter import LIMITER
 from ....errors import (
     FormMissingFields, SimilarImageError, FileTypeNotSupported,
@@ -44,7 +45,7 @@ class SubmitCapyResource(HTTPEndpoint):
     @LIMITER.limit("20/minute")
     @require_captcha
     async def post(self, request: Request,
-                   captcha_admin_bypass: bool) -> JSONResponse:
+                   admin: Optional[AdminModel]) -> JSONResponse:
         form = await request.form()
 
         if ("file" not in form or not
@@ -85,19 +86,27 @@ class SubmitCapyResource(HTTPEndpoint):
             raise SimilarImageError()
 
         _id = nanoid.generate(size=NANO_ID_LEN)
+        now = datetime.now()
 
-        await Sessions.mongo.capybara.insert_one({
+        insert = {
             "_id": _id,
-            "created": datetime.now(),
+            "created": now,
             "used": None,
-            # If captcha was bypassed by admin then auto approve.
-            "approved": captcha_admin_bypass,
             "name": name,
             "phash": phash,
             "email": email,
             "content_type": image.content_type,
-            "approved_by": None
-        })
+        }
+        if admin:  # If captcha was bypassed by admin then auto approve.
+            insert["approved"] = True
+            insert["approved_by"] = admin._id
+            insert["approved_at"] = now
+        else:
+            insert["approved"] = False
+            insert["approved_by"] = None
+            insert["approved_at"] = None
+
+        await Sessions.mongo.capybara.insert_one(insert)
 
         async with aiofiles.open(
                 path.join(SAVE_PATH, f"{_id}.capy"), "wb") as f_:
