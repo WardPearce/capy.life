@@ -66,7 +66,6 @@ export async function deleteCapy(capyId: string) {
         throw resp
 }
 
-
 export async function getCapyCount(): Promise<iCapyCount> {
     const resp = await fetch(`${backendUrl}/api/admin/remaining`)
     if (resp.status !== 200)
