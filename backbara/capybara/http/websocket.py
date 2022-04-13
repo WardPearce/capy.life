@@ -15,7 +15,8 @@ from ..resources import Sessions
 
 class AdminWebsocket(socketio.AsyncNamespace):
     async def on_connect(self, sid, environ):
-        if "asgi.scope" not in environ or "headers" not in environ:
+        if ("asgi.scope" not in environ or
+                "headers" not in environ["asgi.scope"]):
             return
 
         raw_cookies = None

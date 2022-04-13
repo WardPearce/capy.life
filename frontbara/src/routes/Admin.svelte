@@ -100,7 +100,7 @@
             )
             // Kinda ugly, but fast.
             for (let index = 0; index < toApprove.length; index++) {
-                const element = toApprove[index];
+                const element = toApprove[index]
                 if (element._id === capyId) {
                     approvalHistory = [
                         element,
