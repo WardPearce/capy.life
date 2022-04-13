@@ -94,7 +94,6 @@
         capyCount.total++
         capyCount.remaining++
 
-
         try {
             await (new AdminCapy(capyId)).approve(
                 capyId in approvedNames ? !(approvedNames[capyId]) : false
