@@ -149,7 +149,7 @@ form img {
 }
 
 .approval img {
-    width: 200px;
+    width: 60%;
 }
 
 .approval .deny {
@@ -231,5 +231,11 @@ form img {
 @media screen and (max-width: 950px) {
     .capy-history .card {
         flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .approval img {
+        width: 100%;
     }
 }

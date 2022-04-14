@@ -142,6 +142,7 @@
                     src={history.image}
                     alt={`Capybara named ${history.name}`}
                     loading="lazy"
+                    style="width: 200px;"
                 >
             </div></li>
         {/each}
