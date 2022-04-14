@@ -72,7 +72,11 @@ class AdminApprovalHistoryResource(HTTPEndpoint):
             approved_capy.append({
                 "name": record["name"],
                 "image": f"{URL_PROXIED}/api/capy/{record['_id']}",
-                "_id": record["_id"]
+                "_id": record["_id"],
+                "approvedBy": record["approved_by"],
+                "approvedAt": record["approved_at"].strftime(
+                    "%Y/%m/%d %I:%M %p"
+                )
             })
 
         return JSONResponse(approved_capy)

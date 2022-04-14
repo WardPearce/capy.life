@@ -16,6 +16,11 @@ export interface iCapy {
     _id: string
 }
 
+export interface iCapyApprovalHistory {
+    approvedBy: string
+    approvedAt: string
+}
+
 export interface iCapyHistory extends iCapy {
     used: string
 }
