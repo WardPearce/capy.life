@@ -118,7 +118,7 @@ class AdminApproveResource(HTTPEndpoint):
                         f"has been changed to \"{update_values['name']}\""
                     )
                 message += (
-                    "\n\nYour can view your capybara here: "
+                    "\n\nYour can view your capybara here:\n"
                     f"{URL_PROXIED}/api/capy/{record['_id']}"
                 )
                 # Some reason 'BackgroundTasks' doesn't work for aiosmtplib
