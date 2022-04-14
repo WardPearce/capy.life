@@ -144,7 +144,7 @@
     {/if}
 </form>
 
-<h2>How does capy.life use & store my email?</h2>
+<h2>How does capy.life use / store my email?</h2>
 <p>Capy.life only uses your email to notify you once your capybara has been approved / denied. Afterwards your email will be deleted from our database. Your email won't be provided to any 3rd-party aside from mailgun.com (our email provider.) You can always choose not to provide any email.</p>
 
 {#if capyHistory.length > 0}
