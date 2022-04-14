@@ -1,6 +1,7 @@
 <script lang="ts">
     import { navigate } from 'svelte-routing'
     import { SyncLoader } from 'svelte-loading-spinners'
+    import zxcvbn from 'zxcvbn'
 
     import type { iAdminDetails, iCaptcha } from '../api/interfaces'
     import { login, logout } from '../api'
@@ -22,11 +23,19 @@
     let captchaCode: string
     let captchaComponent
 
+    let passwordStrength: typeof zxcvbn = {}
+
     adminStore.set({
         is: false,
         root: false
     })
     logout().then()
+
+    function passwordCheck() {
+        if (mode !== 'register')
+            return
+        passwordStrength = zxcvbn(loginDetails.password)
+    }
 
     async function attemptLogin() {
         loginLoading = true
@@ -34,6 +43,15 @@
             delete loginDetails.inviteCode
         }
         errorMsg = ''
+
+        if (mode === 'register') {
+            passwordCheck()
+            if (passwordStrength.score < 2) {
+                errorMsg = 'Password too weak, please provide something stronger'
+                loginLoading = false
+                return
+            }
+        }
 
         try {
             const adminLogin = await login(loginDetails, captcha.captchaId, captchaCode)
@@ -80,9 +98,16 @@
         <input bind:value={loginDetails.username} type="text" name="username" required placeholder="...">
 
         <label for="password">Password</label>
-        <input bind:value={loginDetails.password} type="password" name="password" required placeholder="...">
+        <input on:input={passwordCheck} bind:value={loginDetails.password} type="password" name="password" required placeholder="...">
 
         {#if mode === 'register'}
+            {#if Object.keys(passwordStrength).length !== 0}
+                <p style="margin-bottom: .5em;margin-top:0;">
+                    <span style="font-weight: 300;">Strength:</span>
+                    {passwordStrength.crack_times_display.online_no_throttling_10_per_second}
+                    to guess.
+                </p>
+            {/if}
             <label for="invite">Invite code</label>
             <input bind:value={loginDetails.inviteCode} type="password" name="invite" required placeholder="...">
         {/if}
