@@ -104,7 +104,7 @@
             {#if Object.keys(passwordStrength).length !== 0}
                 <p style="margin-bottom: .5em;margin-top:0;">
                     <span style="font-weight: 300;">Strength:</span>
-                    {passwordStrength.crack_times_display.online_no_throttling_10_per_second}
+                    {passwordStrength.crack_times_display.offline_slow_hashing_1e4_per_second}
                     to guess.
                 </p>
             {/if}
