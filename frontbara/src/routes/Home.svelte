@@ -106,7 +106,7 @@
 </main>
 
 <h2>What is capy.life?</h2>
-<p>Capy.Life is the official daily Capybara site approved by many Zoos & Scientists. 1/10 Endocrinologist say that viewing a Capybara each day drastically improves your mental state.</p>
+<p>Capy.life is the official daily Capybara site approved by many Zoos & Scientists. 1/10 Endocrinologist say that viewing a Capybara each day drastically improves your mental state.</p>
 
 <h2 id="submit">Submit a capybara!</h2>
 <form on:submit|preventDefault={attemptCapySubmit}>
@@ -143,6 +143,9 @@
         <SyncLoader color="#644a4a" />
     {/if}
 </form>
+
+<h2>How does capy.life use & store my email?</h2>
+<p>Capy.life only uses your email to notify you once your capybara has been approved / denied. Afterwards your email will be deleted from our database. Your email won't be provided to any 3rd-party aside from mailgun.com (our email provider.) You can always choose not to provide any email.</p>
 
 {#if capyHistory.length > 0}
     <h2>Timeline</h2>
