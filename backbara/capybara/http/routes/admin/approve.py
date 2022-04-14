@@ -154,7 +154,7 @@ class AdminApproveResource(HTTPEndpoint):
                     to=record["email"],
                     subject="Capybara denied by Admin.",
                     content=(
-                        "Thanks you for attempting to support us, "
+                        "Thank you for attempting to support us, "
                         "however admins have decided to deny your image."
                     )
                 )
