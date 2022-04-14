@@ -14,7 +14,7 @@ from starlette.responses import JSONResponse
 
 from multicolorcaptcha import CaptchaGenerator
 from io import BytesIO
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from ...resources import Sessions
 
@@ -34,7 +34,7 @@ class CaptchaResource(HTTPEndpoint):
         await Sessions.mongo.captcha.insert_one({
             "_id": captcha_id,
             "code": captcha.characters,
-            "expire": (datetime.now() + timedelta(hours=1)).utcnow()
+            "expire": datetime.now(timezone.utc) + timedelta(hours=1)
         })
 
         buffer = BytesIO()
