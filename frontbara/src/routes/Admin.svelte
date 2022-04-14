@@ -4,7 +4,9 @@
     import { SyncLoader } from 'svelte-loading-spinners'
 
     import Fa from 'svelte-fa'
-    import { faCheckSquare, faSquareXmark } from '@fortawesome/free-solid-svg-icons'
+    import {
+        faCheckSquare, faSquareXmark, faTrash, faCheck, faXmark
+    } from '@fortawesome/free-solid-svg-icons'
 
     import {
         getToApprove, AdminCapy, getCapyCount,
@@ -198,8 +200,12 @@
                   
                 <img src={capy.image} alt={`Capy named ${capy.name}`}>
                 <div>
-                    <button on:click={async () => await approveCapy(capy._id)} style="margin-right: .2em;">Approve</button>
-                    <button on:click={async () => await denyCapy(capy._id)} class="deny">Deny</button>
+                    <button on:click={async () => await approveCapy(capy._id)} style="margin-right: .2em;">
+                        <Fa icon={faCheck} /> Approve
+                    </button>
+                    <button on:click={async () => await denyCapy(capy._id)} class="deny">
+                        <Fa icon={faXmark} /> Deny
+                    </button>
                 </div>
             </div></li>
         {/each }
@@ -223,7 +229,7 @@
                 <img src={capy.image} alt={`Capy named ${capy.name}`} loading="lazy">
                 <div>
                     <button on:click={async () => await removeCapy(capy._id)} class="deny">
-                        Remove
+                        <Fa icon={faTrash} /> Remove
                     </button>
                 </div>
             </div></li>
