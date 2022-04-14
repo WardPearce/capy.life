@@ -7,11 +7,12 @@ Version 3, 19 November 2007
 
 import aiosmtplib
 
-from email.message import EmailMessage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 from ..env import (
     SMTP_DOMAIN, SMTP_MAIN, SMTP_HOST,
-    SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD
+    SMTP_USERNAME, SMTP_PASSWORD
 )
 
 
@@ -25,13 +26,16 @@ async def send_email(to: str, subject: str, content: str) -> None:
     content : str
     """
 
-    message = EmailMessage()
+    message = MIMEMultipart("alternative")
     message["From"] = f"{SMTP_MAIN}@{SMTP_DOMAIN}"
     message["To"] = to
     message["Subject"] = subject
-    message.set_content(content)
+    message.attach(MIMEText(
+        content, "plain", "utf-8"
+    ))
 
     await aiosmtplib.send(
-        message, hostname=SMTP_HOST, port=SMTP_PORT,
-        username=SMTP_USERNAME, password=SMTP_PASSWORD
+        message, hostname=SMTP_HOST,
+        username=SMTP_USERNAME, password=SMTP_PASSWORD,
+        use_tls=True
     )

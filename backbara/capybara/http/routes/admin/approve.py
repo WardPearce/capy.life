@@ -6,11 +6,12 @@ Version 3, 19 November 2007
 """
 
 import aiofiles.os
+import asyncio
 
 from starlette.endpoints import HTTPEndpoint
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
-from starlette.background import BackgroundTasks
+from starlette.background import BackgroundTask
 
 from os import path
 from names import get_first_name
@@ -104,14 +105,6 @@ class AdminApproveResource(HTTPEndpoint):
                 request.query_params["changeName"] == "true"):
             update_values["name"] = get_first_name()
 
-        background_tasks = BackgroundTasks()
-        background_tasks.add_task(
-            Sessions.ws.emit,
-            event="approval_update",
-            data={"_id": record["_id"]},
-            to="admin_approval"
-        )
-
         if record["email"] is not None:
             if SMTP_DOMAIN:
                 message = (
@@ -125,14 +118,16 @@ class AdminApproveResource(HTTPEndpoint):
                         f"has been changed to \"{update_values['name']}\""
                     )
                 message += (
-                    "\n\nYour can view your capybara here:"
+                    "\n\nYour can view your capybara here: "
                     f"{URL_PROXIED}/api/capy/{record['_id']}"
                 )
-                background_tasks.add_task(
-                    send_email,
-                    to=record["email"],
-                    subject="Your capybara has been approved!",
-                    content=message
+                # Some reason 'BackgroundTasks' doesn't work for aiosmtplib
+                asyncio.create_task(
+                    send_email(
+                        to=record["email"],
+                        subject="Capybara approved by Admin",
+                        content=message
+                    )
                 )
 
             update_values["email"] = None  # type: ignore
@@ -141,27 +136,27 @@ class AdminApproveResource(HTTPEndpoint):
             "_id": record["_id"]
         }, {"$set": update_values})
 
-        return Response(background=background_tasks)
-
-    async def delete(self, request: Request, admin: AdminModel) -> Response:
-        record = await get_capy(request.path_params["_id"])
-
-        background_tasks = BackgroundTasks()
-        background_tasks.add_task(
+        return Response(background=BackgroundTask(
             Sessions.ws.emit,
             event="approval_update",
             data={"_id": record["_id"]},
             to="admin_approval"
-        )
+        ))
+
+    @validate_admin(require_otp=True)
+    async def delete(self, request: Request, admin: AdminModel) -> Response:
+        record = await get_capy(request.path_params["_id"])
 
         if record["email"] is not None and SMTP_DOMAIN:
-            background_tasks.add_task(
-                send_email,
-                to=record["email"],
-                subject="Your image has been denied.",
-                content=(
-                    "Thank for your for attempting to support us, "
-                    "however admins have decided to deny your image."
+            # Some reason 'BackgroundTasks' doesn't work for aiosmtplib
+            asyncio.create_task(
+                send_email(
+                    to=record["email"],
+                    subject="Capybara denied by Admin.",
+                    content=(
+                        "Thanks you for attempting to support us, "
+                        "however admins have decided to deny your image."
+                    )
                 )
             )
 
@@ -176,4 +171,9 @@ class AdminApproveResource(HTTPEndpoint):
         except FileNotFoundError:
             pass
 
-        return Response(background=background_tasks)
+        return Response(background=BackgroundTask(
+            Sessions.ws.emit,
+            event="approval_update",
+            data={"_id": record["_id"]},
+            to="admin_approval"
+        ))
