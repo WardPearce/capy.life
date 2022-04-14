@@ -5,7 +5,8 @@
 
     import Fa from 'svelte-fa'
     import {
-        faCheckSquare, faSquareXmark, faTrash, faCheck, faXmark
+        faCheckSquare, faSquareXmark, faTrash, faCheck, faXmark,
+        faRotate, faHomeAlt, faRightFromBracket, faArrowDown
     } from '@fortawesome/free-solid-svg-icons'
 
     import {
@@ -144,14 +145,20 @@
 </script>
 
 {#if pageLoading}
-    <SyncLoader color="#644a4a" />
+    <div class="loading-center">
+        <SyncLoader color="#644a4a" />
+    </div>
 {:else}
 <nav>
     <Link to="/">
-        <button>Home</button>
+        <button>
+            <Fa icon={faHomeAlt} /> Home
+        </button>
     </Link>
     
-    <button on:click={logMeOut}>Logout</button>
+    <button on:click={logMeOut}>
+        <Fa icon={faRightFromBracket} /> Logout
+    </button>
 </nav>
 
 {#if isRoot}
@@ -163,7 +170,9 @@
             {#each invites as code }
                 <li><div class="card center">
                     <p>{ code }</p>
-                    <button class="deny" on:click={async () => await removeInvite(code)}>Delete</button>
+                    <button class="deny" on:click={async () => await removeInvite(code)}>
+                        <Fa icon={faTrash} /> Remove
+                    </button>
                 </div></li>
             {/each}
         </ul>
@@ -172,7 +181,9 @@
         {#if inviteCode !== ''}
             <input bind:value={inviteCode} type="text" disabled>
         {/if}
-        <button type="submit">Generate invite</button>
+        <button type="submit">
+            <Fa icon={faRotate} /> Generate invite
+        </button>
     </form>
 {/if}
 
@@ -236,7 +247,9 @@
         {/each }
     </ul>
     {#if approvalHistory.length % 5 === 0}
-        <button on:click={loadMoreHistory}>Load more</button>
+        <button on:click={loadMoreHistory}>
+            Load more
+        </button>
     {/if}
 {/if}
 {/if}

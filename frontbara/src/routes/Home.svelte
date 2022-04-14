@@ -1,6 +1,8 @@
 <script lang="ts">
     import { Link } from 'svelte-routing'
     import { SyncLoader } from 'svelte-loading-spinners'
+    import Fa from 'svelte-fa'
+    import { faUserShield } from '@fortawesome/free-solid-svg-icons'
 
     import { submitCapy, getTodayCapy, getCapyHistory } from '../api'
     import type { iCaptcha, iCapySubmit, iCapy, iCapyHistory } from '../api/interfaces'
@@ -71,7 +73,9 @@
 
 {#if isAdmin}
     <nav>
-        <Link to="/admin"><button>Admin portal</button></Link>
+        <Link to="/admin"><button>
+            <Fa icon={faUserShield} /> Admin portal
+        </button></Link>
     </nav>
 {/if}
 
@@ -84,7 +88,7 @@
     {:else if Object.keys(todayCapy).length === 0}
         <SyncLoader color="#644a4a" />
     {:else}
-        <img src={todayCapy.image} alt="capy">
+        <img class="capy-image" src={todayCapy.image} alt="capy">
         <h3 style="text-align: center;">Name: { todayCapy.name }</h3>
     {/if}
 </main>
