@@ -2,6 +2,7 @@
     import { Link, navigate } from 'svelte-routing'
     import { io } from 'socket.io-client'
     import { SyncLoader } from 'svelte-loading-spinners'
+    import { onDestroy } from 'svelte'
 
     import Fa from 'svelte-fa'
     import {
@@ -131,16 +132,23 @@
         navigate('/')
     }
 
+    let allowSocketDeath = false
     const socket = io(
-        import.meta.env.VITE_URL_PROXIED as string
+        import.meta.env.VITE_URL_PROXIED as string,
     )
     socket.connect()
     socket.on('disconnect', () => {
-        socket.connect()
+        if (!allowSocketDeath)
+            socket.connect()
     })
 
     socket.on('approval_update', (data) => {
         removeIdFromList(data._id)
+    })
+
+    onDestroy(() => {
+        allowSocketDeath = true
+        socket.disconnect()
     })
 </script>
 

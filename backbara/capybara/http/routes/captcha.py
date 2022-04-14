@@ -17,12 +17,14 @@ from io import BytesIO
 from datetime import datetime, timedelta, timezone
 
 from ...resources import Sessions
+from ...limiter import LIMITER
 
 
 generator = CaptchaGenerator(captcha_size_num=1)
 
 
 class CaptchaResource(HTTPEndpoint):
+    @LIMITER.limit("60/minute")
     async def get(self, request: Request) -> JSONResponse:
         captcha = generator.gen_captcha_image(
             margin=False,

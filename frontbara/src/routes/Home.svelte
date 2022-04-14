@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Link } from 'svelte-routing'
     import { SyncLoader } from 'svelte-loading-spinners'
+    import { onDestroy } from 'svelte'
     import Fa from 'svelte-fa'
     import { faUserShield } from '@fortawesome/free-solid-svg-icons'
 
@@ -11,9 +12,20 @@
 
     let todayCapyError = ''
     let todayCapy: iCapy = {} as iCapy
-    getTodayCapy().then(resp => {
-        todayCapy = resp
-    }).catch(async error => todayCapyError = (await error.json()).error)
+    async function checkCapy() {
+        try {
+            todayCapy = await getTodayCapy()
+        } catch (error) {
+            todayCapyError = (await error.json()).error
+        }
+    }
+
+    checkCapy()
+    
+    const capyCheckInterval = setInterval(
+        checkCapy, 180000
+    )
+    onDestroy(() => clearInterval(capyCheckInterval))
 
     let captcha: iCaptcha
     let captchaCode: string
