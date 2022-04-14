@@ -216,7 +216,9 @@
                 <h3>
                     { capy.name }
                 </h3>
-                <p><span style="font-weight: 300;">Admin:</span> {capy.approvedBy}</p>
+                {#if isRoot}
+                    <p><span style="font-weight: 300;">Admin:</span> {capy.approvedBy}</p>
+                {/if}
                 <p><span style="font-weight: 300;">Date:</span> {capy.approvedAt}</p>
                 <img src={capy.image} alt={`Capy named ${capy.name}`} loading="lazy">
                 <div>
