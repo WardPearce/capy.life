@@ -41,7 +41,6 @@
 
     let historyPage = 1
     let approvalHistory = []
-    let approvalHistoryPast = 1
     getApprovalHistory().then(resp => approvalHistory = resp)
 
     async function loadMoreHistory() {
@@ -50,7 +49,6 @@
             ...approvalHistory,
             ...await getApprovalHistory(historyPage)
         ]
-        approvalHistoryPast = approvalHistory.length
     }
 
     async function removeCapy(capyId: string) {
@@ -229,7 +227,7 @@
             </div></li>
         {/each }
     </ul>
-    {#if approvalHistoryPast !== approvalHistory.length && approvalHistory.length % 5 === 0}
+    {#if approvalHistory.length % 5 === 0}
         <button on:click={loadMoreHistory}>Load more</button>
     {/if}
 {/if}

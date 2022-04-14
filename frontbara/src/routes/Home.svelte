@@ -55,7 +55,6 @@
     }
 
     let capyHistoryPage = 1
-    let capyHistoryPast = 0
     let capyHistory: iCapyHistory[] = []
     getCapyHistory().then(history => {
         capyHistory = history
@@ -67,7 +66,6 @@
             ...capyHistory,
             ...await getCapyHistory(capyHistoryPage)
         ]
-        capyHistoryPast = capyHistory.length
     }
 </script>
 
@@ -148,7 +146,7 @@
             </div></li>
         {/each}
     </ul>
-    {#if capyHistory.length !== capyHistoryPast && capyHistory.length % 5 === 0}
+    {#if capyHistory.length % 5 === 0}
         <button on:click={loadMoreHistory}>Load more</button>
     {/if}
 {/if}
