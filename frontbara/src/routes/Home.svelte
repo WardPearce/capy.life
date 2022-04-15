@@ -4,6 +4,7 @@
     import { onDestroy } from 'svelte'
     import Fa from 'svelte-fa'
     import { faUserShield } from '@fortawesome/free-solid-svg-icons'
+    import { faTwitter, faDiscord } from '@fortawesome/free-brands-svg-icons'
 
     import { submitCapy, getTodayCapy, getCapyHistory } from '../api'
     import type { iCaptcha, iCapySubmit, iCapy, iCapyHistory } from '../api/interfaces'
@@ -144,8 +145,20 @@
     {/if}
 </form>
 
-<h2>How does capy.life use / store my email?</h2>
-<p>Capy.life only uses your email to notify you once your capybara has been approved / denied. Afterwards your email will be deleted from our database. Your email won't be provided to any 3rd-party aside from mailgun.com (our email provider.) You can always choose not to provide any email.</p>
+<h2>Offical bots</h2>
+<div class="bots">
+    <div class="card">
+        <Fa icon={faTwitter} />
+        <h3>Twitter</h3>
+    </div>
+    <div class="card">
+        <Fa icon={faDiscord} />
+        <h3>Discord</h3>
+    </div>
+    <div class="card">
+        <img src="./src/assets/img/matrix.svg" alt="Matrix's icon">
+    </div>
+</div>
 
 {#if capyHistory.length > 0}
     <h2>Timeline</h2>

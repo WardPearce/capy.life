@@ -138,7 +138,7 @@ form img {
     list-style: none;
 }
 
-.approval .card {
+.card {
     background-color: #332525;
     padding: .5em 1em;
     width: 100%;
@@ -172,6 +172,30 @@ form img {
     justify-content: center;
 }
 
+.bots {
+    columns: 100px 3;
+    column-gap: 1;
+}
+
+.bots .card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bots .card svg {
+    font-size: 3em;
+}
+
+.bots .card img {
+    filter: invert();
+    width: 7em;
+}
+
+.bots .card h3 {
+    margin-left: 1em;
+}
+
 @media screen and (max-width: 1200px) {
     input {
         width: 80%;
@@ -179,8 +203,20 @@ form img {
 }
 
 @media screen and (max-width: 1200px) {
-    form img {
+    input {
         width: 80%;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .bots {
+        columns: 1;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .bots .card {
+        margin-top: .5em;
     }
 }
 
