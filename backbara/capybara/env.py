@@ -35,7 +35,7 @@ SUPPORTED_IMAGE_TYPES = os.getenv(
     "SUPPORTED_IMAGE_TYPES", "image/webp,image/jpeg,image/jpg,image/png"
 ).split(",")
 
-MAX_FILE_SIZE_BYTES = int(os.getenv("MAX_FILE_SIZE_BYTES", 5243000))
+MAX_FILE_SIZE_BYTES = int(os.getenv("MAX_FILE_SIZE_BYTES", 4194000))
 
 SMTP_DOMAIN = os.getenv("SMTP_DOMAIN", None)
 SMTP_MAIN = os.getenv("SMTP_MAIN", "no-reply")

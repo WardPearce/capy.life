@@ -68,10 +68,10 @@ class SubmitCapyResource(HTTPEndpoint):
         if image.content_type not in SUPPORTED_IMAGE_TYPES:
             raise FileTypeNotSupported()
 
-        # Read the max size & 24 extra bytes
+        # Read the max size & 1 extra bytes
         # if the image bytes equals the max size plus the extra bytes
         # its too large.
-        read_size = MAX_FILE_SIZE_BYTES + 24
+        read_size = MAX_FILE_SIZE_BYTES + 1
         image_bytes = await image.read(read_size)
         if len(image_bytes) == read_size:
             raise FileTooLarge()
