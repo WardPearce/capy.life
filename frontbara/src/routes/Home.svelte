@@ -147,7 +147,7 @@
 
 <h2>Offical bots</h2>
 <div class="bots">
-    <a href="http://" target="_blank" rel="noopener noreferrer">
+    <a href="https://twitter.com/capydaily" target="_blank" rel="noopener noreferrer">
         <div class="card">
             <Fa icon={faTwitter} />
             <h3>Twitter</h3>
