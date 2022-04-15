@@ -187,11 +187,6 @@ form img {
     font-size: 3em;
 }
 
-.bots .card img {
-    filter: invert();
-    width: 7em;
-}
-
 .bots .card h3 {
     margin-left: 1em;
 }

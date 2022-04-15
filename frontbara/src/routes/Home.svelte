@@ -3,7 +3,7 @@
     import { SyncLoader } from 'svelte-loading-spinners'
     import { onDestroy } from 'svelte'
     import Fa from 'svelte-fa'
-    import { faUserShield } from '@fortawesome/free-solid-svg-icons'
+    import { faUserShield, faLock } from '@fortawesome/free-solid-svg-icons'
     import { faTwitter, faDiscord } from '@fortawesome/free-brands-svg-icons'
 
     import { submitCapy, getTodayCapy, getCapyHistory } from '../api'
@@ -147,17 +147,24 @@
 
 <h2>Offical bots</h2>
 <div class="bots">
-    <div class="card">
-        <Fa icon={faTwitter} />
-        <h3>Twitter</h3>
-    </div>
-    <div class="card">
-        <Fa icon={faDiscord} />
-        <h3>Discord</h3>
-    </div>
-    <div class="card">
-        <img src="./src/assets/img/matrix.svg" alt="Matrix's icon">
-    </div>
+    <a href="http://" target="_blank" rel="noopener noreferrer">
+        <div class="card">
+            <Fa icon={faTwitter} />
+            <h3>Twitter</h3>
+        </div>
+    </a>
+    <a href="http://" target="_blank" rel="noopener noreferrer">
+        <div class="card">
+            <Fa icon={faDiscord} />
+            <h3>Discord</h3>
+        </div>
+    </a>
+    <a href="http://" target="_blank" rel="noopener noreferrer">
+        <div class="card">
+            <Fa icon={faLock} />
+            <h3>Matrix</h3>
+        </div>
+    </a>
 </div>
 
 {#if capyHistory.length > 0}
