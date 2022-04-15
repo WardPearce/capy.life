@@ -18,6 +18,6 @@
     </section>
     <footer>
         <p>Everything on this website is satire & is NOT factually accurate.</p>
-        <a href="https://github.com/capylife/capyend" target="_blank" rel="noopener noreferrer">Source code</a>
+        <a href="https://github.com/capylife" target="_blank" rel="noopener noreferrer">Source code</a>
     </footer>
 </main>
