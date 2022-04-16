@@ -159,7 +159,7 @@
             <h3>Discord</h3>
         </div>
     </a>
-    <a href="http://" target="_blank" rel="noopener noreferrer">
+    <a href="https://matrix.to/#/#capylife:matrix.org" target="_blank" rel="noopener noreferrer">
         <div class="card">
             <Fa icon={faLock} />
             <h3>Matrix</h3>
