@@ -153,7 +153,7 @@
             <h3>Twitter</h3>
         </div>
     </a>
-    <a href="http://" target="_blank" rel="noopener noreferrer">
+    <a href="https://capy.life/discord" target="_blank" rel="noopener noreferrer">
         <div class="card">
             <Fa icon={faDiscord} />
             <h3>Discord</h3>
