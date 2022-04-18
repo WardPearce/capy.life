@@ -57,6 +57,9 @@ h2 {
 nav {
     display: flex;
     justify-content: end;
+    padding-bottom: .5em;
+    margin-bottom: .5em;
+    border-bottom: #4d3838 solid 2px;
 }
 
 nav button {
