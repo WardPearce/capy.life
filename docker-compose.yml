@@ -26,7 +26,7 @@ services:
       SMTP_USERNAME: ""
       SMTP_PASSWORD: ""
 
-      REDIS_HOST: "capy_frontend"
+      REDIS_HOST: "capy_redis"
       REDIS_PORT: 6379
 
       # Proxied Frontend URL.
