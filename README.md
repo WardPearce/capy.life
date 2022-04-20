@@ -1,5 +1,5 @@
 # Capy.life
-Capy.life is the official daily Capybara site approved by many Zoos & Scientists. 1/10 Endocrinologist say that viewing a Capybara each day drastically improves your mental state.
+Capy.life is the official daily Capybara site approved by many Zoos & Scientists. 1/10 Endocrinologist say that viewing a Capybara each day drastically improves your mental state (Satire).
 
 ## Previews
 ### Home
