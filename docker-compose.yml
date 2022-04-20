@@ -30,7 +30,7 @@ services:
       REDIS_PORT: 6379
 
       # Proxied Frontend URL.
-      URL_PROXIED: "http://localhost:8889"
+      URL_PROXIED: "http://localhost:7778"
     volumes:
       # If you change 'SAVE_PATH' this needs to be changed,
       # changing 'SAVE_PATH' is not recommended.
@@ -47,7 +47,7 @@ services:
       context: ./frontbara
       args:
         # Proxied backend URL, NO TRAILING SLASH!
-        VITE_URL_PROXIED: "http://localhost:8888"
+        VITE_URL_PROXIED: "http://localhost:7777"
     restart: unless-stopped
     ports:
       - "7778:80"

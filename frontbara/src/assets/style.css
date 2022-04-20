@@ -6,14 +6,14 @@
 
 @font-face {
     font-family: FluffyCapy;
-    src: url('./src/assets/font/PermanentMarker-Regular.ttf');
+    src: url('font/PermanentMarker-Regular.ttf');
 }
 
 body {
     color: #fff;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     background-color: #211515;
-    background-image: url('./src/assets/img/bg.png');
+    background-image: url('img/bg.png');
     background-repeat: repeat;
     background-position: center;
     background-size: 35px 35px;
