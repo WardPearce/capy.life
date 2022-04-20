@@ -24,9 +24,13 @@ URL_PROXIED = os.getenv("URL_PROXIED", "http://localhost")
 
 NANO_ID_LEN = int(os.getenv("NANO_ID_LEN", 21))
 
-SAVE_PATH = os.getenv("SAVE_PATH", "./capybaras")
-
-JWT_SECRET_PATH = os.getenv("JWT_SECRET_PATH", "./jwt.secret")
+JWT_SECRET_PATH = os.getenv(
+    "JWT_SECRET_PATH",
+    os.path.join(
+        os.path.dirname(os.path.realpath(__name__)),
+        "jwt.secret"
+    )
+)
 JWT_EXPIRES_DAYS = int(os.getenv("JWT_EXPIRES_DAYS", 20))
 
 ROOT_ADMIN_NAME = os.getenv("ROOT_ADMIN_NAME", "capy")
@@ -43,10 +47,19 @@ SMTP_HOST = os.getenv("SMTP_HOST", "localhost")
 SMTP_USERNAME = os.getenv("SMTP_USERNAME", None)
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", None)
 
-try:
-    os.mkdir(SAVE_PATH)
-except Exception:
-    pass
+SAVE_PATH = os.getenv(
+    "SAVE_PATH",
+    os.path.join(
+        os.path.dirname(os.path.realpath(__name__)),
+        "capybaras"
+    )
+)
+if not os.path.exists(SAVE_PATH):
+    # Some rclone's might not allow creating empty dirs.
+    try:
+        os.mkdir(SAVE_PATH)
+    except Exception:
+        pass
 
 
 if not os.path.exists(JWT_SECRET_PATH):
