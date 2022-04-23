@@ -22,6 +22,10 @@ MONGO_DB = os.getenv("MONGO_DB", "capybara")
 
 URL_PROXIED = os.getenv("URL_PROXIED", "http://localhost")
 
+CORS_ORIGINS = [URL_PROXIED.lower()]
+if CORS_ORIGINS[0].startswith("https"):
+    CORS_ORIGINS.append(CORS_ORIGINS[0].replace("https", "http", 1))
+
 NANO_ID_LEN = int(os.getenv("NANO_ID_LEN", 21))
 
 JWT_SECRET_PATH = os.getenv(

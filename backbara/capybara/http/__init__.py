@@ -33,7 +33,6 @@ from .websocket import AdminWebsocket
 
 from ..resources import Sessions
 
-
 Sessions.ws.register_namespace(AdminWebsocket())
 
 
@@ -55,7 +54,9 @@ ROUTES = [
         ]),
         Route("/", CapyDateResource)
     ]),
-    Mount("/socket.io", socketio.ASGIApp(Sessions.ws, socketio_path=""))
+    Mount("/socket.io", socketio.ASGIApp(
+        Sessions.ws, socketio_path=""
+    ))
 ]
 
 

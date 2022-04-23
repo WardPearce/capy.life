@@ -17,7 +17,7 @@ from motor import motor_asyncio
 
 from .env import (
     MONGO_HOST, MONGO_PORT, MONGO_DB,
-    URL_PROXIED, ROOT_ADMIN_NAME
+    ROOT_ADMIN_NAME, CORS_ORIGINS
 )
 from .limiter import LIMITER
 from .resources import Sessions
@@ -51,16 +51,12 @@ Password: {password}
 Once you login, you'll be prompted to setup Two-factor.""")
 
 
-cors_origins = [URL_PROXIED.lower()]
-if cors_origins[0].startswith("https"):
-    cors_origins.append(cors_origins[0].replace("https", "http", 1))
-
 app = Starlette(
     routes=ROUTES,
     exception_handlers=ERRORS,  # type: ignore
     middleware=[
         Middleware(CORSMiddleware,
-                   allow_origins=cors_origins,
+                   allow_origins=CORS_ORIGINS,
                    allow_methods=["GET", "DELETE", "POST"]),
         Middleware(SlowAPIMiddleware),
     ],

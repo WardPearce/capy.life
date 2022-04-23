@@ -9,8 +9,12 @@ import socketio
 from motor import motor_asyncio
 
 
+from .env import CORS_ORIGINS
+
+
 class Sessions:
     mongo: motor_asyncio.AsyncIOMotorCollection
     ws = socketio.AsyncServer(
-        async_mode="asgi"
+        async_mode="asgi",
+        cors_allowed_origins=CORS_ORIGINS
     )
