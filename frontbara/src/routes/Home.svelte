@@ -59,6 +59,7 @@
                     is: false,
                     root: false
                 })
+                isAdmin = false
                 errorMsg = 'Admin login has expired, please login again.'
             } else
                 errorMsg = (await error.json()).error
