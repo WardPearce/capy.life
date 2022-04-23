@@ -71,4 +71,4 @@ else:
         JWT_SECRET = f_.read()
 
 
-assert len(JWT_SECRET) == 86
+assert len(JWT_SECRET) > 32, "JWT key must be above 32 bytes!"
