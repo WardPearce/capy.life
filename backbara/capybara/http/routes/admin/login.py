@@ -154,7 +154,7 @@ class AdminLogin(HTTPEndpoint):
                 ).timestamp(),
                 "sub": _id
             }, JWT_SECRET, algorithm="HS256"),
-            httponly=True, samesite="strict"
+            httponly=True, samesite="strict", max_age=2592000
         )
 
         return response
