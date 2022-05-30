@@ -198,7 +198,7 @@
 <h2>Stats</h2>
 <p>Capybaras left: {capyCount.remaining}/{capyCount.total} ({ capyCount.remaining } days covered)</p>
 
-<h2>To approvel</h2>
+<h2>To approve</h2>
 {#if toApprove.length === 0 }
     <p>No capybaras to approve</p>
 {:else}
