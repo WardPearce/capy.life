@@ -53,11 +53,11 @@ class SubmitCapyResource(HTTPEndpoint):
             raise FormMissingFields("'file' is required")
 
         if ("name" not in form or not isinstance(form["name"], str) or not
-            re.match(r'[A-Za-z]+', form["name"]) or
-                len(form["name"]) > 30):
+            re.match(r'[A-Za-z]+', cast(str, form["name"])) or
+                len(cast(str, form["name"])) > 30):
             name = get_first_name()
         else:
-            name = form["name"].capitalize()
+            name = cast(str, form["name"]).capitalize()
 
         if ("email" not in form or not
                 validators.email(form["email"])):
