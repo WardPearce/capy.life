@@ -75,10 +75,7 @@ main {
 }
 
 .capybara-stats {
-    display: flex;
-    flex-direction: column;
     background-color: var(--capyDark);
-    align-items: stretch;
 }
 
 .capybara-stats ul {
@@ -115,7 +112,6 @@ main {
 }
 
 .capybara-stats h3 {
-    margin-top: .1em;
     font-size: 1.1em;
     color: var(--capyTextDarker);
 }
