@@ -9,6 +9,10 @@
 </nav>
 
 <main>
+  {#if !submitCapy}
+    <h3 style="margin-bottom: .5em;">Todays Capybara</h3>
+  {/if}
+
   <CapybaraCard
     editable={submitCapy}
     imgSrc="https://capy.life/api/capy/Ta1PpP3ao0QBGyv3-W6lm"
@@ -17,11 +21,11 @@
   {#if !submitCapy}
     <button
       class="button-large"
-      style="margin-top: 2em;"
+      style="margin-top: 1em;"
       on:click={() => (submitCapy = !submitCapy)}>Submit a Capybara!</button
     >
   {:else}
-    <button style="margin-top: 2em;" on:click={() => (submitCapy = false)}
+    <button style="margin-top: 1em;" on:click={() => (submitCapy = false)}
       >Back</button
     >
   {/if}

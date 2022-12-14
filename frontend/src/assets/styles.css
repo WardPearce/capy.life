@@ -77,15 +77,23 @@ main {
 .capybara-stats {
     display: flex;
     flex-direction: column;
-    align-items: center;
     background-color: var(--capyDark);
+    align-items: stretch;
 }
 
 .capybara-stats ul {
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    height: 100%;
 }
 
 .capybara-stats ul > li {
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
