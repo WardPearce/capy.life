@@ -55,10 +55,15 @@ main {
     color: var(--capyText) !important;
     width: 5em !important;
     height: 5em !important;
+    margin: 1em !important;
 }
 
 .sc-carousel-arrow__circle i {
     border-color: var(--capyText) !important;
+}
+
+.sc-carousel-arrow__circle:focus {
+    outline: none !important;
 }
 
 .capybara-display {
