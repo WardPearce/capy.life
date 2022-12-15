@@ -1,5 +1,6 @@
 <script lang="ts">
   import { SyncLoader } from "svelte-loading-spinners";
+  import Select from "svelte-select";
   import Image from "./Image.svelte";
 
   export let imgSrc: string | null = null;
@@ -12,6 +13,8 @@
 
   let fileInput;
   let filePreview = null;
+
+  let selectSingle;
 
   function previewImage(e) {
     const imgReader = new FileReader();
@@ -91,7 +94,14 @@
             <SyncLoader color="var(--capyLight)" size={50} />
           {/if}
         {:else}
-          <input type="text" />
+          <Select
+            value={selectSingle}
+            items={[
+              { value: true, label: "Single" },
+              { value: false, label: "Taken" },
+            ]}
+            on:select={(event) => {}}
+          />
         {/if}
       </li>
       <li>

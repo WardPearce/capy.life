@@ -2,7 +2,7 @@
   import CapybaraCard from "./lib/CapybaraCard.svelte";
   import Carousel from "svelte-carousel";
 
-  let submitCapy = false;
+  let submitCapy = true;
 </script>
 
 <nav>
@@ -19,7 +19,7 @@
 
         <CapybaraCard
           editable={false}
-          imgSrc="https://capy.life/api/capy/Ta1PpP3ao0QBGyv3-W6lm"
+          imgSrc="https://capy.life/api/capy/eB-Iz9QTok_w5i1_ReySG"
         />
       </div>
     </Carousel>

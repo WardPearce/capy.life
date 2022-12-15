@@ -11,6 +11,18 @@
     --capyText: rgb(228, 226, 226);
     --capyTextDarker: rgb(133, 133, 133);
     --sc-arrow-size: .4em !important;
+    --border: solid 2px var(--capyLight);
+    --borderFocusColor: var(--capyLight);
+    --listBackground: var(--capyDark);
+    --listBorderRadius: 0;
+    --clearSelectColor: var(--capyText);
+    --listBorder: solid 2px var(--capyLight);
+    --itemHoverBG: var(--capyLight);
+    --itemFirstBorderRadius: 0;
+    --inputPadding: .5em;
+    --borderRadius: 0;
+    --background: var(--capyDark);
+    --placeholderColor: var(--capyText);
 }
 
 @font-face {
@@ -74,6 +86,7 @@ main {
 
 .today-capybara {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     color: var(--capyLight);
@@ -188,6 +201,7 @@ input:focus {
     outline: none;
 }
 
+
 ::selection, ::-moz-selection {
     background-color: var(--capyLight);
     color: var(--capyBrown);
@@ -223,7 +237,7 @@ input:focus {
 @media only screen and (max-width: 930px) {
     .today-capybara {
         min-width: 0;
-        width: 93vw;
+        width: 100%;
         border-radius: 1em 1em 0 0;
         border-right: none;
     }
