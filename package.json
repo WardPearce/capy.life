@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "svelte-carousel": "^1.0.20"
+  }
+}

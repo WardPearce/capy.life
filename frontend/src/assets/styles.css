@@ -1,14 +1,16 @@
 * {
     margin: 0;
     padding: 0;
+    
 }
 
 :root {
-    --capyDark: #181010;
+    --capyDark: #140e0e;
     --capyBrown: #211515;
-    --capyLight: #4d3838;
+    --capyLight: #745656;
     --capyText: rgb(228, 226, 226);
     --capyTextDarker: rgb(133, 133, 133);
+    --sc-arrow-size: .4em !important;
 }
 
 @font-face {
@@ -41,11 +43,28 @@ body {
 }
 
 main {
-    padding: 2em;
+    margin: 1.5em 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: var(--capyBrown);
+}
+
+.sc-carousel-arrow__circle {
+    background-color: var(--capyDark) !important;
+    color: var(--capyText) !important;
+    width: 5em !important;
+    height: 5em !important;
+}
+
+.sc-carousel-arrow__circle i {
+    border-color: var(--capyText) !important;
+}
+
+.capybara-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .today-capybara {
@@ -95,6 +114,9 @@ main {
     flex-direction: column;
     justify-content: center;
     padding: .4em 2em 1em 1em;
+}
+
+.capybara-stats ul > li:not(:last-child) {
     border-bottom: solid 3px var(--capyLight);
 }
 
@@ -159,6 +181,17 @@ input {
 
 input:focus {
     outline: none;
+}
+
+::selection, ::-moz-selection {
+    background-color: var(--capyLight);
+    color: var(--capyBrown);
+}
+
+@media only screen and (max-width: 930px) {
+    .sc-carousel__arrow-container {
+        display: none !important;
+    }
 }
 
 @media only screen and (max-width: 930px) {

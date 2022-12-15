@@ -1,5 +1,6 @@
 <script lang="ts">
   import CapybaraCard from "./lib/CapybaraCard.svelte";
+  import Carousel from "svelte-carousel";
 
   let submitCapy = false;
 </script>
@@ -10,13 +11,21 @@
 
 <main>
   {#if !submitCapy}
-    <h3 style="margin-bottom: .5em;">Todays Capybara</h3>
-  {/if}
+    <Carousel dots={false} infinite={false} autoplay={false}>
+      <div class="capybara-display">
+        {#if !submitCapy}
+          <h3 style="margin-bottom: .5em;">Todays Capybara</h3>
+        {/if}
 
-  <CapybaraCard
-    editable={submitCapy}
-    imgSrc="https://capy.life/api/capy/Ta1PpP3ao0QBGyv3-W6lm"
-  />
+        <CapybaraCard
+          editable={false}
+          imgSrc="https://capy.life/api/capy/Ta1PpP3ao0QBGyv3-W6lm"
+        />
+      </div>
+    </Carousel>
+  {:else}
+    <CapybaraCard editable={true} />
+  {/if}
 
   {#if !submitCapy}
     <button
