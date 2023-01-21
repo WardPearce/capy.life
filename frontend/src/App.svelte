@@ -2,11 +2,12 @@
   import CapybaraCard from "./lib/CapybaraCard.svelte";
   import Carousel from "svelte-carousel";
 
-  let submitCapy = true;
+  let submitCapy = false;
 </script>
 
 <nav>
   <h1 on:click={() => (submitCapy = false)} on:keydown={() => {}}>capy.life</h1>
+  <p>the official daily capybara website</p>
 </nav>
 
 <main>
@@ -14,12 +15,12 @@
     <Carousel dots={false} infinite={false} autoplay={false}>
       <div class="capybara-display">
         {#if !submitCapy}
-          <h3 style="margin-bottom: .5em;">Todays Capybara</h3>
+          <h3 style="margin-bottom: .5em;">Capybara of the day</h3>
         {/if}
 
         <CapybaraCard
           editable={false}
-          imgSrc="https://capy.life/api/capy/eB-Iz9QTok_w5i1_ReySG"
+          imgSrc="https://capy.life/api/capy/9ZhXTT7iE8eiYIzR-OEYa"
         />
       </div>
     </Carousel>

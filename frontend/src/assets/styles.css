@@ -5,9 +5,9 @@
 }
 
 :root {
-    --capyDark: #140e0e;
-    --capyBrown: #211515;
-    --capyLight: #745656;
+    --capyDark: #130d0d;
+    --capyBrown: #291a1a;
+    --capyLight: #775a5a;
     --capyText: rgb(228, 226, 226);
     --capyTextDarker: rgb(133, 133, 133);
     --sc-arrow-size: .4em !important;
@@ -34,7 +34,10 @@ nav {
     padding: 1em .7em;
     display: flex;
     justify-content: center;
-    border-bottom: solid 5px var(--capyDark);
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--capyDark);
+    border-bottom: solid 3px var(--capyLight);
 }
 
 nav h1 {
@@ -95,15 +98,19 @@ main {
     min-height: 10em;
     border-radius: 1em 0 0 1em;
     border-right: solid 5px var(--capyLight);
+    background-image: url(./img/wee_lil_capy.png);
+    background-repeat: repeat;
+    background-position: center;
+    background-size: 10px 10px;
 }
 
 .today-capybara img {
-    object-fit: cover;
-    min-height: 653px;
-    max-height: 653px;
+    height: 653px;
+    width: 500px;
     border-radius: 1em 0 0 1em;
     border: solid 5px var(--capyLight);
     border-right: none;
+    object-fit: contain;
 }
 
 .capybara-card {

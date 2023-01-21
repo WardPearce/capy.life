@@ -28,7 +28,7 @@
     {#if !editable}
       <Image src={imgSrc} alt="Today's capybara" />
     {:else if !filePreview}
-      <h3>No image selected</h3>
+      <h3 style="color: var(--capyText);">No image selected</h3>
     {:else}
       <img src={filePreview} alt="Today's capybara" class="today-capybara" />
     {/if}
