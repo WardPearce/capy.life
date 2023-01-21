@@ -101,7 +101,7 @@ main {
     background-repeat: repeat;
     background-position: center;
     padding: .5em;
-    height: 600px;
+    min-height: 600px;
     width: 500px;
     background-size: 10px 10px;
 }
@@ -109,8 +109,8 @@ main {
 .today-capybara img {
     border-right: none;
     object-fit: contain;
-    height: 600px;
     width: 500px;
+    height: 600px;
 }
 
 .today-capybara h3 {

@@ -42,7 +42,7 @@ app = Starlite(
         version=API_VERSION,
         root_schema_site="redoc",
         servers=[Server(url=BACKEND)],
-        by_alias=False,
+        by_alias=True,
         contact=Contact(
             name="Capy.life team",
             email="capylife@pm.me",
