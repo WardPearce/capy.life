@@ -109,7 +109,7 @@ main {
     width: 500px;
     border-radius: 1em 0 0 1em;
     border-right: none;
-    object-fit: scale-down;
+    object-fit: contain;
 }
 
 .today-capybara h3 {
