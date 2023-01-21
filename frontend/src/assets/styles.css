@@ -95,23 +95,22 @@ main {
     align-items: center;
     color: var(--capyLight);
     background-color: var(--capyDark);
-    min-height: 653px;
-    width: 500px;
     border-radius: 1em 0 0 1em;
     border-right: solid 5px var(--capyLight);
     background-image: url(./img/wee_lil_capy.png);
     background-repeat: repeat;
     background-position: center;
     padding: .5em;
+    height: 600px;
+    width: 500px;
     background-size: 10px 10px;
 }
 
 .today-capybara img {
-    height: 653px;
-    width: 500px;
     border-right: none;
     object-fit: contain;
-    border-radius: 1.5em;
+    height: 600px;
+    width: 500px;
 }
 
 .today-capybara h3 {
@@ -177,6 +176,7 @@ main {
     font-family: FredokaOne;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .button-large {
@@ -243,28 +243,28 @@ input:focus {
 @media only screen and (max-width: 930px) {
     .capybara-card {
         flex-direction: column;
+        align-items: center;
     }
 }
 
 @media only screen and (max-width: 930px) {
     .capybara-stats {
         display: block;
+        width: 100%;
     }
 }
 
 @media only screen and (max-width: 930px) {
     .today-capybara img {
-        width: 100%;
+        width: 95%;
         min-height: 0;
-        border-radius: 1em 1em 0 0;
-        border: solid 5px var(--capyLight);
     }
 }
 
 @media only screen and (max-width: 930px) {
     .today-capybara {
-        min-width: 0;
-        width: 100%;
+        width: 100vw;
+        height: 400px;
         border-radius: 1em 1em 0 0;
         border-right: none;
     }
