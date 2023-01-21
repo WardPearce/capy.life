@@ -1,25 +1,39 @@
 <script lang="ts">
-  import { SyncLoader } from "svelte-loading-spinners";
+  import { Circle, SyncLoader } from "svelte-loading-spinners";
   import Select from "svelte-select";
+  import { CapyAPi } from "./capy";
+  import { RelationshipEnum, type SubmitModal } from "./client";
   import Image from "./Image.svelte";
 
   export let imgSrc: string | null = null;
   export let name: string | null = null;
   export let fighterClass: string | null = null;
-  export let muncherLvl: string | null = null;
+  export let muncherLvl: number | null = null;
   export let weaponOfChoice: string | null = null;
-  export let isSingle: boolean | null = null;
+  export let relationship_status: RelationshipEnum = null;
   export let editable = true;
+
+  let submittingCapybara = false;
+
+  async function submitCapybara() {
+    submittingCapybara = true;
+    let payload: SubmitModal = {
+      name: name,
+      image: await (await fetch(filePreview)).blob(),
+    };
+    if (relationship_status) payload.relationship_status = relationship_status;
+    await CapyAPi.default.submitCapy(payload);
+    submittingCapybara = false;
+    window.location.reload();
+  }
 
   let fileInput;
   let filePreview = null;
 
-  let selectSingle;
-
   function previewImage(e) {
     const imgReader = new FileReader();
     imgReader.readAsDataURL(e.target.files[0]);
-    imgReader.onload = (e) => (filePreview = e.target.result);
+    imgReader.onload = (loadEvent) => (filePreview = loadEvent.target.result);
   }
 </script>
 
@@ -28,12 +42,12 @@
     {#if !editable}
       <Image src={imgSrc} alt="Today's capybara" />
     {:else if !filePreview}
-      <h3 style="color: var(--capyText);">No image selected</h3>
+      <h3>No image selected</h3>
     {:else}
       <img src={filePreview} alt="Today's capybara" class="today-capybara" />
     {/if}
   </div>
-  <div class="capybara-stats">
+  <form on:submit|preventDefault={submitCapybara} class="capybara-stats">
     <ul>
       {#if editable}
         <li>
@@ -48,7 +62,12 @@
         </li>
       {/if}
       <li>
-        <h2>Name<i class="las la-praying-hands" /></h2>
+        <h2>
+          Name<i class="las la-praying-hands" />
+          {#if editable}
+            <span style="font-size: .5em;margin-left:1em;"> (Optional)</span>
+          {/if}
+        </h2>
         {#if !editable}
           {#if !name}
             <SyncLoader color="var(--capyLight)" size={50} />
@@ -56,7 +75,7 @@
             <h3>{name}</h3>
           {/if}
         {:else}
-          <input type="text" />
+          <input type="text" bind:value={name} />
         {/if}
       </li>
       <li>
@@ -68,7 +87,7 @@
             <h3>{fighterClass}</h3>
           {/if}
         {:else}
-          <input type="text" />
+          <p>randomly generated</p>
         {/if}
       </li>
       <li>
@@ -80,27 +99,30 @@
             <h3>{muncherLvl}</h3>
           {/if}
         {:else}
-          <input type="text" />
+          <p>randomly generated</p>
         {/if}
       </li>
       <li>
-        <h2>Relationship status<i class="las la-heart" /></h2>
+        <h2>
+          Relationship status<i class="las la-heart" />
+          {#if editable}
+            <span style="font-size: .5em;margin-left:1em;"> (Optional)</span>
+          {/if}
+        </h2>
         {#if !editable}
-          {#if isSingle === true || isSingle === false}
+          {#if relationship_status}
             <h3>
-              {isSingle ? "Single" : "Taken"}
+              {relationship_status}
             </h3>
           {:else}
             <SyncLoader color="var(--capyLight)" size={50} />
           {/if}
         {:else}
           <Select
-            value={selectSingle}
-            items={[
-              { value: true, label: "Single" },
-              { value: false, label: "Taken" },
-            ]}
-            on:select={(event) => {}}
+            items={Object.values(RelationshipEnum)}
+            on:select={(event) => {
+              relationship_status = event.detail.value;
+            }}
           />
         {/if}
       </li>
@@ -113,16 +135,26 @@
             <h3>{weaponOfChoice}</h3>
           {/if}
         {:else}
-          <input type="text" />
+          <p>randomly generated</p>
         {/if}
       </li>
       {#if editable}
         <li style="padding-right: 1em;">
-          <button class="button-alt" type="submit" style="margin-top: 1em;"
-            >Create</button
+          <button
+            disabled={!filePreview || submittingCapybara}
+            class="button-alt"
+            type="submit"
+            style="margin-top: 1em;"
           >
+            {#if submittingCapybara}
+              <Circle color="var(--capyText)" size={20} />
+              <p style="margin-left: 1em;">Submitting capybara...</p>
+            {:else}
+              Create
+            {/if}
+          </button>
         </li>
       {/if}
     </ul>
-  </div>
+  </form>
 </div>

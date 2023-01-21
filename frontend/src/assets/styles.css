@@ -108,9 +108,12 @@ main {
     height: 653px;
     width: 500px;
     border-radius: 1em 0 0 1em;
-    border: solid 5px var(--capyLight);
     border-right: none;
-    object-fit: contain;
+    object-fit: scale-down;
+}
+
+.today-capybara h3 {
+    color: var(--capyText);
 }
 
 .capybara-card {
@@ -160,7 +163,7 @@ main {
 
 .capybara-stats h3 {
     font-size: 1.1em;
-    color: var(--capyTextDarker);
+    color: var(--capyText);
 }
 
 .button, button {
@@ -170,6 +173,8 @@ main {
     color: var(--capyText);
     padding: 1em 2em;
     font-family: FredokaOne;
+    display: flex;
+    align-items: center;
 }
 
 .button-large {
@@ -190,6 +195,18 @@ button:hover {
     cursor: pointer;
 }
 
+.button:disabled,
+button:disabled,
+.button-alt {
+    cursor: not-allowed;
+}
+
+.button:disabled:hover,
+button:disabled:hover,
+.button-alt:disabled:hover {
+    background-color: var(--capyLight);
+}
+
 label {
     font-family: FredokaOne;
 }
@@ -201,7 +218,8 @@ input {
     padding: .2em .5em;
     color: var(--capyText);
     font-size: 1.1em;
-    width: 97%;
+    object-fit: contain;
+    height: 1.7em;
 }
 
 input:focus {

@@ -27,8 +27,10 @@
 {#if loaded}
   <img {src} {alt} />
 {:else if failed}
-  <h3>Can't load Capybara, API might be down.</h3>
+  <h3 style="color: var(--capyText);">
+    Can't load Capybara, API might be down.
+  </h3>
 {:else if loading}
-  <SyncLoader color="var(--capyLight)" size={50} />
-  <h3>Downloading Capybara.</h3>
+  <SyncLoader color="var(--capyText)" size={50} />
+  <h3 style="color: var(--capyText);">Downloading Capybara.</h3>
 {/if}

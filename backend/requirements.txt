@@ -1,0 +1,9 @@
+starlite
+motor
+pydantic
+uvicorn
+aiohttp
+aiobotocore
+nanoid
+dhash
+names
