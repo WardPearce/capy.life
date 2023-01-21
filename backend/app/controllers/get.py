@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, timedelta
 from typing import Optional
 
 from starlite import NotFoundException, get
@@ -11,12 +11,16 @@ from app.resources import Sessions
 
 
 @get(path="/")
-async def get_today_capybara(on_date: Optional[datetime] = None) -> CapybaraModel:
-    when = date.today().isoformat() if not on_date else on_date.isoformat()
+async def get_today_capybara(days_ago: Optional[int] = None) -> CapybaraModel:
+    when = (
+        date.today().isoformat()
+        if not days_ago
+        else (date.today() - timedelta(days=days_ago)).isoformat()
+    )
 
     record = await Sessions.mongo.capybara.find_one({"used": when})
     if not record:
-        if on_date:
+        if days_ago:
             raise NotFoundException(detail="No capybara on that data")
 
         async for result in Sessions.mongo.capybara.aggregate(

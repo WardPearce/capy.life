@@ -12,18 +12,18 @@ export class DefaultService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * @param onDate
+     * @param daysAgo
      * @returns CapybaraModel Request fulfilled, document follows
      * @throws ApiError
      */
     public getTodayCapybara(
-        onDate?: (null | string),
+        daysAgo?: (null | number),
     ): CancelablePromise<CapybaraModel> {
         return this.httpRequest.request({
             method: 'GET',
             url: '/',
             query: {
-                'on_date': onDate,
+                'days_ago': daysAgo,
             },
             errors: {
                 400: `Bad request syntax or unsupported method`,

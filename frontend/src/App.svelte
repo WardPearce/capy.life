@@ -6,16 +6,14 @@
 
   let submitCapy = false;
 
-  let capybaras: Array<CapybaraModel | null> = [];
-  CapyAPi.default
-    .getTodayCapybara()
-    .then((resp) => {
-      capybaras = [resp, ...capybaras];
-    })
-    .catch((error) => (capybaras = [null, ...capybaras]));
+  let capybaras: Array<CapybaraModel | null> = [null];
+  let daysAgo = 0;
 
-  function handleNewCapy(event) {
-    console.log(event);
+  async function handleNewCapy(event) {
+    capybaras[event.detail] = await CapyAPi.default.getTodayCapybara(
+      (daysAgo = 0)
+    );
+    daysAgo++;
   }
 </script>
 
@@ -42,7 +40,18 @@
           </div>
         {:else}
           <div class="capybara-display">
-            <h3 style="margin-bottom: .5em;">Capybara of the day</h3>
+            <h3 style="margin-bottom: .5em;">
+              {#if new Date(capy.used).toLocaleDateString() == new Date().toLocaleDateString()}
+                Today's capybara
+              {:else}
+                {new Date(capy.used).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              {/if}
+            </h3>
 
             <CapybaraCard
               editable={false}
