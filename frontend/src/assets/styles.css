@@ -8,6 +8,7 @@
     --capyDark: #130d0d;
     --capyBrown: #291a1a;
     --capyLight: #775a5a;
+    --capyError: #a57641;
     --capyText: rgb(228, 226, 226);
     --capyTextDarker: rgb(133, 133, 133);
     --sc-arrow-size: .4em !important;
@@ -94,8 +95,8 @@ main {
     align-items: center;
     color: var(--capyLight);
     background-color: var(--capyDark);
-    min-width: 30em;
-    min-height: 10em;
+    min-height: 653px;
+    width: 500px;
     border-radius: 1em 0 0 1em;
     border-right: solid 5px var(--capyLight);
     background-image: url(./img/wee_lil_capy.png);

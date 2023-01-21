@@ -2,7 +2,7 @@
   import { Circle, SyncLoader } from "svelte-loading-spinners";
   import Select from "svelte-select";
   import { CapyAPi } from "./capy";
-  import { RelationshipEnum, type SubmitModal } from "./client";
+  import { ApiError, RelationshipEnum, type SubmitModal } from "./client";
   import Image from "./Image.svelte";
 
   export let imgSrc: string | null = null;
@@ -14,6 +14,7 @@
   export let editable = true;
 
   let submittingCapybara = false;
+  let errorMsg = "";
 
   async function submitCapybara() {
     submittingCapybara = true;
@@ -22,9 +23,14 @@
       image: await (await fetch(filePreview)).blob(),
     };
     if (relationship_status) payload.relationship_status = relationship_status;
-    await CapyAPi.default.submitCapy(payload);
+    try {
+      await CapyAPi.default.submitCapy(payload);
+      location.reload();
+    } catch (error) {
+      if (error instanceof ApiError) errorMsg = error.body.detail;
+      else error = error.toString();
+    }
     submittingCapybara = false;
-    window.location.reload();
   }
 
   let fileInput;
@@ -140,6 +146,12 @@
       </li>
       {#if editable}
         <li style="padding-right: 1em;">
+          {#if errorMsg}
+            <div style="background-color: var(--capyError);padding:.5em 1em;">
+              <h3>Error</h3>
+              <p>{errorMsg}</p>
+            </div>
+          {/if}
           <button
             disabled={!filePreview || submittingCapybara}
             class="button-alt"

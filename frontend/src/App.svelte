@@ -4,7 +4,7 @@
   import { CapyAPi } from "./lib/capy";
   import type { CapybaraModel } from "./lib/client";
 
-  let submitCapy = true;
+  let submitCapy = false;
 
   let capybaras: Array<CapybaraModel | null> = [];
   CapyAPi.default
@@ -14,7 +14,9 @@
     })
     .catch((error) => (capybaras = [null, ...capybaras]));
 
-  function handleNewCapy(event) {}
+  function handleNewCapy(event) {
+    console.log(event);
+  }
 </script>
 
 <nav>
