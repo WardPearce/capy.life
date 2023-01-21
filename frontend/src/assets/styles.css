@@ -102,15 +102,16 @@ main {
     background-image: url(./img/wee_lil_capy.png);
     background-repeat: repeat;
     background-position: center;
+    padding: .5em;
     background-size: 10px 10px;
 }
 
 .today-capybara img {
     height: 653px;
     width: 500px;
-    border-radius: 1em 0 0 1em;
     border-right: none;
     object-fit: contain;
+    border-radius: 1.5em;
 }
 
 .today-capybara h3 {
