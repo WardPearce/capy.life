@@ -71,8 +71,10 @@
       {/if}
     {/each}
     {#if daysAgo < 2}
-      <h3>Scroll to load more</h3>
-      <i class="las la-angle-down" />
+      <div class="scroll-to-load">
+        <h3>Scroll to load more</h3>
+        <i class="las la-angle-down" />
+      </div>
     {/if}
   </div>
 
@@ -103,7 +105,14 @@
     min-height: 100vh;
   }
 
-  #content i {
-    font-size: 3em;
+  .scroll-to-load {
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .scroll-to-load i {
+    font-size: 2.5em;
   }
 </style>
