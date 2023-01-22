@@ -82,6 +82,9 @@
 </main>
 
 <style>
+  :global(body) {
+    overflow: hidden;
+  }
   .capybara-display {
     margin-bottom: 1em;
   }

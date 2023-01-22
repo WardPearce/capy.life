@@ -19,5 +19,5 @@ async def retrieve_user_handler(token: Token, connection) -> Optional[AdminModel
 jwt_cookie_auth = JWTCookieAuth[None](
     retrieve_user_handler=retrieve_user_handler,
     token_secret=secrets.token_urlsafe(128),
-    exclude=["/discord/login", "/discord/auth", "/", "/submit", "/schema"],
+    exclude=["/admin/login", "/admin/auth", "/submit", "/capybara", "/schema"],
 )

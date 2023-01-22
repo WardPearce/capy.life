@@ -55,7 +55,10 @@ body {
         Geneva,
         Verdana,
         sans-serif;
-    overflow: hidden;
+}
+
+ul {
+    list-style-position: inside;
 }
 
 main {

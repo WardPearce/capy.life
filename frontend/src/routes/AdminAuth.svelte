@@ -10,7 +10,7 @@
     if (!code) navigate("/", { replace: true });
     else {
       try {
-        const admin = await CapyAPi.default.discordAuthDiscordAuth(code);
+        const admin = await CapyAPi.default.adminAuthAuth(code);
         loggedIn.set({
           username: admin.username,
           isRoot: admin.is_root,

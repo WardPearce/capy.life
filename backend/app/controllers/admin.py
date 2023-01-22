@@ -3,12 +3,13 @@ from urllib.parse import quote_plus
 
 from starlite import (
     HTTPException,
-    MediaType,
     NotAuthorizedException,
     Redirect,
     Response,
     Router,
+    delete,
     get,
+    post,
 )
 
 from app.env import (
@@ -19,12 +20,12 @@ from app.env import (
     USER_URL_DISCORD,
 )
 from app.jwt import jwt_cookie_auth
-from app.models.admin import AdminModel
+from app.models.admin import AdminModel, StatsModel
 from app.resources import Sessions
 
 
-@get("/auth", include_in_schema=True)
-async def discord_auth(code: str) -> Response[AdminModel]:
+@post("/auth", include_in_schema=True)
+async def auth(code: str) -> Response[AdminModel]:
     resp = await Sessions.request.post(
         url=TOKEN_URL_DISCORD,
         data={
@@ -61,11 +62,28 @@ async def discord_auth(code: str) -> Response[AdminModel]:
     )
 
 
+@delete("/logout", status_code=200)
+async def logout() -> Response:
+    response = Response(content=None)
+    response.delete_cookie(jwt_cookie_auth.key)
+    return response
+
+
 @get("/login", include_in_schema=False, name="login", status_code=307)
-async def discord_login() -> Redirect:
+async def login() -> Redirect:
     return Redirect(
         path=f"https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID_DISCORD}&redirect_uri={quote_plus(AUTH_REDIRECT_URL)}&response_type=code&scope=identify"
     )
 
 
-router = Router(path="/discord", route_handlers=[discord_auth, discord_login])
+@get("/stats")
+async def stats() -> StatsModel:
+    return StatsModel(
+        remaining=await Sessions.mongo.capybara.count_documents(
+            {"used": None, "approved": True}
+        ),
+        total=await Sessions.mongo.capybara.count_documents({"approved": True}),
+    )
+
+
+router = Router(path="/admin", route_handlers=[auth, login, stats, logout])

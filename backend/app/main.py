@@ -15,6 +15,7 @@ from app.env import (
     MONGO_PORT,
     ROOT_ADMIN_DISCORD_ID,
 )
+from app.jwt import jwt_cookie_auth
 from app.resources import Sessions
 
 
@@ -45,6 +46,7 @@ app = Starlite(
     on_startup=[start_motor, start_aiohttp],
     after_startup=[check_root_admin],
     on_shutdown=[close_aiohttp],
+    on_app_init=[jwt_cookie_auth.on_app_init],
     cors_config=CORSConfig(allow_origins=[BACKEND, FRONTEND]),
     openapi_config=OpenAPIConfig(
         title=API_TITLE,

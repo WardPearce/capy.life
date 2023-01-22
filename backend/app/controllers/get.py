@@ -12,7 +12,7 @@ from app.models.submit import RelationshipEnum
 from app.resources import Sessions
 
 
-@get(path="/")
+@get(path="/", opt={"exclude_from_auth": True})
 async def get_today_capybara(days_ago: Optional[int] = None) -> CapybaraModel:
     when = (
         date.today().isoformat()

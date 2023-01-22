@@ -19,9 +19,7 @@
   }
   onMount(() => {
     if (requiresAuth && get(loggedIn).username === "") {
-      window.location.href = `${
-        import.meta.env.VITE_API_ENDPOINT
-      }/discord/login`;
+      window.location.href = `${import.meta.env.VITE_API_ENDPOINT}/admin/login`;
     }
 
     if (delayMs) {
