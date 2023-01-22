@@ -70,7 +70,12 @@
         </div>
       {/if}
     {/each}
+    {#if daysAgo < 2}
+      <h3>Scroll to load more</h3>
+      <i class="las la-angle-down" />
+    {/if}
   </div>
+
   <InfiniteScroll threshold={1} on:loadMore={loadMore} />
 </main>
 
@@ -96,5 +101,9 @@
     text-align: center;
     width: 100%;
     min-height: 100vh;
+  }
+
+  #content i {
+    font-size: 3em;
   }
 </style>

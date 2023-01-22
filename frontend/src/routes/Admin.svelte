@@ -1,5 +1,5 @@
 <main>
-  <h2>Statistics</h2>
+  <h2 style="margin-bottom: 0.5em; margin-top: 1em;">Statistics</h2>
   <p>100/3000 Capybaras remaining</p>
 
   <h2 style="margin-top: 1em;">My recent approvals</h2>
