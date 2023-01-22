@@ -14,7 +14,7 @@ from app.resources import Sessions
 async def get_today_capybara(days_ago: Optional[int] = None) -> CapybaraModel:
     when = (
         date.today().isoformat()
-        if not days_ago
+        if days_ago is None
         else (date.today() - timedelta(days=days_ago)).isoformat()
     )
 
@@ -47,4 +47,5 @@ async def get_today_capybara(days_ago: Optional[int] = None) -> CapybaraModel:
     return CapybaraModel(
         **record,
         image=f"{BACKEND}/api/capy/{record['_id']}",
+        days_ago=days_ago if days_ago is not None else 0,
     )

@@ -1,8 +1,10 @@
 <script lang="ts">
   import { Circle, SyncLoader } from "svelte-loading-spinners";
   import Select from "svelte-select";
-  import { CapyAPi } from "./capy";
-  import { ApiError, RelationshipEnum, type SubmitModal } from "./client";
+  import { navigate } from "svelte-navigator";
+
+  import { CapyAPi } from "../lib/capy";
+  import { ApiError, RelationshipEnum, type SubmitModal } from "../lib/client";
   import Image from "./Image.svelte";
 
   export let imgSrc: string | null = null;
@@ -25,7 +27,7 @@
     if (relationship_status) payload.relationship_status = relationship_status;
     try {
       await CapyAPi.default.submitCapy(payload);
-      location.reload();
+      navigate("/", { replace: true });
     } catch (error) {
       if (error instanceof ApiError) errorMsg = error.body.detail;
       else error = error.toString();

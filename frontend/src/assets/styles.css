@@ -56,6 +56,7 @@ body {
         Geneva,
         Verdana,
         sans-serif;
+    overflow: hidden;
 }
 
 main {
@@ -226,6 +227,16 @@ input {
 
 input:focus {
     outline: none;
+}
+
+a {
+    text-decoration: none;
+    color: var(--capyText);
+}
+
+a:hover {
+    color: var(--capyLight);
+    text-decoration: none;
 }
 
 

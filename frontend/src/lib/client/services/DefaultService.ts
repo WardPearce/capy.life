@@ -36,7 +36,7 @@ export class DefaultService {
      * @returns any Request fulfilled, document follows
      * @throws ApiError
      */
-    public capyImage(
+    public capyCapy(
         capyId: string,
     ): CancelablePromise<any> {
         return this.httpRequest.request({

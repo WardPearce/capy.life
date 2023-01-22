@@ -1,6 +1,6 @@
 from aiohttp import ClientSession
 from motor import motor_asyncio
-from pydantic import AnyUrl
+from pydantic import AnyUrl, BaseModel
 from pydantic_openapi_schema.v3_1_0 import Contact, Server
 from starlite import CORSConfig, OpenAPIConfig, Starlite
 
@@ -50,4 +50,5 @@ app = Starlite(
         ),
     ),
     debug=FRONTEND.endswith("localhost"),
+    type_encoders={BaseModel: lambda m: m.dict(by_alias=True)},
 )

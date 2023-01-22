@@ -1,3 +1,5 @@
+from dataclasses import fields
+
 from pydantic import BaseModel, Field
 
 from app.models.submit import RelationshipEnum
@@ -12,3 +14,4 @@ class CapybaraModel(BaseModel):
     class_: str = Field(..., alias="class")
     used: str
     relationship_status: RelationshipEnum
+    days_ago: int

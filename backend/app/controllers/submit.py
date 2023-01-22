@@ -17,7 +17,7 @@ dhash.force_pil()
 
 
 @post(path="/submit")
-async def submit_capy(
+async def capy(
     data: SubmitModal = Body(media_type=RequestEncodingType.MULTI_PART),
 ) -> Response:
     if data.image.content_type not in SUPPORTED_IMAGE_TYPES:
