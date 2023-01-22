@@ -13,10 +13,8 @@
 
 <nav>
   <a href="/" use:link><h1>capy.life</h1></a>
-  <button
-    class="button"
-    style="margin-top: 1.5em;"
-    on:click={() => navigate("/submit")}>Submit a Capybara</button
+  <button class="button" on:click={() => navigate("/submit")}
+    >Submit a Capybara</button
   >
 </nav>
 
