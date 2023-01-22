@@ -5,12 +5,14 @@ import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 
+import { AdminService } from './services/AdminService';
 import { DefaultService } from './services/DefaultService';
 
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 
 export class CapyClient {
 
+    public readonly admin: AdminService;
     public readonly default: DefaultService;
 
     public readonly request: BaseHttpRequest;
@@ -28,6 +30,7 @@ export class CapyClient {
             ENCODE_PATH: config?.ENCODE_PATH,
         });
 
+        this.admin = new AdminService(this.request);
         this.default = new DefaultService(this.request);
     }
 }

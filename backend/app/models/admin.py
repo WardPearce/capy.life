@@ -2,6 +2,8 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
+from app.models.get import CapybaraModel
+
 
 class CreateAdminModel(BaseModel):
     username: str
@@ -19,3 +21,7 @@ class ListAdminsModel(BaseModel):
 class StatsModel(BaseModel):
     remaining: int
     total: int
+
+
+class ToApproveModel(BaseModel):
+    to_approve: List[CapybaraModel]

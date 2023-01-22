@@ -1,4 +1,5 @@
 from dataclasses import fields
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -12,6 +13,6 @@ class CapybaraModel(BaseModel):
     muncher_lvl: int
     weapon: str
     class_: str = Field(..., alias="class")
-    used: str
+    used: Optional[str] = None
     relationship_status: RelationshipEnum
     days_ago: int

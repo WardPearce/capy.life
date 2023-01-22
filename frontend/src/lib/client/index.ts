@@ -16,5 +16,7 @@ export type { ListAdminsModel } from './models/ListAdminsModel';
 export { RelationshipEnum } from './models/RelationshipEnum';
 export type { StatsModel } from './models/StatsModel';
 export type { SubmitModal } from './models/SubmitModal';
+export type { ToApproveModel } from './models/ToApproveModel';
 
+export { AdminService } from './services/AdminService';
 export { DefaultService } from './services/DefaultService';

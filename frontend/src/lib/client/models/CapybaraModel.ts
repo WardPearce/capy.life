@@ -11,7 +11,7 @@ export type CapybaraModel = {
     muncher_lvl: number;
     weapon: string;
     class: string;
-    used: string;
+    used?: string;
     relationship_status: RelationshipEnum;
     days_ago: number;
 };

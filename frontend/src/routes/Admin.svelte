@@ -2,7 +2,11 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-navigator";
   import { CapyAPi } from "../lib/capy";
-  import type { ListAdminsModel, StatsModel } from "../lib/client";
+  import type {
+    ListAdminsModel,
+    StatsModel,
+    ToApproveModel,
+  } from "../lib/client";
   import { loggedIn } from "../store";
 
   let admin: { username: string; isRoot: boolean };
@@ -10,7 +14,7 @@
 
   async function logout() {
     try {
-      await CapyAPi.default.adminLogoutLogout();
+      await CapyAPi.admin.adminLogoutLogout();
     } catch (error) {}
     loggedIn.set({ username: "", isRoot: false });
     navigate("/", { replace: true });
@@ -18,25 +22,37 @@
 
   let stats: StatsModel = null;
   let currentAdmins: ListAdminsModel = null;
+  let toApprove: ToApproveModel = null;
   onMount(async () => {
     try {
-      stats = await CapyAPi.default.adminStatsStats();
+      stats = await CapyAPi.admin.adminStatsStats();
     } catch {
       await logout();
     }
 
-    currentAdmins = await CapyAPi.default.adminListListAdmins();
+    currentAdmins = await CapyAPi.admin.adminListListAdmins();
+    toApprove = await CapyAPi.admin.adminToApproveToApprove();
   });
 
+  async function approveCapy(capyId: string, changeName: boolean = false) {
+    await CapyAPi.admin.adminApproveApproveCapy(capyId, changeName ? 1 : 0);
+    toApprove = await CapyAPi.admin.adminToApproveToApprove();
+  }
+
+  async function denyCapy(capyId: string) {
+    await CapyAPi.admin.adminDenyDenyCapy(capyId);
+    toApprove = await CapyAPi.admin.adminToApproveToApprove();
+  }
+
   async function removeAdmin(discordId: string) {
-    await CapyAPi.default.adminRemoveRemoveAdmin(discordId);
-    currentAdmins = await CapyAPi.default.adminListListAdmins();
+    await CapyAPi.admin.adminRemoveRemoveAdmin(discordId);
+    currentAdmins = await CapyAPi.admin.adminListListAdmins();
   }
 
   let addUsername: string;
   let addDiscordId: string;
   async function addAdmin() {
-    await CapyAPi.default.adminAddAddAdmin({
+    await CapyAPi.admin.adminAddAddAdmin({
       username: addUsername,
       _id: addDiscordId,
     });
@@ -44,7 +60,7 @@
     addUsername = "";
     addDiscordId = "";
 
-    currentAdmins = await CapyAPi.default.adminListListAdmins();
+    currentAdmins = await CapyAPi.admin.adminListListAdmins();
   }
 </script>
 
@@ -85,17 +101,29 @@
   {/if}
 
   <h2 style="margin-top: 1em;">To approve</h2>
-  <div class="to-approve">
-    <img src="https://capy.life/api/capy/C1JnUlnM8y-NXmroj-cz8" />
-    <div class="stats">
-      <h3>Name</h3>
-      <p>Greg</p>
+  {#if !toApprove || toApprove.to_approve.length == 0}
+    <h4>nothing to approve</h4>
+  {:else}
+    {#each toApprove.to_approve as capy}
+      <div class="to-approve">
+        <img
+          src={capy.image}
+          referrerpolicy="no-referrer"
+          alt="Capybara to approve"
+        />
+        <div class="stats">
+          <h3>Name</h3>
+          <p>Greg</p>
 
-      <button>Approve</button>
-      <button>Approve but change name</button>
-      <button class="deny">Deny</button>
-    </div>
-  </div>
+          <button on:click={() => approveCapy(capy._id, false)}>Approve</button>
+          <button on:click={() => approveCapy(capy._id, true)}
+            >Approve but change name</button
+          >
+          <button class="deny" on:click={() => denyCapy(capy._id)}>Deny</button>
+        </div>
+      </div>
+    {/each}
+  {/if}
 </main>
 
 <style>
@@ -108,7 +136,7 @@
   }
   .to-approve {
     display: flex;
-    margin-top: 1em;
+    margin: 1em 0;
   }
 
   .to-approve img {

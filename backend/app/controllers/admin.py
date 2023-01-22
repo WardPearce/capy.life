@@ -1,7 +1,8 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import List
 from urllib.parse import quote_plus
 
+import names
 from starlite import (
     HTTPException,
     NotAuthorizedException,
@@ -19,11 +20,20 @@ from app.env import (
     AUTH_REDIRECT_URL,
     CLIENT_ID_DISCORD,
     CLIENT_SECRET_DISCORD,
+    DOWNLOAD_URL,
     TOKEN_URL_DISCORD,
     USER_URL_DISCORD,
 )
 from app.jwt import jwt_cookie_auth
-from app.models.admin import AdminModel, CreateAdminModel, ListAdminsModel, StatsModel
+from app.lib.s3 import format_path
+from app.models.admin import (
+    AdminModel,
+    CreateAdminModel,
+    ListAdminsModel,
+    StatsModel,
+    ToApproveModel,
+)
+from app.models.get import CapybaraModel
 from app.resources import Sessions
 
 
@@ -127,7 +137,61 @@ async def stats() -> StatsModel:
     )
 
 
+@post("/approve/{capy_id:str}/{change_name:int}", tags=["admin"])
+async def approve_capy(
+    request: Request[AdminModel, Token], capy_id: str, change_name: int
+) -> None:
+    to_set = {
+        "approved": True,
+        "approved_by": request.user.id,
+        "approved_at": datetime.now(),
+    }
+
+    if change_name:
+        to_set["name"] = names.get_first_name()
+
+    await Sessions.mongo.capybara.update_one(
+        {"_id": capy_id},
+        {"$set": to_set},
+    )
+
+
+@delete("/deny/{capy_id:str}", tags=["admin"])
+async def deny_capy(capy_id: str) -> None:
+    await Sessions.mongo.capybara.delete_one({"_id": capy_id})
+
+
+@get("/to-approve", tags=["admin"])
+async def to_approve() -> ToApproveModel:
+    to_approve = []
+
+    async for record in Sessions.mongo.capybara.aggregate(
+        [{"$match": {"approved": False}}, {"$sample": {"size": 25}}]
+    ):
+        to_approve.append(
+            CapybaraModel(
+                **record,
+                days_ago=0,
+                image=DOWNLOAD_URL
+                + f"/{format_path(record['_id'], record['img_ext'])}",
+            )
+        )
+
+    return ToApproveModel(to_approve=to_approve)
+
+
 router = Router(
     path="/admin",
-    route_handlers=[auth, login, stats, logout, add_admin, remove_admin, list_admins],
+    route_handlers=[
+        auth,
+        login,
+        stats,
+        to_approve,
+        logout,
+        add_admin,
+        remove_admin,
+        list_admins,
+        approve_capy,
+        deny_capy,
+    ],
 )
