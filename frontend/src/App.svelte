@@ -9,6 +9,7 @@
 
   const SubmitLoader = () => import("./routes/Submit.svelte");
   const AdminLoader = () => import("./routes/Admin.svelte");
+  const AdminAuthLoader = () => import("./routes/AdminAuth.svelte");
 </script>
 
 <nav>
@@ -27,6 +28,14 @@
       path="/submit"
       requiresAuth={false}
       component={SubmitLoader}
+      delayMs={500}
+    >
+      <PageLoading />
+    </LazyRoute>
+    <LazyRoute
+      path="/admin/auth"
+      requiresAuth={false}
+      component={AdminAuthLoader}
       delayMs={500}
     >
       <PageLoading />

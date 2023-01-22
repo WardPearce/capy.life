@@ -1,6 +1,15 @@
+from datetime import timedelta
 from urllib.parse import quote_plus
 
-from starlite import HTTPException, Redirect, Request, Router, get
+from starlite import (
+    HTTPException,
+    MediaType,
+    NotAuthorizedException,
+    Redirect,
+    Response,
+    Router,
+    get,
+)
 
 from app.env import (
     AUTH_REDIRECT_URL,
@@ -9,11 +18,13 @@ from app.env import (
     TOKEN_URL_DISCORD,
     USER_URL_DISCORD,
 )
+from app.jwt import jwt_cookie_auth
+from app.models.admin import AdminModel
 from app.resources import Sessions
 
 
-@get("/auth", include_in_schema=False, status_code=307)
-async def discord_auth(code: str) -> Redirect:
+@get("/auth", include_in_schema=True)
+async def discord_auth(code: str) -> Response[AdminModel]:
     resp = await Sessions.request.post(
         url=TOKEN_URL_DISCORD,
         data={
@@ -37,7 +48,17 @@ async def discord_auth(code: str) -> Redirect:
     if resp.status != 200:
         raise HTTPException(detail="Bad auth", status_code=400)
 
-    return Redirect(path="/")
+    user = await resp.json()
+
+    admin = await Sessions.mongo.approvers.find_one({"_id": user["id"]})
+    if not admin:
+        raise NotAuthorizedException()
+
+    return jwt_cookie_auth.login(
+        identifier=str(user["id"]),
+        token_expiration=timedelta(days=24),
+        response_body=AdminModel(**admin),
+    )
 
 
 @get("/login", include_in_schema=False, name="login", status_code=307)

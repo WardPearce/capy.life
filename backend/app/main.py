@@ -13,8 +13,16 @@ from app.env import (
     MONGO_COLLECTION,
     MONGO_HOST,
     MONGO_PORT,
+    ROOT_ADMIN_DISCORD_ID,
 )
 from app.resources import Sessions
+
+
+async def check_root_admin(_) -> None:
+    await Sessions.mongo.approvers.delete_many({"is_root": True})
+    await Sessions.mongo.approvers.insert_one(
+        {"_id": ROOT_ADMIN_DISCORD_ID, "is_root": True, "username": "Root admin"}
+    )
 
 
 async def start_motor() -> None:
@@ -35,6 +43,7 @@ async def close_aiohttp() -> None:
 app = Starlite(
     route_handlers=[router],
     on_startup=[start_motor, start_aiohttp],
+    after_startup=[check_root_admin],
     on_shutdown=[close_aiohttp],
     cors_config=CORSConfig(allow_origins=[BACKEND, FRONTEND]),
     openapi_config=OpenAPIConfig(

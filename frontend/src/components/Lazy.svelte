@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { get } from "svelte/store";
+  import { loggedIn } from "../store";
   import RouteTransition from "./RouteTransition.svelte";
   export let component;
   export let delayMs = null;
@@ -15,9 +17,13 @@
       $$props;
     props = restProps;
   }
-  if (requiresAuth) {
-  }
   onMount(() => {
+    if (requiresAuth && get(loggedIn).username === "") {
+      window.location.href = `${
+        import.meta.env.VITE_API_ENDPOINT
+      }/discord/login`;
+    }
+
     if (delayMs) {
       timeout = setTimeout(() => {
         showFallback = true;

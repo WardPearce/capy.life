@@ -9,6 +9,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { AdminModel } from './models/AdminModel';
 export type { CapybaraModel } from './models/CapybaraModel';
 export { RelationshipEnum } from './models/RelationshipEnum';
 export type { SubmitModal } from './models/SubmitModal';

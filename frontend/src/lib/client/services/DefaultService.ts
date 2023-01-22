@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AdminModel } from '../models/AdminModel';
 import type { CapybaraModel } from '../models/CapybaraModel';
 import type { SubmitModal } from '../models/SubmitModal';
 
@@ -32,26 +33,6 @@ export class DefaultService {
     }
 
     /**
-     * @param capyId
-     * @returns any Request fulfilled, document follows
-     * @throws ApiError
-     */
-    public capyCapy(
-        capyId: string,
-    ): CancelablePromise<any> {
-        return this.httpRequest.request({
-            method: 'GET',
-            url: '/capy/{capy_id}',
-            path: {
-                'capy_id': capyId,
-            },
-            errors: {
-                400: `Bad request syntax or unsupported method`,
-            },
-        });
-    }
-
-    /**
      * @param formData
      * @returns any Document created, URL follows
      * @throws ApiError
@@ -64,6 +45,26 @@ export class DefaultService {
             url: '/submit',
             formData: formData,
             mediaType: 'multipart/form-data',
+            errors: {
+                400: `Bad request syntax or unsupported method`,
+            },
+        });
+    }
+
+    /**
+     * @param code
+     * @returns AdminModel Request fulfilled, document follows
+     * @throws ApiError
+     */
+    public discordAuthDiscordAuth(
+        code: string,
+    ): CancelablePromise<AdminModel> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/discord/auth',
+            query: {
+                'code': code,
+            },
             errors: {
                 400: `Bad request syntax or unsupported method`,
             },
