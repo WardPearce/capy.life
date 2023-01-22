@@ -1,3 +1,4 @@
+import mimetypes
 from datetime import datetime
 from io import BytesIO
 
@@ -20,7 +21,9 @@ dhash.force_pil()
 async def capy(
     data: SubmitModal = Body(media_type=RequestEncodingType.MULTI_PART),
 ) -> Response:
-    if data.image.content_type not in SUPPORTED_IMAGE_TYPES:
+    img_ext = mimetypes.guess_extension(data.image.content_type)
+
+    if data.image.content_type not in SUPPORTED_IMAGE_TYPES or not img_ext:
         raise HTTPException(detail="Content type not supported", status_code=400)
 
     read_size = MAX_FILE_SIZE_BYTES + 1
@@ -52,7 +55,7 @@ async def capy(
         "used": None,
         "name": name,
         "phash": phash,
-        "content_type": data.image.content_type,
+        "img_ext": img_ext,
         "approved": False,
         "approved_by": None,
         "approved_at": None,
@@ -63,6 +66,10 @@ async def capy(
     await Sessions.mongo.capybara.insert_one(insert)
 
     async with s3_create_client() as client:
-        await client.put_object(Bucket=BUCKET, Key=format_path(_id), Body=image_bytes)
+        await client.put_object(
+            Bucket=BUCKET,
+            Key=format_path(_id, img_ext),
+            Body=image_bytes,
+        )
 
     return Response(content=None)

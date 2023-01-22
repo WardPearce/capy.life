@@ -1,10 +1,8 @@
 from starlite import Router
 
-from app.controllers import get, image, submit
+from app.controllers import get, submit
 
 __all__ = ["router"]
 
 
-router = Router(
-    path="/", route_handlers=[get.get_today_capybara, image.capy, submit.capy]
-)
+router = Router(path="/", route_handlers=[get.get_today_capybara, submit.capy])

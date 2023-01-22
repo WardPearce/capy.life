@@ -28,3 +28,4 @@ ACCESS_KEY_ID = environ["ACCESS_KEY_ID"]
 BUCKET = environ["BUCKET"]
 FOLDER = environ.get("FOLDER", None)
 ENDPOINT_URL = environ.get("ENDPOINT_URL", None)
+DOWNLOAD_URL = environ["DOWNLOAD_URL"]

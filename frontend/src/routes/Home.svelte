@@ -101,6 +101,7 @@
 
   .unable-to-load {
     text-align: center;
+    margin-top: 5em;
     width: 100%;
     min-height: 100vh;
   }

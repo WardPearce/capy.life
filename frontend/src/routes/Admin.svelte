@@ -2,7 +2,7 @@
   <h2 style="margin-bottom: 0.5em; margin-top: 1em;">Statistics</h2>
   <p>100/3000 Capybaras remaining</p>
 
-  <h2 style="margin-top: 1em;">My recent approvals</h2>
+  <h2 style="margin-top: 1em;">Current session's approvals</h2>
   <div class="to-approve">
     <img src="https://capy.life/api/capy/C1JnUlnM8y-NXmroj-cz8" />
     <div class="stats">
@@ -21,7 +21,7 @@
       <p>Greg</p>
 
       <button>Approve</button>
-      <button>Approve with random name</button>
+      <button>Approve with name change</button>
       <button class="deny">Deny</button>
     </div>
   </div>

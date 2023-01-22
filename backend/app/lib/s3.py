@@ -16,11 +16,11 @@ def s3_create_client():
     )
 
 
-def format_path(capy_id: str) -> str:
+def format_path(capy_id: str, ext: str) -> str:
     path = []
     if FOLDER:
         path.append(FOLDER)
 
-    path.append(f"{capy_id}.capy")
+    path.append(capy_id + ext)
 
     return os.path.join(*path)

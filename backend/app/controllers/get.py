@@ -1,9 +1,11 @@
+import mimetypes
 from datetime import date, timedelta
-from typing import Optional
+from typing import Optional, cast
 
 from starlite import NotFoundException, get
 
-from app.env import BACKEND
+from app.env import BACKEND, DOWNLOAD_URL
+from app.lib.s3 import format_path
 from app.lib.stats import generate_stats
 from app.models.get import CapybaraModel
 from app.models.submit import RelationshipEnum
@@ -44,8 +46,13 @@ async def get_today_capybara(days_ago: Optional[int] = None) -> CapybaraModel:
 
     record["used"] = when
 
+    if "content_type" in record:
+        ext = cast(str, mimetypes.guess_extension(record["content_type"]))
+    else:
+        ext = record["img_ext"]
+
     return CapybaraModel(
         **record,
-        image=f"{BACKEND}/api/capy/{record['_id']}",
+        image=DOWNLOAD_URL + f"/{format_path(record['_id'], ext)}",
         days_ago=days_ago if days_ago is not None else 0,
     )
