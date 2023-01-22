@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-navigator";
   import { CapyAPi } from "../lib/capy";
-  import type { StatsModel } from "../lib/client";
+  import type { ListAdminsModel, StatsModel } from "../lib/client";
   import { loggedIn } from "../store";
 
   let admin: { username: string; isRoot: boolean };
@@ -17,13 +17,35 @@
   }
 
   let stats: StatsModel = null;
+  let currentAdmins: ListAdminsModel = null;
   onMount(async () => {
     try {
       stats = await CapyAPi.default.adminStatsStats();
     } catch {
       await logout();
     }
+
+    currentAdmins = await CapyAPi.default.adminListListAdmins();
   });
+
+  async function removeAdmin(discordId: string) {
+    await CapyAPi.default.adminRemoveRemoveAdmin(discordId);
+    currentAdmins = await CapyAPi.default.adminListListAdmins();
+  }
+
+  let addUsername: string;
+  let addDiscordId: string;
+  async function addAdmin() {
+    await CapyAPi.default.adminAddAddAdmin({
+      username: addUsername,
+      _id: addDiscordId,
+    });
+
+    addUsername = "";
+    addDiscordId = "";
+
+    currentAdmins = await CapyAPi.default.adminListListAdmins();
+  }
 </script>
 
 <main>
@@ -34,16 +56,30 @@
     <p>{stats.remaining}/{stats.remaining} Capybaras remaining</p>
   {/if}
 
-  {#if admin.isRoot}
+  {#if admin.isRoot && currentAdmins !== null}
     <h2 style="margin-top: 1em;">Admins</h2>
     <ul>
-      <li>Greg (1049963929310330900) <button class="deny">remove</button></li>
+      {#each currentAdmins.admins as admin}
+        {#if !admin.is_root}
+          <li>
+            {admin.username} ({admin._id})
+            <button class="deny" on:click={() => removeAdmin(admin._id)}
+              >remove</button
+            >
+          </li>
+        {/if}
+      {/each}
     </ul>
 
-    <form style="margin-top: 1em;">
+    <form style="margin-top: 1em;" on:submit|preventDefault={addAdmin}>
       <h3>Add admin</h3>
-      <input type="text" placeholder="Username" />
-      <input style="margin-top: .5em;" type="text" placeholder="Discord ID" />
+      <input bind:value={addUsername} type="text" placeholder="Username" />
+      <input
+        bind:value={addDiscordId}
+        style="margin-top: .5em;"
+        type="text"
+        placeholder="Discord ID"
+      />
       <button style="margin-top: .5em;" type="submit">Add</button>
     </form>
   {/if}

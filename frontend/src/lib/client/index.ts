@@ -11,6 +11,8 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { AdminModel } from './models/AdminModel';
 export type { CapybaraModel } from './models/CapybaraModel';
+export type { CreateAdminModel } from './models/CreateAdminModel';
+export type { ListAdminsModel } from './models/ListAdminsModel';
 export { RelationshipEnum } from './models/RelationshipEnum';
 export type { StatsModel } from './models/StatsModel';
 export type { SubmitModal } from './models/SubmitModal';

@@ -2,9 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type AdminModel = {
+export type CreateAdminModel = {
     username: string;
     _id: string;
-    is_root?: boolean;
 };
 

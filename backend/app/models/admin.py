@@ -1,10 +1,19 @@
+from typing import List
+
 from pydantic import BaseModel, Field
 
 
-class AdminModel(BaseModel):
-    id: str = Field(..., alias="_id")
+class CreateAdminModel(BaseModel):
     username: str
+    id: str = Field(..., alias="_id")
+
+
+class AdminModel(CreateAdminModel):
     is_root: bool = False
+
+
+class ListAdminsModel(BaseModel):
+    admins: List[AdminModel]
 
 
 class StatsModel(BaseModel):

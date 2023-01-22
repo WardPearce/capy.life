@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type { AdminModel } from '../models/AdminModel';
 import type { CapybaraModel } from '../models/CapybaraModel';
+import type { CreateAdminModel } from '../models/CreateAdminModel';
+import type { ListAdminsModel } from '../models/ListAdminsModel';
 import type { StatsModel } from '../models/StatsModel';
 import type { SubmitModal } from '../models/SubmitModal';
 
@@ -91,6 +93,56 @@ export class DefaultService {
         return this.httpRequest.request({
             method: 'DELETE',
             url: '/admin/logout',
+        });
+    }
+
+    /**
+     * @param requestBody
+     * @returns any Document created, URL follows
+     * @throws ApiError
+     */
+    public adminAddAddAdmin(
+        requestBody: CreateAdminModel,
+    ): CancelablePromise<any> {
+        return this.httpRequest.request({
+            method: 'POST',
+            url: '/admin/add',
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                400: `Bad request syntax or unsupported method`,
+            },
+        });
+    }
+
+    /**
+     * @param adminId
+     * @returns void
+     * @throws ApiError
+     */
+    public adminRemoveRemoveAdmin(
+        adminId: string,
+    ): CancelablePromise<void> {
+        return this.httpRequest.request({
+            method: 'DELETE',
+            url: '/admin/remove/{admin_id}',
+            path: {
+                'admin_id': adminId,
+            },
+            errors: {
+                400: `Bad request syntax or unsupported method`,
+            },
+        });
+    }
+
+    /**
+     * @returns ListAdminsModel Request fulfilled, document follows
+     * @throws ApiError
+     */
+    public adminListListAdmins(): CancelablePromise<ListAdminsModel> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/admin/list',
         });
     }
 

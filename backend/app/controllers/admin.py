@@ -1,16 +1,19 @@
 from datetime import timedelta
+from typing import List
 from urllib.parse import quote_plus
 
 from starlite import (
     HTTPException,
     NotAuthorizedException,
     Redirect,
+    Request,
     Response,
     Router,
     delete,
     get,
     post,
 )
+from starlite.contrib.jwt import Token
 
 from app.env import (
     AUTH_REDIRECT_URL,
@@ -20,11 +23,11 @@ from app.env import (
     USER_URL_DISCORD,
 )
 from app.jwt import jwt_cookie_auth
-from app.models.admin import AdminModel, StatsModel
+from app.models.admin import AdminModel, CreateAdminModel, ListAdminsModel, StatsModel
 from app.resources import Sessions
 
 
-@post("/auth", include_in_schema=True)
+@post("/auth", tags=["admin"])
 async def auth(code: str) -> Response[AdminModel]:
     resp = await Sessions.request.post(
         url=TOKEN_URL_DISCORD,
@@ -62,7 +65,45 @@ async def auth(code: str) -> Response[AdminModel]:
     )
 
 
-@delete("/logout", status_code=200)
+@get("/list", tags=["admin"])
+async def list_admins(request: Request[AdminModel, Token]) -> ListAdminsModel:
+    if not request.user.is_root:
+        raise NotAuthorizedException()
+
+    admins: List[AdminModel] = []
+
+    async for admin in Sessions.mongo.approvers.find():
+        admins.append(AdminModel(**admin))
+
+    return ListAdminsModel(admins=admins)
+
+
+@post("/add", tags=["admin"])
+async def add_admin(
+    request: Request[AdminModel, Token], data: CreateAdminModel
+) -> Response:
+    if not request.user.is_root:
+        raise NotAuthorizedException()
+
+    if await Sessions.mongo.approvers.count_documents({"_id": data.id}) > 0:
+        raise HTTPException(detail="Id already added", status_code=400)
+
+    await Sessions.mongo.approvers.insert_one(
+        {"_id": data.id, "username": data.username, "is_root": False}
+    )
+
+    return Response(content=None)
+
+
+@delete("/remove/{admin_id:str}", tags=["admin"])
+async def remove_admin(request: Request[AdminModel, Token], admin_id: str) -> None:
+    if not request.user.is_root:
+        raise NotAuthorizedException()
+
+    await Sessions.mongo.approvers.delete_one({"_id": admin_id})
+
+
+@delete("/logout", status_code=200, tags=["admin"])
 async def logout() -> Response:
     response = Response(content=None)
     response.delete_cookie(jwt_cookie_auth.key)
@@ -76,7 +117,7 @@ async def login() -> Redirect:
     )
 
 
-@get("/stats")
+@get("/stats", tags=["admin"])
 async def stats() -> StatsModel:
     return StatsModel(
         remaining=await Sessions.mongo.capybara.count_documents(
@@ -86,4 +127,7 @@ async def stats() -> StatsModel:
     )
 
 
-router = Router(path="/admin", route_handlers=[auth, login, stats, logout])
+router = Router(
+    path="/admin",
+    route_handlers=[auth, login, stats, logout, add_admin, remove_admin, list_admins],
+)
