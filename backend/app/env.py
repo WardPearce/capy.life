@@ -29,3 +29,13 @@ BUCKET = environ["BUCKET"]
 FOLDER = environ.get("FOLDER", None)
 ENDPOINT_URL = environ.get("ENDPOINT_URL", None)
 DOWNLOAD_URL = environ["DOWNLOAD_URL"]
+
+USER_URL_DISCORD = environ.get(
+    "USER_URL_DISCORD", "https://discordapp.com/api/users/@me"
+)
+TOKEN_URL_DISCORD = environ.get(
+    "TOKEN_URL_DISCORD", "https://discord.com/api/oauth2/token"
+)
+CLIENT_ID_DISCORD = environ["CLIENT_ID_DISCORD"]
+CLIENT_SECRET_DISCORD = environ["CLIENT_SECRET_DISCORD"]
+AUTH_REDIRECT_URL = environ["AUTH_REDIRECT_URL"]
