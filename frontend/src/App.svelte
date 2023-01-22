@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Router, Route, link } from "svelte-navigator";
+  import { Router, Route, link, navigate } from "svelte-navigator";
 
   import Home from "./routes/Home.svelte";
   import LazyRoute from "./routes/LazyRoute.svelte";
@@ -13,7 +13,11 @@
 
 <nav>
   <a href="/" use:link><h1>capy.life</h1></a>
-  <p style="margin-top: .5em;">the official daily capybara website</p>
+  <button
+    class="button"
+    style="margin-top: 1.5em;"
+    on:click={() => navigate("/submit")}>Submit a Capybara</button
+  >
 </nav>
 
 <Router primary={false}>

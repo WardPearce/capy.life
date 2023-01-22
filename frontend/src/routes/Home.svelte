@@ -32,11 +32,6 @@
 
 <main>
   <div id="content">
-    <button
-      class="button-large"
-      style="margin: 1em;"
-      on:click={() => navigate("/submit")}>Submit a Capybara!</button
-    >
     {#each capybaras as capy}
       {#if !capy}
         <div class="unable-to-load">
