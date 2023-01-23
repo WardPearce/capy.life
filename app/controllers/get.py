@@ -20,10 +20,13 @@ async def get_today_capybara(days_ago: Optional[int] = None) -> CapybaraModel:
         else (date.today() - timedelta(days=days_ago)).isoformat()
     )
 
+    if days_ago is not None and days_ago < 0:
+        raise NotFoundException(detail="Days ago can't be negative")
+
     record = cast(dict, await Sessions.mongo.capybara.find_one({"used": when}))
     if not record or "muncher_lvl" not in record:
         if not record:
-            if days_ago:
+            if days_ago is not None:
                 raise NotFoundException(detail="No capybara on that data")
 
             async for result in Sessions.mongo.capybara.aggregate(
