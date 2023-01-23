@@ -50,7 +50,7 @@ app = Starlite(
     after_startup=[check_root_admin],
     on_shutdown=[close_aiohttp],
     on_app_init=[jwt_cookie_auth.on_app_init],
-    cors_config=CORSConfig(allow_origins=[BACKEND, FRONTEND]),
+    cors_config=CORSConfig(allow_origins=[BACKEND, FRONTEND], allow_credentials=True),
     openapi_config=OpenAPIConfig(
         title=API_TITLE,
         version=API_VERSION,
