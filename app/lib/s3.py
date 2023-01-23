@@ -2,7 +2,7 @@ import os
 
 from aiobotocore.session import get_session
 
-from app.env import ACCESS_KEY_ID, ENDPOINT_URL, FOLDER, REGION_NAME, SECRET_ACCESS_KEY
+from ..env import ACCESS_KEY_ID, ENDPOINT_URL, FOLDER, REGION_NAME, SECRET_ACCESS_KEY
 
 
 def s3_create_client():

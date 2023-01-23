@@ -4,12 +4,12 @@ from typing import Optional, cast
 
 from starlite import NotFoundException, get
 
-from app.env import BACKEND, DOWNLOAD_URL
-from app.lib.s3 import format_path
-from app.lib.stats import generate_stats
-from app.models.get import CapybaraModel
-from app.models.submit import RelationshipEnum
-from app.resources import Sessions
+from ..env import DOWNLOAD_URL
+from ..lib.s3 import format_path
+from ..lib.stats import generate_stats
+from ..models.get import CapybaraModel
+from ..models.submit import RelationshipEnum
+from ..resources import Sessions
 
 
 @get(path="/", opt={"exclude_from_auth": True})

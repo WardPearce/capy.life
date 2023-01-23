@@ -1,6 +1,6 @@
 import random
 
-from app.models.submit import CLASSES, WEAPONS
+from ..models.submit import CLASSES, WEAPONS
 
 
 def generate_stats() -> dict:

@@ -1,6 +1,6 @@
 from starlite import Router
 
-from app.controllers import admin, get, submit
+from . import admin, get, submit
 
 __all__ = ["router"]
 

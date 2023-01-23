@@ -16,7 +16,7 @@ from starlite import (
 )
 from starlite.contrib.jwt import Token
 
-from app.env import (
+from ..env import (
     AUTH_REDIRECT_URL,
     CLIENT_ID_DISCORD,
     CLIENT_SECRET_DISCORD,
@@ -24,17 +24,17 @@ from app.env import (
     TOKEN_URL_DISCORD,
     USER_URL_DISCORD,
 )
-from app.jwt import jwt_cookie_auth
-from app.lib.s3 import format_path
-from app.models.admin import (
+from ..jwt import jwt_cookie_auth
+from ..lib.s3 import format_path
+from ..models.admin import (
     AdminModel,
     CreateAdminModel,
     ListAdminsModel,
     StatsModel,
     ToApproveModel,
 )
-from app.models.get import CapybaraModel
-from app.resources import Sessions
+from ..models.get import CapybaraModel
+from ..resources import Sessions
 
 
 @post("/auth", tags=["admin"])

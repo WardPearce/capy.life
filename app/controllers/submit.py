@@ -8,11 +8,11 @@ import nanoid
 from PIL import Image
 from starlite import Body, HTTPException, RequestEncodingType, Response, post
 
-from app.env import BUCKET, MAX_FILE_SIZE_BYTES, NANO_ID_LEN, SUPPORTED_IMAGE_TYPES
-from app.lib.s3 import format_path, s3_create_client
-from app.lib.stats import generate_stats
-from app.models.submit import SubmitModal
-from app.resources import Sessions
+from ..env import BUCKET, MAX_FILE_SIZE_BYTES, NANO_ID_LEN, SUPPORTED_IMAGE_TYPES
+from ..lib.s3 import format_path, s3_create_client
+from ..lib.stats import generate_stats
+from ..models.submit import SubmitModal
+from ..resources import Sessions
 
 dhash.force_pil()
 

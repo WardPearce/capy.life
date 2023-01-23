@@ -3,8 +3,8 @@ from typing import Optional
 
 from starlite.contrib.jwt import JWTCookieAuth, Token
 
-from app.models.admin import AdminModel
-from app.resources import Sessions
+from .models.admin import AdminModel
+from .resources import Sessions
 
 
 async def retrieve_user_handler(token: Token, connection) -> Optional[AdminModel]:

@@ -4,8 +4,8 @@ from pydantic import AnyUrl, BaseModel
 from pydantic_openapi_schema.v3_1_0 import Contact, Server
 from starlite import CORSConfig, OpenAPIConfig, Starlite
 
-from app.controllers import router
-from app.env import (
+from .controllers import router
+from .env import (
     API_TITLE,
     API_VERSION,
     BACKEND,
@@ -15,8 +15,8 @@ from app.env import (
     MONGO_PORT,
     ROOT_ADMIN_DISCORD_ID,
 )
-from app.jwt import jwt_cookie_auth
-from app.resources import Sessions
+from .jwt import jwt_cookie_auth
+from .resources import Sessions
 
 
 async def check_root_admin(_) -> None:

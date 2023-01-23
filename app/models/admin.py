@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from app.models.get import CapybaraModel
+from ..models.get import CapybaraModel
 
 
 class CreateAdminModel(BaseModel):
