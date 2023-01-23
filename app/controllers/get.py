@@ -38,7 +38,7 @@ async def get_today_capybara(days_ago: Optional[int] = None) -> CapybaraModel:
         if "muncher_lvl" not in record:
             new_stats = {
                 **generate_stats(),
-                "relationship_status": RelationshipEnum.single,
+                "relationship_status": RelationshipEnum.single.value,
             }
         else:
             new_stats = {}
