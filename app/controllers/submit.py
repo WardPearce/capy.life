@@ -21,7 +21,10 @@ dhash.force_pil()
 async def capy(
     data: SubmitModal = Body(media_type=RequestEncodingType.MULTI_PART),
 ) -> Response:
-    img_ext = mimetypes.guess_extension(data.image.content_type)
+    if data.image.content_type == "image/webp":
+        img_ext = ".webp"
+    else:
+        img_ext = mimetypes.guess_extension(data.image.content_type)
 
     if data.image.content_type not in SUPPORTED_IMAGE_TYPES or not img_ext:
         raise HTTPException(detail="Content type not supported", status_code=400)

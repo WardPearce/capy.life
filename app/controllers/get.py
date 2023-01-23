@@ -52,7 +52,9 @@ async def get_today_capybara(days_ago: Optional[int] = None) -> CapybaraModel:
     record["used"] = when
 
     if "content_type" in record:
-        ext = cast(str, mimetypes.guess_extension(record["content_type"]))
+        ext = mimetypes.guess_extension(record["content_type"])
+        if not ext:
+            ext = ".webp"
     else:
         ext = record["img_ext"]
 
