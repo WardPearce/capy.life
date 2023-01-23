@@ -1,4 +1,4 @@
-starlite
+starlite[full]
 motor
 pydantic
 uvicorn
