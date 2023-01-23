@@ -21,27 +21,32 @@ async def get_today_capybara(days_ago: Optional[int] = None) -> CapybaraModel:
     )
 
     record = cast(dict, await Sessions.mongo.capybara.find_one({"used": when}))
-    if not record:
-        if days_ago:
-            raise NotFoundException(detail="No capybara on that data")
-
-        async for result in Sessions.mongo.capybara.aggregate(
-            [{"$match": {"approved": True, "used": None}}, {"$sample": {"size": 1}}]
-        ):
-            record = result
-
+    if not record or "muncher_lvl" not in record:
         if not record:
-            raise NotFoundException()
+            if days_ago:
+                raise NotFoundException(detail="No capybara on that data")
+
+            async for result in Sessions.mongo.capybara.aggregate(
+                [{"$match": {"approved": True, "used": None}}, {"$sample": {"size": 1}}]
+            ):
+                record = result
+
+            if not record:
+                raise NotFoundException()
 
         # Add stats if legacy capy
         if "muncher_lvl" not in record:
-            stats = generate_stats()
-            record = {**record, **stats, "relationship_status": RelationshipEnum.single}
+            new_stats = {
+                **generate_stats(),
+                "relationship_status": RelationshipEnum.single,
+            }
         else:
-            stats = {}
+            new_stats = {}
+
+        record = {**record, **new_stats}
 
         await Sessions.mongo.capybara.update_one(
-            {"_id": record["_id"]}, {"$set": {"used": when, **stats}}
+            {"_id": record["_id"]}, {"$set": {"used": when, **new_stats}}
         )
 
     record["used"] = when
