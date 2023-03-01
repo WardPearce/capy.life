@@ -7,6 +7,6 @@ nanoid==2.0.0
 Pillow==9.4.0
 pydantic==1.10.5
 pydantic_openapi_schema==1.5.1
-python-dotenv==0.21.1
+python-dotenv==1.0.0
 starlite[full]==1.51.5
 uvicorn==0.20.0
