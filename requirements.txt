@@ -5,8 +5,8 @@ motor==3.1.1
 names==0.3.0
 nanoid==2.0.0
 Pillow==9.4.0
-pydantic==1.10.5
+pydantic==1.10.6
 pydantic_openapi_schema==1.5.1
 python-dotenv==1.0.0
 starlite[full]==1.51.7
-uvicorn==0.20.0
+uvicorn==0.21.1
