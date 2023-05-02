@@ -8,5 +8,5 @@ Pillow==9.5.0
 pydantic==1.10.7
 pydantic_openapi_schema==1.5.1
 python-dotenv==1.0.0
-starlite[full]==1.51.10
+starlite[full]==1.51.11
 uvicorn==0.22.0
