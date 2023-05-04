@@ -96,7 +96,7 @@ async def add_admin(
         raise NotAuthorizedException()
 
     if await Sessions.mongo.approvers.count_documents({"_id": data.id}) > 0:
-        raise HTTPException(detail="Id already added", status_code=400)
+        raise HTTPException(detail="ID already added", status_code=400)
 
     await Sessions.mongo.approvers.insert_one(
         {"_id": data.id, "username": data.username, "is_root": False}

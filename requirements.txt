@@ -10,3 +10,4 @@ pydantic_openapi_schema==1.5.1
 python-dotenv==0.21.1
 starlite[full]==1.50.1
 uvicorn==0.20.0
+tldextract==3.4.1
