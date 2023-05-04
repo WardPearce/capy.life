@@ -1,3 +1,4 @@
+import mimetypes
 from datetime import datetime, timedelta
 from typing import List
 from urllib.parse import quote_plus
@@ -168,12 +169,18 @@ async def to_approve() -> ToApproveModel:
     async for record in Sessions.mongo.capybara.aggregate(
         [{"$match": {"approved": False}}, {"$sample": {"size": 25}}]
     ):
+        if "content_type" in record:
+            ext = mimetypes.guess_extension(record["content_type"])
+            if not ext:
+                ext = ".webp"
+        else:
+            ext = record["img_ext"]
+
         to_approve.append(
             CapybaraModel(
                 **record,
                 days_ago=0,
-                image=DOWNLOAD_URL
-                + f"/{format_path(record['_id'], record['img_ext'])}",
+                image=DOWNLOAD_URL + f"/{format_path(record['_id'], ext)}",
             )
         )
 
