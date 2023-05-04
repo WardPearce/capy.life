@@ -23,9 +23,8 @@ frontend_domain = tldextract.extract(FRONTEND)
 jwt_cookie_auth = JWTCookieAuth[None](
     retrieve_user_handler=retrieve_user_handler,
     token_secret=secrets.token_urlsafe(128),
-    samesite="none",
+    samesite="strict",
     secure=True,
-    path="/",
     domain=f"{frontend_domain.domain}{'.' if frontend_domain.suffix else ''}{frontend_domain.suffix}",
     exclude=["/admin/login", "/admin/auth", "/submit", "/capybara", "/schema"],
 )
