@@ -4,11 +4,11 @@
 
 ### Home
 
-![home page preview](https://i.imgur.com/2EQsfb1.png)
+![home page preview](https://i.imgur.com/8U3qeZ0.png)
 
-### Admin
+### Submit
 
-![admin page preview](https://i.imgur.com/QV7Av5w.png)
+![admin page preview](https://i.imgur.com/giyzTe8.png)
 
 ## Setup
 
