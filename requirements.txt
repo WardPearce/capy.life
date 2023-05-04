@@ -11,3 +11,4 @@ python-dotenv==1.0.0
 starlite[full]==1.51.11
 uvicorn==0.22.0
 tldextract==3.4.1
+types-aiobotocore==2.5.0.post2
