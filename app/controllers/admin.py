@@ -167,7 +167,10 @@ async def to_approve() -> ToApproveModel:
     to_approve = []
 
     async for record in Sessions.mongo.capybara.aggregate(
-        [{"$match": {"approved": False}}, {"$sample": {"size": 25}}]
+        [
+            {"$match": {"approved": False, "relationship_status": {"$exists": True}}},
+            {"$sample": {"size": 25}},
+        ]
     ):
         if "content_type" in record:
             ext = mimetypes.guess_extension(record["content_type"])

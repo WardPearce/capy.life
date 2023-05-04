@@ -21,11 +21,17 @@ from .resources import Sessions
 
 async def check_root_admin(_) -> None:
     if (
-        await Sessions.mongo.approvers.count_documents({"_id": ROOT_ADMIN_DISCORD_ID})
+        await Sessions.mongo.approvers.count_documents(
+            {"_id": str(ROOT_ADMIN_DISCORD_ID)}
+        )
         == 0
     ):
         await Sessions.mongo.approvers.insert_one(
-            {"_id": ROOT_ADMIN_DISCORD_ID, "is_root": True, "username": "Root admin"}
+            {
+                "_id": str(ROOT_ADMIN_DISCORD_ID),
+                "is_root": True,
+                "username": "Root admin",
+            }
         )
 
 
