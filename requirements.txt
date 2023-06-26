@@ -1,7 +1,7 @@
 aiobotocore==2.5.0
 aiohttp==3.8.4
 dhash==1.4
-motor==3.1.2
+motor==3.2.0
 names==0.3.0
 nanoid==2.0.0
 Pillow==9.5.0
