@@ -118,7 +118,7 @@
 
   <h2 style="margin-top: 1em;">To approve</h2>
   {#if toApproveLoading}
-    <SyncLoader color="var(--capyLight)" size={20} />
+    <SyncLoader color="var(--capyLight)" size={40} />
   {:else if !toApprove || toApprove.to_approve.length == 0}
     <h4>nothing to approve</h4>
   {:else}
