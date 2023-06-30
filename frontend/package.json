@@ -19,7 +19,7 @@
     "svelte-infinite-scroll": "^2.0.1",
     "svelte-loading-spinners": "^0.3.4",
     "svelte-local-storage-store": "^0.4.0",
-    "svelte-select": "^5.6.0",
+    "svelte-select": "^5.6.1",
     "tslib": "^2.5.0",
     "typescript": "^5.0.4",
     "vite": "^4.3.5"
