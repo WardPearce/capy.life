@@ -12,7 +12,6 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-top: 8em;
     text-align: center;
   }
   p {
