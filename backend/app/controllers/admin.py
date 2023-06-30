@@ -4,7 +4,6 @@ from urllib.parse import quote_plus
 
 import names
 from app.jwt import jwt_cookie_auth
-from app.lib.s3 import format_path
 from app.models.admin import (
     AdminModel,
     CreateAdminModel,

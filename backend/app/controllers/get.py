@@ -2,8 +2,6 @@ import mimetypes
 from datetime import date, timedelta
 from typing import Optional, cast
 
-from app.env import SETTINGS
-from app.lib.s3 import format_path
 from app.lib.stats import generate_stats
 from app.models.get import CapybaraModel
 from app.models.submit import RelationshipEnum

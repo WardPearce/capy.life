@@ -6,7 +6,7 @@ import dhash
 import names
 import nanoid
 from app.env import SETTINGS
-from app.lib.s3 import format_path, s3_create_client
+from app.lib.s3 import s3_create_client
 from app.lib.stats import generate_stats
 from app.models.submit import SubmitModal
 from app.resources import Sessions
@@ -66,7 +66,7 @@ async def capy(
     async with s3_create_client() as client:
         await client.put_object(
             Bucket=SETTINGS.s3.bucket,
-            Key=format_path(_id, img_ext),
+            Key=_id + img_ext,
             Body=image_bytes,
         )
 
