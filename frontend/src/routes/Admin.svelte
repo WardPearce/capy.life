@@ -33,14 +33,20 @@
     }
   });
 
+  function filterCapy(capyId: string) {
+    toApprove.to_approve = toApprove.to_approve.filter(
+      (capy) => capy._id !== capyId
+    );
+  }
+
   async function approveCapy(capyId: string, changeName: boolean = false) {
+    filterCapy(capyId);
     await CapyAPi.admin.adminApproveApproveCapy(capyId, changeName ? 1 : 0);
-    toApprove = await CapyAPi.admin.adminToApproveToApprove();
   }
 
   async function denyCapy(capyId: string) {
+    filterCapy(capyId);
     await CapyAPi.admin.adminDenyDenyCapy(capyId);
-    toApprove = await CapyAPi.admin.adminToApproveToApprove();
   }
 
   async function removeAdmin(discordId: string) {
