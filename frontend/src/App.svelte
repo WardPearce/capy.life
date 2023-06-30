@@ -6,18 +6,11 @@
   import TransitionContainer from "./components/TransitionContainer.svelte";
   import Home from "./routes/Home.svelte";
   import LazyRoute from "./routes/LazyRoute.svelte";
-  import { loggedIn } from "./store";
-
-  let isAdmin = false;
-  loggedIn.subscribe((admin) => (isAdmin = admin.username !== ""));
 </script>
 
 <nav>
   <a href="/" use:link><h1>capy.life</h1></a>
   <div style="display: flex;align-items:center;">
-    {#if isAdmin}
-      <a href="/admin" use:link style="margin-right: 1em;">Admin Portal</a>
-    {/if}
     <button class="button" on:click={() => navigate("/submit")}
       >Submit a Capybara</button
     >

@@ -1,27 +1,41 @@
 <script lang="ts">
-  import { navigate } from "svelte-navigator";
-  import InfiniteScroll from "svelte-infinite-scroll";
   import { onMount } from "svelte";
+  import InfiniteScroll from "svelte-infinite-scroll";
 
   import CapybaraCard from "../components/CapybaraCard.svelte";
+  import PageLoading from "../components/PageLoading.svelte";
   import { CapyAPi } from "../lib/capy";
   import type { CapybaraModel } from "../lib/client";
 
   let capybaras: Array<CapybaraModel | null> = [];
   let daysAgo = 0;
+  let loading = false;
 
   async function loadMore() {
+    if (loading) return;
+
+    loading = true;
+    const content = document.getElementById("content");
+    content.style.minHeight = `${100 * (daysAgo + 1)}vh`;
+
     try {
       const capybara = await CapyAPi.default.getTodayCapybara(daysAgo);
       capybaras = [...capybaras, capybara];
+
+      // Wait for dom to update.
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      document.getElementById(capybara._id).scrollIntoView({
+        behavior: "smooth",
+      });
+
+      daysAgo++;
+
+      loading = false;
     } catch (error) {
       capybaras = [...capybaras, null];
+      loading = false;
     }
-
-    document.getElementById("content").style.height =
-      document.getElementById("content").clientHeight * 2 + "px";
-
-    daysAgo++;
   }
 
   onMount(async () => {
@@ -57,6 +71,8 @@
             {/if}
           </h3>
 
+          <div id={capy._id} />
+
           <CapybaraCard
             editable={false}
             imgSrc={capy.image}
@@ -69,7 +85,10 @@
         </div>
       {/if}
     {/each}
-    {#if daysAgo < 2}
+
+    {#if loading}
+      <div class="loading"><PageLoading /></div>
+    {:else if daysAgo < 2}
       <div class="scroll-to-load">
         <h3>Scroll to load more</h3>
         <i class="las la-angle-down" />
@@ -84,6 +103,7 @@
   :global(body) {
     overflow: hidden;
   }
+
   .capybara-display {
     margin-bottom: 1em;
   }

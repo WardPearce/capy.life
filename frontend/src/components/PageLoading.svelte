@@ -4,7 +4,6 @@
 
 <main>
   <SyncLoader color="var(--capyLight)" size={100} />
-  <h3>this may take a moment</h3>
 </main>
 
 <style>

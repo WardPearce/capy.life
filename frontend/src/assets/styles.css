@@ -104,7 +104,7 @@ main {
     background-repeat: repeat;
     background-position: center;
     padding: .5em;
-    min-height: 600px;
+    min-height: 200px;
     width: 500px;
     background-size: 10px 10px;
 }

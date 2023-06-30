@@ -6,7 +6,7 @@ import type { RelationshipEnum } from './RelationshipEnum';
 
 export type CapybaraModel = {
     name: string;
-    image: string;
+    image?: string;
     _id: string;
     muncher_lvl: number;
     weapon: string;

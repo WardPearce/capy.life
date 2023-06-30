@@ -1,3 +1,4 @@
+import mimetypes
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
@@ -20,7 +21,10 @@ dhash.force_pil()
 async def capy(
     data: SubmitModal = Body(media_type=RequestEncodingType.MULTI_PART),
 ) -> Response:
-    img_ext = Path(data.image.filename).suffix
+    if data.image.content_type == "image/webp":
+        img_ext = ".webp"
+    else:
+        img_ext = mimetypes.guess_extension(data.image.content_type)
 
     if img_ext not in SETTINGS.file.supported_types:
         raise HTTPException(detail="Content type not supported", status_code=400)
