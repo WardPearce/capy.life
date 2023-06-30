@@ -3,6 +3,7 @@ from typing import List
 from urllib.parse import quote_plus
 
 import names
+from app.env import SETTINGS
 from app.jwt import jwt_cookie_auth
 from app.models.admin import (
     AdminModel,
@@ -25,8 +26,6 @@ from starlite import (
     post,
 )
 from starlite.contrib.jwt import Token
-
-from backend.app.env import SETTINGS
 
 
 @post("/auth", tags=["admin"])

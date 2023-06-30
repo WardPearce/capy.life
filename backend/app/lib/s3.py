@@ -1,8 +1,7 @@
 from typing import TYPE_CHECKING
 
 from aiobotocore.session import get_session
-
-from backend.app.env import SETTINGS
+from app.env import SETTINGS
 
 if TYPE_CHECKING:
     from types_aiobotocore_s3 import S3Client

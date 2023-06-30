@@ -47,12 +47,12 @@ class Settings(BaseSettings):
     file: FileUpload = FileUpload()
     s3: S3
     discord: Discord
-    mongo: MongoDB
+    mongo: MongoDB = MongoDB()
     proxies: ProxiedUrls = ProxiedUrls()
     openapi: OpenAPI = OpenAPI()
 
     root_admin_id: str
-    jtw_secret: str = Field(secrets.token_urlsafe(32), min_length=32)
+    jwt_secret: str = Field(secrets.token_urlsafe(32), min_length=32)
 
     class Config:
         env_prefix = "capy_"

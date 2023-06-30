@@ -1,13 +1,12 @@
 from aiohttp import ClientSession
 from app.controllers import router
+from app.env import SETTINGS
 from app.jwt import jwt_cookie_auth
 from app.resources import Sessions
 from motor import motor_asyncio
-from pydantic import AnyUrl, BaseModel
+from pydantic import BaseModel
 from pydantic_openapi_schema.v3_1_0 import Contact, Server
 from starlite import CORSConfig, OpenAPIConfig, Starlite
-
-from backend.app.env import SETTINGS
 
 
 async def check_root_admin(_) -> None:

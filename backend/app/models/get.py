@@ -21,10 +21,10 @@ class CapybaraModel(BaseModel):
         super().__init__(*args, **kwargs)
 
         if "img_ext" in kwargs:
-            image_ext = kwargs["image_ext"]
+            image_ext = kwargs["img_ext"]
         else:
             image_ext = mimetypes.guess_extension(kwargs[""])
             if not image_ext:
                 image_ext = ".webp"
 
-        self.image = SETTINGS.s3.download_url = f"/{self.id + image_ext}"
+        self.image = SETTINGS.s3.download_url + f"/{self.id + image_ext}"
