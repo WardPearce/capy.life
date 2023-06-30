@@ -51,6 +51,7 @@
   }
 
   async function approveCapy(capyId: string, changeName: boolean = false) {
+    stats.total++;
     stats.remaining++;
     await filterCapy(capyId);
     await CapyAPi.admin.adminApproveApproveCapy(capyId, changeName ? 1 : 0);
