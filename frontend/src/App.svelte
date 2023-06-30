@@ -1,16 +1,12 @@
 <script lang="ts">
-  import { Router, Route, link, navigate } from "svelte-navigator";
+  import { Route, Router, link, navigate } from "svelte-navigator";
 
+  import PageLoading from "./components/PageLoading.svelte";
+  import RouteTransition from "./components/RouteTransition.svelte";
+  import TransitionContainer from "./components/TransitionContainer.svelte";
   import Home from "./routes/Home.svelte";
   import LazyRoute from "./routes/LazyRoute.svelte";
-  import RouteTransition from "./components/RouteTransition.svelte";
-  import PageLoading from "./components/PageLoading.svelte";
-  import TransitionContainer from "./components/TransitionContainer.svelte";
   import { loggedIn } from "./store";
-
-  const SubmitLoader = () => import("./routes/Submit.svelte");
-  const AdminLoader = () => import("./routes/Admin.svelte");
-  const AdminAuthLoader = () => import("./routes/AdminAuth.svelte");
 
   let isAdmin = false;
   loggedIn.subscribe((admin) => (isAdmin = admin.username !== ""));
@@ -36,24 +32,24 @@
     <LazyRoute
       path="/submit"
       requiresAuth={false}
-      component={SubmitLoader}
-      delayMs={500}
+      component={() => import("./routes/Submit.svelte")}
+      delayMs={100}
     >
       <PageLoading />
     </LazyRoute>
     <LazyRoute
       path="/admin/auth"
       requiresAuth={false}
-      component={AdminAuthLoader}
-      delayMs={500}
+      component={() => import("./routes/AdminAuth.svelte")}
+      delayMs={100}
     >
       <PageLoading />
     </LazyRoute>
     <LazyRoute
       path="/admin"
       requiresAuth={true}
-      component={AdminLoader}
-      delayMs={500}
+      component={() => import("./routes/Admin.svelte")}
+      delayMs={100}
     >
       <PageLoading />
     </LazyRoute>
