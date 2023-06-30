@@ -1,8 +1,7 @@
 from typing import List
 
+from app.models.get import CapybaraModel
 from pydantic import BaseModel, Field
-
-from ..models.get import CapybaraModel
 
 
 class CreateAdminModel(BaseModel):

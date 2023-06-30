@@ -1,10 +1,10 @@
 import secrets
 from typing import Optional
 
+from app.env import SETTINGS
+from app.models.admin import AdminModel
+from app.resources import Sessions
 from starlite.contrib.jwt import JWTCookieAuth, Token
-
-from .models.admin import AdminModel
-from .resources import Sessions
 
 
 async def retrieve_user_handler(token: Token, connection) -> Optional[AdminModel]:
@@ -18,7 +18,7 @@ async def retrieve_user_handler(token: Token, connection) -> Optional[AdminModel
 
 jwt_cookie_auth = JWTCookieAuth[None](
     retrieve_user_handler=retrieve_user_handler,
-    token_secret=secrets.token_urlsafe(32),
+    token_secret=SETTINGS.jtw_secret,
     samesite="strict",
     secure=True,
     exclude=["/admin/login", "/admin/auth", "/submit", "/capybara", "/schema"],

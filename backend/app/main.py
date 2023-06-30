@@ -1,34 +1,23 @@
 from aiohttp import ClientSession
+from app.controllers import router
+from app.jwt import jwt_cookie_auth
+from app.resources import Sessions
 from motor import motor_asyncio
 from pydantic import AnyUrl, BaseModel
 from pydantic_openapi_schema.v3_1_0 import Contact, Server
 from starlite import CORSConfig, OpenAPIConfig, Starlite
 
-from .controllers import router
-from .env import (
-    API_TITLE,
-    API_VERSION,
-    BACKEND,
-    FRONTEND,
-    MONGO_COLLECTION,
-    MONGO_HOST,
-    MONGO_PORT,
-    ROOT_ADMIN_DISCORD_ID,
-)
-from .jwt import jwt_cookie_auth
-from .resources import Sessions
+from backend.app.env import SETTINGS
 
 
 async def check_root_admin(_) -> None:
     if (
-        await Sessions.mongo.approvers.count_documents(
-            {"_id": str(ROOT_ADMIN_DISCORD_ID)}
-        )
+        await Sessions.mongo.approvers.count_documents({"_id": SETTINGS.root_admin_id})
         == 0
     ):
         await Sessions.mongo.approvers.insert_one(
             {
-                "_id": str(ROOT_ADMIN_DISCORD_ID),
+                "_id": SETTINGS.root_admin_id,
                 "is_root": True,
                 "username": "Root admin",
             }
@@ -37,9 +26,9 @@ async def check_root_admin(_) -> None:
 
 async def start_motor() -> None:
     # Connect mongodb.
-    mongo = motor_asyncio.AsyncIOMotorClient(MONGO_HOST, MONGO_PORT)
+    mongo = motor_asyncio.AsyncIOMotorClient(SETTINGS.mongo.host, SETTINGS.mongo.port)
     await mongo.server_info()
-    Sessions.mongo = mongo[MONGO_COLLECTION]
+    Sessions.mongo = mongo[SETTINGS.mongo.collection]
 
 
 async def start_aiohttp() -> None:
@@ -56,12 +45,15 @@ app = Starlite(
     after_startup=[check_root_admin],
     on_shutdown=[close_aiohttp],
     on_app_init=[jwt_cookie_auth.on_app_init],
-    cors_config=CORSConfig(allow_origins=[BACKEND, FRONTEND], allow_credentials=True),
+    cors_config=CORSConfig(
+        allow_origins=[SETTINGS.proxies.frontend, SETTINGS.proxies.backend],
+        allow_credentials=True,
+    ),
     openapi_config=OpenAPIConfig(
-        title=API_TITLE,
-        version=API_VERSION,
+        title=SETTINGS.openapi.title,
+        version=SETTINGS.openapi.version,
         root_schema_site="redoc",
-        servers=[Server(url=BACKEND)],
+        servers=[Server(url=SETTINGS.proxies.backend)],
         by_alias=True,
         contact=Contact(
             name="Capy.life team",
@@ -69,6 +61,6 @@ app = Starlite(
             url="https://github.com/capylife/",  # type: ignore
         ),
     ),
-    debug=FRONTEND.endswith("localhost"),
+    debug=SETTINGS.proxies.frontend == "http://localhost",
     type_encoders={BaseModel: lambda m: m.dict(by_alias=True)},
 )

@@ -1,14 +1,14 @@
-from dataclasses import fields
+import mimetypes
 from typing import Optional
 
+from app.env import SETTINGS
+from app.models.submit import RelationshipEnum
 from pydantic import BaseModel, Field
-
-from ..models.submit import RelationshipEnum
 
 
 class CapybaraModel(BaseModel):
     name: str
-    image: str
+    image: str = ""
     id: str = Field(..., alias="_id")
     muncher_lvl: int
     weapon: str
@@ -16,3 +16,15 @@ class CapybaraModel(BaseModel):
     used: Optional[str] = None
     relationship_status: RelationshipEnum
     days_ago: int
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if "img_ext" in kwargs:
+            image_ext = kwargs["image_ext"]
+        else:
+            image_ext = mimetypes.guess_extension(kwargs[""])
+            if not image_ext:
+                image_ext = ".webp"
+
+        self.image = SETTINGS.s3.download_url = f"/{self.id + image_ext}"

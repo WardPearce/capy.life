@@ -24,7 +24,7 @@ pillow = "^9.5.0"
 types-aiobotocore = "^2.5.1"
 uvicorn = "^0.22.0"
 starlite = {version = "^1.51.12", extras = ["full"]}
-python-dotenv = "^1.0.0"
+nanoid = "^2.0.0"
 
 
 [tool.poetry.group.dev.dependencies]

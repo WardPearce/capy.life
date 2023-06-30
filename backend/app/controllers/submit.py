@@ -1,18 +1,17 @@
-import mimetypes
 from datetime import datetime
 from io import BytesIO
+from pathlib import Path
 
 import dhash
 import names
 import nanoid
+from app.env import SETTINGS
+from app.lib.s3 import format_path, s3_create_client
+from app.lib.stats import generate_stats
+from app.models.submit import SubmitModal
+from app.resources import Sessions
 from PIL import Image
 from starlite import Body, HTTPException, RequestEncodingType, Response, post
-
-from ..env import BUCKET, MAX_FILE_SIZE_BYTES, NANO_ID_LEN, SUPPORTED_IMAGE_TYPES
-from ..lib.s3 import format_path, s3_create_client
-from ..lib.stats import generate_stats
-from ..models.submit import SubmitModal
-from ..resources import Sessions
 
 dhash.force_pil()
 
@@ -21,18 +20,14 @@ dhash.force_pil()
 async def capy(
     data: SubmitModal = Body(media_type=RequestEncodingType.MULTI_PART),
 ) -> Response:
-    if data.image.content_type == "image/webp":
-        img_ext = ".webp"
-    else:
-        img_ext = mimetypes.guess_extension(data.image.content_type)
+    img_ext = Path(data.image.filename).suffix
 
-    if data.image.content_type not in SUPPORTED_IMAGE_TYPES or not img_ext:
+    if img_ext not in SETTINGS.file.supported_types:
         raise HTTPException(detail="Content type not supported", status_code=400)
 
-    read_size = MAX_FILE_SIZE_BYTES + 1
-    image_bytes = await data.image.read()
+    image_bytes = await data.image.read(SETTINGS.file.max_size + 24)
 
-    if len(image_bytes) == read_size:
+    if len(image_bytes) > SETTINGS.file.max_size:
         raise HTTPException(detail="Image too large", status_code=400)
 
     with Image.open(BytesIO(image_bytes)) as img_loaded:
@@ -49,7 +44,7 @@ async def capy(
     name = data.name if data.name else names.get_first_name()
 
     # Legacy ID system
-    _id = nanoid.generate(size=NANO_ID_LEN)
+    _id = nanoid.generate(size=21)
     now = datetime.now()
 
     insert = {
@@ -70,7 +65,7 @@ async def capy(
 
     async with s3_create_client() as client:
         await client.put_object(
-            Bucket=BUCKET,
+            Bucket=SETTINGS.s3.bucket,
             Key=format_path(_id, img_ext),
             Body=image_bytes,
         )
