@@ -23,7 +23,7 @@ class CapybaraModel(BaseModel):
         if "img_ext" in kwargs:
             image_ext = kwargs["img_ext"]
         else:
-            image_ext = mimetypes.guess_extension(kwargs[""])
+            image_ext = mimetypes.guess_extension(kwargs["content_type"])
             if not image_ext:
                 image_ext = ".webp"
 
