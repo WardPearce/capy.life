@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { SyncLoader } from "svelte-loading-spinners";
   import { navigate } from "svelte-navigator";
   import { CapyAPi } from "../lib/capy";
   import type {
@@ -8,7 +9,6 @@
     ToApproveModel,
   } from "../lib/client";
   import { loggedIn } from "../store";
-
   let admin: { username: string; isRoot: boolean };
   loggedIn.subscribe((event) => (admin = event));
 
@@ -23,24 +23,41 @@
   let stats: StatsModel = null;
   let currentAdmins: ListAdminsModel = null;
   let toApprove: ToApproveModel = null;
+  let toApproveLoading = false;
   onMount(async () => {
     try {
       stats = await CapyAPi.admin.adminStatsStats();
       currentAdmins = await CapyAPi.admin.adminListListAdmins();
-      toApprove = await CapyAPi.admin.adminToApproveToApprove();
+      await getCapybaraToApprove();
     } catch {
       await logout();
     }
   });
 
-  async function approveCapy(capyId: string, changeName: boolean = false) {
-    await CapyAPi.admin.adminApproveApproveCapy(capyId, changeName ? 1 : 0);
+  async function getCapybaraToApprove() {
+    toApproveLoading = true;
     toApprove = await CapyAPi.admin.adminToApproveToApprove();
+    toApproveLoading = false;
+  }
+
+  async function filterCapy(capyId: string) {
+    toApprove.to_approve = toApprove.to_approve.filter(
+      (capy) => capy._id !== capyId
+    );
+
+    if (toApprove.to_approve.length === 0) {
+      await getCapybaraToApprove();
+    }
+  }
+
+  async function approveCapy(capyId: string, changeName: boolean = false) {
+    await filterCapy(capyId);
+    await CapyAPi.admin.adminApproveApproveCapy(capyId, changeName ? 1 : 0);
   }
 
   async function denyCapy(capyId: string) {
+    await filterCapy(capyId);
     await CapyAPi.admin.adminDenyDenyCapy(capyId);
-    toApprove = await CapyAPi.admin.adminToApproveToApprove();
   }
 
   async function removeAdmin(discordId: string) {
@@ -100,7 +117,9 @@
   {/if}
 
   <h2 style="margin-top: 1em;">To approve</h2>
-  {#if !toApprove || toApprove.to_approve.length == 0}
+  {#if toApproveLoading}
+    <SyncLoader color="var(--capyLight)" size={40} />
+  {:else if !toApprove || toApprove.to_approve.length == 0}
     <h4>nothing to approve</h4>
   {:else}
     {#each toApprove.to_approve as capy}
@@ -126,9 +145,6 @@
 </main>
 
 <style>
-  :global(body) {
-    overflow: auto;
-  }
   main {
     display: block;
     padding: 0 3em;
