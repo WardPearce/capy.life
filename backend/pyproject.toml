@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "capylife"
+version = "0.1.0"
+description = ""
+authors = ["WardPearce <wardpearce@protonmail.com>"]
+readme = "README.md"
+packages = [
+    {include = "*", from = "app"},
+    {include = "run.py"}
+]
+
+
+[tool.poetry.scripts]
+server = "run:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiobotocore = "^2.5.1"
+aiohttp = "^3.8.4"
+dhash = "^1.4"
+motor = "^3.2.0"
+names = "^0.3.0"
+pillow = "^9.5.0"
+types-aiobotocore = "^2.5.1"
+uvicorn = "^0.22.0"
+starlite = {version = "^1.51.12", extras = ["full"]}
+python-dotenv = "^1.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+types-aiobotocore = "^2.5.1"
+motor-types = "^1.0.0b2"
+black = "^23.3.0"
+mypy = "^1.4.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

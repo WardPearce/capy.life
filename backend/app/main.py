@@ -66,7 +66,7 @@ app = Starlite(
         contact=Contact(
             name="Capy.life team",
             email="capylife@pm.me",
-            url=AnyUrl("https://github.com/capylife/", scheme="https"),
+            url="https://github.com/capylife/",  # type: ignore
         ),
     ),
     debug=FRONTEND.endswith("localhost"),
