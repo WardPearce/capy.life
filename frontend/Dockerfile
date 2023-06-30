@@ -11,7 +11,7 @@ COPY package*.json ./
 COPY . .
 
 # Create placeholder env vars
-RUN echo "VITE_NAME=VITE_API_ENDPOINT_PLACEHOLDER" > .env
+RUN echo "VITE_API_ENDPOINT=VITE_API_ENDPOINT_PLACEHOLDER" > .env
 
 # Install dependencies and build the project
 RUN npm install && npm run build
