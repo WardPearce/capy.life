@@ -1,0 +1,16 @@
+{
+  "rewrites":  [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://api.capy.life/$1"
+    },
+    {
+      "source": "/api",
+      "destination": "https://api.capy.life/"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}

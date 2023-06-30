@@ -1,0 +1,315 @@
+* {
+    margin: 0;
+    padding: 0;
+    
+}
+
+:root {
+    --capyDark: #130d0d;
+    --capyBrown: #291a1a;
+    --capyLight: #775a5a;
+    --capyError: #a57641;
+    --capyText: rgb(228, 226, 226);
+    --capyTextDarker: rgb(133, 133, 133);
+    --sc-arrow-size: .4em !important;
+    --border: solid 2px var(--capyLight);
+    --borderFocusColor: var(--capyLight);
+    --listBackground: var(--capyDark);
+    --listBorderRadius: 0;
+    --clearSelectColor: var(--capyText);
+    --listBorder: solid 2px var(--capyLight);
+    --itemHoverBG: var(--capyLight);
+    --itemFirstBorderRadius: 0;
+    --inputPadding: .5em;
+    --borderRadius: 0;
+    --border-radius: 0;
+    --background: var(--capyDark);
+    --placeholderColor: var(--capyText);
+}
+
+@font-face {
+    font-family: FredokaOne;
+    src: url(./fonts/FredokaOne.ttf);
+}
+
+nav {
+    padding: 1em .7em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--capyDark);
+    border-bottom: solid 3px var(--capyLight);
+}
+
+nav h1 {
+    font-family: FredokaOne;
+    font-size: 3em;
+    color: var(--capyText);
+    cursor: pointer;
+}
+
+body {
+    background-color: var(--capyBrown);
+    color: var(--capyText);
+    font-family: 'Segoe UI',
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+}
+
+ul {
+    list-style-position: inside;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--capyBrown);
+}
+
+.sc-carousel-arrow__circle {
+    background-color: var(--capyDark) !important;
+    color: var(--capyText) !important;
+    width: 5em !important;
+    height: 5em !important;
+    margin: 1em !important;
+}
+
+.sc-carousel-arrow__circle i {
+    border-color: var(--capyText) !important;
+}
+
+.sc-carousel-arrow__circle:focus {
+    outline: none !important;
+}
+
+.capybara-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.today-capybara {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--capyLight);
+    background-color: var(--capyDark);
+    border-radius: 1em 0 0 1em;
+    border-right: solid 5px var(--capyLight);
+    background-image: url(./img/wee_lil_capy.png);
+    background-repeat: repeat;
+    background-position: center;
+    padding: .5em;
+    min-height: 200px;
+    width: 500px;
+    background-size: 10px 10px;
+}
+
+.today-capybara img {
+    border-right: none;
+    object-fit: contain;
+    width: 500px;
+    height: 600px;
+}
+
+.today-capybara h3 {
+    color: var(--capyText);
+}
+
+.capybara-card {
+    border-radius: 1em;
+    display: flex;
+}
+
+.capybara-stats {
+    background-color: var(--capyDark);
+}
+
+.capybara-stats ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    height: 100%;
+}
+
+.capybara-stats ul > li {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: .4em 2em 1em 1em;
+}
+
+.capybara-stats ul > li:not(:last-child) {
+    border-bottom: solid 3px var(--capyLight);
+}
+
+.capybara-stats h2 {
+    font-family: FredokaOne;
+    font-size: 1.4em;
+    color: var(--capyLight);
+    display: flex;
+    align-items: center;
+}
+
+.capybara-stats h2 > i {
+    font-size: 1.5em;
+    margin-left: .2em;
+}
+
+.capybara-stats h3 {
+    font-size: 1.1em;
+    color: var(--capyText);
+}
+
+.button, button {
+    border: solid 2px var(--capyLight);
+    border-radius: 2em;
+    background-color: var(--capyDark);
+    color: var(--capyText);
+    padding: 1em 2em;
+    font-family: FredokaOne;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-large {
+    font-size: 1.4em;
+}
+
+.button-alt {
+    background-color: var(--capyLight);
+}
+
+.button-alt:hover {
+    background-color: var(--capyDark);
+}
+
+.button:hover,
+button:hover {
+    background-color: var(--capyLight);
+    cursor: pointer;
+}
+
+.button:disabled,
+button:disabled,
+.button-alt {
+    cursor: not-allowed;
+}
+
+.button:disabled:hover,
+button:disabled:hover,
+.button-alt:disabled:hover {
+    background-color: var(--capyLight);
+}
+
+label {
+    font-family: FredokaOne;
+}
+
+input {
+    display: block;
+    background-color: var(--capyDark);
+    border: solid 2px var(--capyLight);
+    padding: .2em .5em;
+    color: var(--capyText);
+    font-size: 1.1em;
+    object-fit: contain;
+    height: 1.7em;
+}
+
+input:focus {
+    outline: none;
+}
+
+a {
+    text-decoration: none;
+    color: var(--capyText);
+}
+
+a:hover {
+    color: var(--capyLight);
+    text-decoration: none;
+}
+
+
+.svelte-select-list {
+    background-color: var(--capyBrown) !important;
+}
+
+.svelte-select-list .active {
+    background-color: var(--capyDark) !important;
+}
+
+.svelte-select-list .hover {
+    background-color: var(--capyLight) !important;
+}
+
+.svelte-select.focused {
+    border-color: var(--capyBrown) !important;
+    border-width: 2px !important;
+}
+
+
+::selection, ::-moz-selection {
+    background-color: var(--capyLight);
+    color: var(--capyBrown);
+}
+
+@media only screen and (max-width: 930px) {
+    nav {
+        row-gap: 10px;
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 930px) {
+    .sc-carousel__arrow-container {
+        display: none !important;
+    }
+}
+
+@media only screen and (max-width: 930px) {
+    .capybara-card {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media only screen and (max-width: 930px) {
+    .capybara-stats {
+        display: block;
+        width: 100vw;
+    }
+}
+
+@media only screen and (max-width: 930px) {
+    .today-capybara img {
+        width: 95%;
+        min-height: 0;
+    }
+}
+
+@media only screen and (max-width: 930px) {
+    .today-capybara {
+        width: 100vw;
+        height: 400px;
+        border-radius: 1em 1em 0 0;
+        border-right: none;
+    }
+}
+
+@media only screen and (max-width: 930px) {
+    .button, button {
+        width: 100%;
+    }
+}
