@@ -1,4 +1,4 @@
-aiobotocore==2.5.0
+aiobotocore==2.5.1
 aiohttp==3.8.4
 dhash==1.4
 motor==3.2.0
