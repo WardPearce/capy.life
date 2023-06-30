@@ -112,7 +112,7 @@
         />
         <div class="stats">
           <h3>Name</h3>
-          <p>Greg</p>
+          <p>{capy.name}</p>
 
           <button on:click={() => approveCapy(capy._id, false)}>Approve</button>
           <button on:click={() => approveCapy(capy._id, true)}
