@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { SyncLoader } from "svelte-loading-spinners";
+  import PageLoading from "../components/PageLoading.svelte";
   import { CapyAPi } from "../lib/capy";
   import type {
     ListAdminsModel,
@@ -15,7 +16,9 @@
   let currentAdmins: ListAdminsModel = null;
   let toApprove: ToApproveModel = null;
   let toApproveLoading = false;
+  let pageLoading = true;
   onMount(async () => {
+    pageLoading = true;
     try {
       stats = await CapyAPi.admin.adminStatsStats();
       currentAdmins = await CapyAPi.admin.adminListListAdmins();
@@ -23,6 +26,7 @@
     } catch {
       window.location.href = `${import.meta.env.VITE_API_ENDPOINT}/admin/login`;
     }
+    pageLoading = false;
   });
 
   async function getCapybaraToApprove() {
@@ -73,69 +77,77 @@
   }
 </script>
 
-<main>
-  <h1 style="margin-top: 1em;">Welcome {admin.username}</h1>
+{#if pageLoading}
+  <PageLoading />
+{:else}
+  <main>
+    <h1 style="margin-top: 1em;">Welcome {admin.username}</h1>
 
-  <h2 style="margin-bottom: 0.5em; margin-top: 1em;">Statistics</h2>
-  {#if stats}
-    <p>{stats.remaining}/{stats.total} Capybaras remaining</p>
-  {/if}
+    {#if stats}
+      <h2 style="margin-bottom: 0.5em; margin-top: 1em;">Statistics</h2>
+      <p>{stats.remaining}/{stats.total} Capybaras remaining</p>
+    {/if}
 
-  {#if admin.isRoot && currentAdmins !== null}
-    <h2 style="margin-top: 1em;">Admins</h2>
-    <ul>
-      {#each currentAdmins.admins as admin}
-        {#if !admin.is_root}
-          <li>
-            {admin.username} ({admin._id})
-            <button class="deny" on:click={() => removeAdmin(admin._id)}
-              >remove</button
-            >
-          </li>
-        {/if}
-      {/each}
-    </ul>
+    {#if admin.isRoot && currentAdmins !== null}
+      <h2 style="margin-top: 1em;">Admins</h2>
+      <ul>
+        {#each currentAdmins.admins as admin}
+          {#if !admin.is_root}
+            <li>
+              {admin.username} ({admin._id})
+              <button class="deny" on:click={() => removeAdmin(admin._id)}
+                >remove</button
+              >
+            </li>
+          {/if}
+        {/each}
+      </ul>
 
-    <form style="margin-top: 1em;" on:submit|preventDefault={addAdmin}>
-      <h3>Add admin</h3>
-      <input bind:value={addUsername} type="text" placeholder="Username" />
-      <input
-        bind:value={addDiscordId}
-        style="margin-top: .5em;"
-        type="text"
-        placeholder="Discord ID"
-      />
-      <button style="margin-top: .5em;" type="submit">Add</button>
-    </form>
-  {/if}
-
-  <h2 style="margin-top: 1em;">To approve</h2>
-  {#if toApproveLoading}
-    <SyncLoader color="var(--capyLight)" size={40} />
-  {:else if !toApprove || toApprove.to_approve.length == 0}
-    <h4>nothing to approve</h4>
-  {:else}
-    {#each toApprove.to_approve as capy}
-      <div class="to-approve">
-        <img
-          src={capy.image}
-          referrerpolicy="no-referrer"
-          alt="Capybara to approve"
+      <form style="margin-top: 1em;" on:submit|preventDefault={addAdmin}>
+        <h3>Add admin</h3>
+        <input bind:value={addUsername} type="text" placeholder="Username" />
+        <input
+          bind:value={addDiscordId}
+          style="margin-top: .5em;"
+          type="text"
+          placeholder="Discord ID"
         />
-        <div class="stats">
-          <h3>Name</h3>
-          <p>{capy.name}</p>
+        <button style="margin-top: .5em;" type="submit">Add</button>
+      </form>
+    {/if}
 
-          <button on:click={() => approveCapy(capy._id, false)}>Approve</button>
-          <button on:click={() => approveCapy(capy._id, true)}
-            >Approve but change name</button
-          >
-          <button class="deny" on:click={() => denyCapy(capy._id)}>Deny</button>
+    <h2 style="margin-top: 1em;">To approve</h2>
+    {#if toApproveLoading}
+      <SyncLoader color="var(--capyLight)" size={40} />
+    {:else if !toApprove || toApprove.to_approve.length == 0}
+      <h4>nothing to approve</h4>
+    {:else}
+      {#each toApprove.to_approve as capy}
+        <div class="to-approve">
+          <img
+            src={capy.image}
+            referrerpolicy="no-referrer"
+            alt="Capybara to approve"
+          />
+          <div class="stats">
+            <h3>Name</h3>
+            <p>{capy.name}</p>
+
+            <button on:click={() => approveCapy(capy._id, false)}
+              >Approve</button
+            >
+            <button on:click={() => approveCapy(capy._id, true)}
+              >Approve but change name</button
+            >
+            <button class="deny" on:click={() => denyCapy(capy._id)}
+              >Deny</button
+            >
+          </div>
         </div>
-      </div>
-    {/each}
-  {/if}
-</main>
+      {/each}
+    {/if}
+  </main>
+{/if}
 
 <style>
   main {
