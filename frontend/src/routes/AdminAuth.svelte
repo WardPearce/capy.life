@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { navigate } from "svelte-navigator";
   import { SyncLoader } from "svelte-loading-spinners";
+  import { navigate } from "svelte-navigator";
 
   import { onMount } from "svelte";
   import { CapyAPi } from "../lib/capy";
@@ -25,7 +25,9 @@
         await timeout(1000);
         navigate("/admin", { replace: true });
       } catch {
-        navigate("/", { replace: true });
+        window.location.href = `${
+          import.meta.env.VITE_API_ENDPOINT
+        }/admin/login`;
       }
     }
   });
