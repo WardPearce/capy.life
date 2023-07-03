@@ -12,14 +12,6 @@
   let admin: { username: string; isRoot: boolean };
   loggedIn.subscribe((event) => (admin = event));
 
-  async function logout() {
-    try {
-      await CapyAPi.admin.adminLogoutLogout();
-    } catch (error) {}
-    loggedIn.set({ username: "", isRoot: false });
-    navigate("/", { replace: true });
-  }
-
   let stats: StatsModel = null;
   let currentAdmins: ListAdminsModel = null;
   let toApprove: ToApproveModel = null;
@@ -30,7 +22,7 @@
       currentAdmins = await CapyAPi.admin.adminListListAdmins();
       await getCapybaraToApprove();
     } catch {
-      await logout();
+      navigate("/admin/auth", { replace: true });
     }
   });
 
