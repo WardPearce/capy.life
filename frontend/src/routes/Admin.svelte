@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { SyncLoader } from "svelte-loading-spinners";
-  import { navigate } from "svelte-navigator";
   import { CapyAPi } from "../lib/capy";
   import type {
     ListAdminsModel,
@@ -22,7 +21,7 @@
       currentAdmins = await CapyAPi.admin.adminListListAdmins();
       await getCapybaraToApprove();
     } catch {
-      navigate("/admin/auth", { replace: true });
+      window.location.href = `${import.meta.env.VITE_API_ENDPOINT}/admin/login`;
     }
   });
 

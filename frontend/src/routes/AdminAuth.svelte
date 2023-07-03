@@ -25,9 +25,7 @@
         await timeout(1000);
         navigate("/admin", { replace: true });
       } catch {
-        window.location.href = `${
-          import.meta.env.VITE_API_ENDPOINT
-        }/admin/login`;
+        navigate("/", { replace: true });
       }
     }
   });
