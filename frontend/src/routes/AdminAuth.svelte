@@ -4,11 +4,8 @@
 
   import { onMount } from "svelte";
   import { CapyAPi } from "../lib/capy";
+  import { timeout } from "../lib/timeout";
   import { loggedIn } from "../store";
-
-  function timeout(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 
   onMount(async () => {
     const urlParams = new URLSearchParams(window.location.search);

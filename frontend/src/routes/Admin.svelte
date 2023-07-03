@@ -8,6 +8,7 @@
     StatsModel,
     ToApproveModel,
   } from "../lib/client";
+  import { timeout } from "../lib/timeout";
   import { loggedIn } from "../store";
   let admin: { username: string; isRoot: boolean };
   loggedIn.subscribe((event) => (admin = event));
@@ -41,6 +42,8 @@
     );
 
     if (toApprove.to_approve.length === 0) {
+      // Wait 500ms before fetching more capybaras to approve.
+      await timeout(500);
       await getCapybaraToApprove();
     }
   }
