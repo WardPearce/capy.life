@@ -21,13 +21,10 @@ dhash.force_pil()
 async def capy(
     data: SubmitModal = Body(media_type=RequestEncodingType.MULTI_PART),
 ) -> Response:
-    if data.image.content_type == "image/webp":
-        img_ext = ".webp"
-    else:
-        img_ext = mimetypes.guess_extension(data.image.content_type)
+    img_ext = Path(data.image.filename).suffix.lower()
 
     if img_ext not in SETTINGS.file.supported_types:
-        raise HTTPException(detail="Content type not supported", status_code=400)
+        raise HTTPException(detail="File type not supported", status_code=400)
 
     image_bytes = await data.image.read(SETTINGS.file.max_size + 24)
 
@@ -72,6 +69,7 @@ async def capy(
             Bucket=SETTINGS.s3.bucket,
             Key=_id + img_ext,
             Body=image_bytes,
+            ContentType=data.image.content_type,
         )
 
     return Response(content=None)

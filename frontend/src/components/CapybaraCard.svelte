@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Circle, SyncLoader } from "svelte-loading-spinners";
-  import Select from "svelte-select";
   import { navigate } from "svelte-navigator";
+  import Select from "svelte-select";
 
   import { CapyAPi } from "../lib/capy";
   import { ApiError, RelationshipEnum, type SubmitModal } from "../lib/client";
@@ -22,7 +22,7 @@
     submittingCapybara = true;
     let payload: SubmitModal = {
       name: name,
-      image: await (await fetch(filePreview)).blob(),
+      image: new File([await (await fetch(filePreview)).blob()], fileName),
     };
     if (relationship_status) payload.relationship_status = relationship_status;
     try {
@@ -37,8 +37,10 @@
 
   let fileInput;
   let filePreview = null;
+  let fileName = null;
 
   function previewImage(e) {
+    fileName = e.target.files[0].name;
     const imgReader = new FileReader();
     imgReader.readAsDataURL(e.target.files[0]);
     imgReader.onload = (loadEvent) => (filePreview = loadEvent.target.result);
