@@ -8,7 +8,6 @@
     StatsModel,
     ToApproveModel,
   } from "../lib/client";
-  import { timeout } from "../lib/timeout";
   import { loggedIn } from "../store";
   let admin: { username: string; isRoot: boolean };
   loggedIn.subscribe((event) => (admin = event));
@@ -42,8 +41,6 @@
     );
 
     if (toApprove.to_approve.length === 0) {
-      // Wait 500ms before fetching more capybaras to approve.
-      await timeout(500);
       await getCapybaraToApprove();
     }
   }
@@ -51,13 +48,15 @@
   async function approveCapy(capyId: string, changeName: boolean = false) {
     stats.total++;
     stats.remaining++;
-    await filterCapy(capyId);
     await CapyAPi.admin.adminApproveApproveCapy(capyId, changeName ? 1 : 0);
+
+    await filterCapy(capyId);
   }
 
   async function denyCapy(capyId: string) {
-    await filterCapy(capyId);
     await CapyAPi.admin.adminDenyDenyCapy(capyId);
+
+    await filterCapy(capyId);
   }
 
   async function removeAdmin(discordId: string) {
