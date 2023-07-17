@@ -30,7 +30,7 @@ nanoid = "^2.0.0"
 [tool.poetry.group.dev.dependencies]
 types-aiobotocore = "^2.5.2"
 motor-types = "^1.0.0b2"
-black = "^23.3.0"
+black = "^23.7.0"
 mypy = "^1.4.1"
 
 [build-system]
