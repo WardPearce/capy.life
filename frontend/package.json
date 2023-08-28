@@ -18,7 +18,7 @@
     "svelte-check": "^3.5.0",
     "svelte-loading-spinners": "^0.3.4",
     "svelte-local-storage-store": "^0.6.0",
-    "svelte-select": "^5.6.1",
+    "svelte-select": "^5.7.0",
     "tslib": "^2.6.2",
     "typescript": "^5.1.6",
     "vite": "^4.4.9"
