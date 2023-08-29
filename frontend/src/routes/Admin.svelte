@@ -9,12 +9,13 @@
     ToApproveModel,
   } from "../lib/client";
   import { loggedIn } from "../store";
+
   let admin: { username: string; isRoot: boolean };
   loggedIn.subscribe((event) => (admin = event));
 
-  let stats: StatsModel = null;
-  let currentAdmins: ListAdminsModel = null;
-  let toApprove: ToApproveModel = null;
+  let stats: StatsModel | null = null;
+  let currentAdmins: ListAdminsModel | null = null;
+  let toApprove: ToApproveModel | null = null;
   let toApproveLoading = false;
   let pageLoading = true;
   onMount(async () => {

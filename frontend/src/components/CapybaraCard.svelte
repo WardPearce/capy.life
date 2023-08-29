@@ -12,7 +12,7 @@
   export let fighterClass: string | null = null;
   export let muncherLvl: number | null = null;
   export let weaponOfChoice: string | null = null;
-  export let relationship_status: RelationshipEnum = null;
+  export let relationship_status: RelationshipEnum | null = null;
   export let editable = true;
 
   let submittingCapybara = false;
@@ -21,8 +21,11 @@
   async function submitCapybara() {
     submittingCapybara = true;
     let payload: SubmitModal = {
-      name: name,
-      image: new File([await (await fetch(filePreview)).blob()], fileName),
+      name: name as string,
+      image: new File(
+        [await (await fetch(filePreview as string)).blob()],
+        fileName
+      ),
     };
     if (relationship_status) payload.relationship_status = relationship_status;
     try {
@@ -30,7 +33,7 @@
       navigate("/", { replace: true });
     } catch (error) {
       if (error instanceof ApiError) errorMsg = error.body.detail;
-      else error = error.toString();
+      else errorMsg = error.toString();
     }
     submittingCapybara = false;
   }
@@ -40,10 +43,11 @@
   let fileName: string | null = null;
 
   function previewImage(event: Event & { currentTarget: HTMLInputElement }) {
-    fileName = event.currentTarget.files[0].name;
+    const files = event.currentTarget.files as FileList;
+    fileName = files[0].name;
     const imgReader = new FileReader();
-    imgReader.readAsDataURL(event.currentTarget.files[0]);
-    imgReader.onload = (loadEvent) =>
+    imgReader.readAsDataURL(files[0]);
+    imgReader.onload = (loadEvent: any) =>
       (filePreview = loadEvent.target.result as string);
   }
 </script>
