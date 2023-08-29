@@ -16,7 +16,7 @@
         const admin = await CapyAPi.admin.adminAuthAuth(code);
         loggedIn.set({
           username: admin.username,
-          isRoot: admin.is_root,
+          isRoot: admin.is_root ? true : false,
         });
         // Wait a second before redirecting.
         await timeout(1000);

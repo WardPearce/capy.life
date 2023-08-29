@@ -9,12 +9,13 @@
     ToApproveModel,
   } from "../lib/client";
   import { loggedIn } from "../store";
+
   let admin: { username: string; isRoot: boolean };
   loggedIn.subscribe((event) => (admin = event));
 
-  let stats: StatsModel = null;
-  let currentAdmins: ListAdminsModel = null;
-  let toApprove: ToApproveModel = null;
+  let stats: StatsModel | null = null;
+  let currentAdmins: ListAdminsModel | null = null;
+  let toApprove: ToApproveModel | null = null;
   let toApproveLoading = false;
   let pageLoading = true;
   onMount(async () => {
@@ -36,6 +37,8 @@
   }
 
   async function filterCapy(capyId: string) {
+    if (!toApprove) return;
+
     toApprove.to_approve = toApprove.to_approve.filter(
       (capy) => capy._id !== capyId
     );
@@ -46,6 +49,8 @@
   }
 
   async function approveCapy(capyId: string, changeName: boolean = false) {
+    if (!stats) return;
+
     stats.total++;
     stats.remaining++;
     await CapyAPi.admin.adminApproveApproveCapy(capyId, changeName ? 1 : 0);

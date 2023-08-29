@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { SyncLoader } from "svelte-loading-spinners";
-  export let src;
+  export let src: string;
   export let alt = "Document";
 
   let loaded = false;

@@ -12,7 +12,7 @@
   export let fighterClass: string | null = null;
   export let muncherLvl: number | null = null;
   export let weaponOfChoice: string | null = null;
-  export let relationship_status: RelationshipEnum = null;
+  export let relationship_status: RelationshipEnum | null = null;
   export let editable = true;
 
   let submittingCapybara = false;
@@ -21,8 +21,11 @@
   async function submitCapybara() {
     submittingCapybara = true;
     let payload: SubmitModal = {
-      name: name,
-      image: new File([await (await fetch(filePreview)).blob()], fileName),
+      name: name as string,
+      image: new File(
+        [await (await fetch(filePreview as string)).blob()],
+        fileName as string
+      ),
     };
     if (relationship_status) payload.relationship_status = relationship_status;
     try {
@@ -30,26 +33,27 @@
       navigate("/", { replace: true });
     } catch (error) {
       if (error instanceof ApiError) errorMsg = error.body.detail;
-      else error = error.toString();
+      else errorMsg = (error as string | object).toString();
     }
     submittingCapybara = false;
   }
 
-  let fileInput;
-  let filePreview = null;
-  let fileName = null;
+  let filePreview: string | null = null;
+  let fileName: string | null = null;
 
-  function previewImage(e) {
-    fileName = e.target.files[0].name;
+  function previewImage(event: Event & { currentTarget: HTMLInputElement }) {
+    const files = event.currentTarget.files as FileList;
+    fileName = files[0].name;
     const imgReader = new FileReader();
-    imgReader.readAsDataURL(e.target.files[0]);
-    imgReader.onload = (loadEvent) => (filePreview = loadEvent.target.result);
+    imgReader.readAsDataURL(files[0]);
+    imgReader.onload = (loadEvent: any) =>
+      (filePreview = loadEvent.target.result as string);
   }
 </script>
 
 <div class="capybara-card">
   <div class="today-capybara">
-    {#if !editable}
+    {#if !editable && imgSrc}
       <Image src={imgSrc} alt="Today's capybara" />
     {:else if !filePreview}
       <h3>No image selected</h3>
@@ -66,7 +70,6 @@
             type="file"
             name="capybara-image"
             accept="image/png,image/gif,image/jpeg,image/jpg"
-            bind:this={fileInput}
             on:change={previewImage}
           />
         </li>

@@ -3,14 +3,16 @@
   import { get } from "svelte/store";
   import { loggedIn } from "../store";
   import RouteTransition from "./RouteTransition.svelte";
-  export let component;
-  export let delayMs = null;
-  export let componentProps = null;
+
+  export let component: any;
+  export let delayMs: number | null = null;
+  export let componentProps: any = null;
   export let requiresAuth = false;
-  let loadedComponent = null;
-  let timeout;
+
+  let loadedComponent: any = null;
+  let timeout: NodeJS.Timeout;
   let showFallback = !delayMs;
-  let props;
+  let props: Record<any, any>;
   $: {
     // eslint-disable-next-line no-shadow
     const { component, requiresAuth, componentProps, delayMs, ...restProps } =
@@ -28,7 +30,7 @@
         showFallback = true;
       }, delayMs);
     }
-    component().then((module) => {
+    component().then((module: any) => {
       loadedComponent = module.default;
     });
     return () => clearTimeout(timeout);
