@@ -36,14 +36,15 @@
   }
 
   let fileInput;
-  let filePreview = null;
-  let fileName = null;
+  let filePreview: string | null = null;
+  let fileName: string | null = null;
 
-  function previewImage(e) {
-    fileName = e.target.files[0].name;
+  function previewImage(event: Event & { currentTarget: HTMLInputElement }) {
+    fileName = event.currentTarget.files[0].name;
     const imgReader = new FileReader();
-    imgReader.readAsDataURL(e.target.files[0]);
-    imgReader.onload = (loadEvent) => (filePreview = loadEvent.target.result);
+    imgReader.readAsDataURL(event.currentTarget.files[0]);
+    imgReader.onload = (loadEvent) =>
+      (filePreview = loadEvent.target.result as string);
   }
 </script>
 

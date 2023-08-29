@@ -14,12 +14,4 @@
     flex-direction: column;
     text-align: center;
   }
-  p {
-    margin-top: 1em;
-    font-weight: bold;
-    text-transform: lowercase;
-  }
-  h3 {
-    margin-top: 6em;
-  }
 </style>
