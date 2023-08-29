@@ -33,7 +33,7 @@
       navigate("/", { replace: true });
     } catch (error) {
       if (error instanceof ApiError) errorMsg = error.body.detail;
-      else errorMsg = error.toString();
+      else errorMsg = (error as string | object).toString();
     }
     submittingCapybara = false;
   }
