@@ -3,7 +3,7 @@
   import Lazy from "../components/Lazy.svelte";
 
   export let component: any;
-  export let delayMs: number = null;
+  export let delayMs: number | null = null;
   export let componentProps: any = null;
   export let requiresAuth = false;
 

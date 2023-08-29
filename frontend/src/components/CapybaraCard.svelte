@@ -24,7 +24,7 @@
       name: name as string,
       image: new File(
         [await (await fetch(filePreview as string)).blob()],
-        fileName
+        fileName as string
       ),
     };
     if (relationship_status) payload.relationship_status = relationship_status;
@@ -38,7 +38,6 @@
     submittingCapybara = false;
   }
 
-  let fileInput;
   let filePreview: string | null = null;
   let fileName: string | null = null;
 
@@ -54,7 +53,7 @@
 
 <div class="capybara-card">
   <div class="today-capybara">
-    {#if !editable}
+    {#if !editable && imgSrc}
       <Image src={imgSrc} alt="Today's capybara" />
     {:else if !filePreview}
       <h3>No image selected</h3>
@@ -71,7 +70,6 @@
             type="file"
             name="capybara-image"
             accept="image/png,image/gif,image/jpeg,image/jpg"
-            bind:this={fileInput}
             on:change={previewImage}
           />
         </li>

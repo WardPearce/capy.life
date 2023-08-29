@@ -37,6 +37,8 @@
   }
 
   async function filterCapy(capyId: string) {
+    if (!toApprove) return;
+
     toApprove.to_approve = toApprove.to_approve.filter(
       (capy) => capy._id !== capyId
     );
@@ -47,6 +49,8 @@
   }
 
   async function approveCapy(capyId: string, changeName: boolean = false) {
+    if (!stats) return;
+
     stats.total++;
     stats.remaining++;
     await CapyAPi.admin.adminApproveApproveCapy(capyId, changeName ? 1 : 0);

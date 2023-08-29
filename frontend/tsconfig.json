@@ -15,6 +15,7 @@
     "checkJs": true,
     "isolatedModules": true,
     "noImplicitAny": true,
+    "strictNullChecks": true,
   },
   "include": [
     "src/**/*.d.ts",

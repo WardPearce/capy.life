@@ -48,7 +48,7 @@
             Capybara from {capy.days_ago}
             {capy.days_ago > 1 ? "days" : "day"} ago
           {:else}
-            Capybara from {new Date(capy.used.toString()).toLocaleDateString(
+            Capybara from {new Date(`${capy.used}`).toLocaleDateString(
               "en-US",
               {
                 year: "numeric",
