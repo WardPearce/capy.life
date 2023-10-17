@@ -31,7 +31,7 @@ nanoid = "^2.0.0"
 types-aiobotocore = "^2.6.0"
 motor-types = "^1.0.0b3"
 black = "^23.9.1"
-mypy = "^1.5.1"
+mypy = "^1.6.0"
 
 [build-system]
 requires = ["poetry-core"]
