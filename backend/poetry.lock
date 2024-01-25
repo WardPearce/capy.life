@@ -1103,13 +1103,13 @@ zstd = ["pymongo[zstd] (>=4.5,<5)"]
 
 [[package]]
 name = "motor-types"
-version = "1.0.0b3"
+version = "1.0.0b4"
 description = "Python stubs for Motor, a Non-Blocking MongoDB driver for Python's Tornado and AsyncIO based applications."
 optional = false
 python-versions = ">=3.8.0,<4.0"
 files = [
-    {file = "motor_types-1.0.0b3-py3-none-any.whl", hash = "sha256:47bad510a5ace79cbd4e9adf45f6e149c580d9b25d57eff74a89cae2a9b14a28"},
-    {file = "motor_types-1.0.0b3.tar.gz", hash = "sha256:634d316093ada5d881f221499fe0d7e1da168e945ef6224b84ed2f1dccdf4fb5"},
+    {file = "motor_types-1.0.0b4-py3-none-any.whl", hash = "sha256:6dc37c87a78acdbd658abbc4426ba3d239c4a26485a12325c65439cb7a2e27bf"},
+    {file = "motor_types-1.0.0b4.tar.gz", hash = "sha256:ece2ec5283dfef1a4d3d693db15a010b6c56fea0d46697184e36880935a9f940"},
 ]
 
 [package.dependencies]
@@ -2672,4 +2672,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "7fc71c67fc07f006d74259f5ce5d053fb232e28da89f884e3fef6a254191f27f"
+content-hash = "35471d9b98a60360347c61bcacf0b69973c0d94b19a872de144cbac3adb194d5"
