@@ -21,14 +21,14 @@ dhash = "^1.4"
 motor = "^3.3.2"
 names = "^0.3.0"
 pillow = "^10.2.0"
-types-aiobotocore = "^2.11.0"
+types-aiobotocore = "^2.11.1"
 uvicorn = "^0.24.0"
 starlite = {version = "^1.51.14", extras = ["full"]}
 nanoid = "^2.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
-types-aiobotocore = "^2.11.0"
+types-aiobotocore = "^2.11.1"
 motor-types = "^1.0.0b4"
 black = "^23.12.1"
 mypy = "^1.8.0"
