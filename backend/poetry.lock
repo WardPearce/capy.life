@@ -1976,18 +1976,18 @@ files = [
 
 [[package]]
 name = "starlite"
-version = "1.51.14"
+version = "1.51.16"
 description = "Performant, light and flexible ASGI API Framework"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "<4.0,>=3.8"
 files = [
-    {file = "starlite-1.51.14-py3-none-any.whl", hash = "sha256:7e0c9a2034d6d170db0569be37626be6e1c1a6dbe167150ffdb57e62349af855"},
-    {file = "starlite-1.51.14.tar.gz", hash = "sha256:f4f7d7b87a61d2a2d0126fe09342d8ce49dd4bd9ee08fb410014b7a77d5d46b6"},
+    {file = "starlite-1.51.16-py3-none-any.whl", hash = "sha256:6b9e59885ca38686307ba73c7a1caa7ae7aa04ed88fa6fba33ee4b974657f40d"},
+    {file = "starlite-1.51.16.tar.gz", hash = "sha256:c249d3ac71262ffe4ceebea3b87da46f43558d73af55fb95c2dc548d37d69e51"},
 ]
 
 [package.dependencies]
 aiomcache = {version = "*", optional = true, markers = "extra == \"memcached\" or extra == \"full\""}
-anyio = ">=3"
+anyio = ">=3,<4"
 brotli = {version = "*", optional = true, markers = "extra == \"brotli\" or extra == \"full\""}
 click = {version = "*", optional = true, markers = "extra == \"cli\" or extra == \"standard\" or extra == \"full\""}
 cryptography = {version = "*", optional = true, markers = "extra == \"cryptography\" or extra == \"jwt\" or extra == \"full\""}
@@ -2690,4 +2690,4 @@ test = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more-it
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "3a3cc2ccdebb65c846b3481a8da841e81b16b6622c02f86bfd7250b81f4c8392"
+content-hash = "0ca3025cf457577dc3188be90af2985323efeed8a2815a61b57e384ea5487ce6"
